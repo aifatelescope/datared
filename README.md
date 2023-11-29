@@ -1,7 +1,11 @@
 
-A jupyter book about data reduction at the AIfA telescope.
+# A tutorial about data reduction at the AIfA telescope.
 
-Read the book here: https://aifatelescope.github.io/datared
+Read the tutorial here: https://aifatelescope.github.io/datared
+
+It is build with Jupyter Book: 
+https://jupyterbook.org/en/stable/intro.html
+
 
 # Installation
 
