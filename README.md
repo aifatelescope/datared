@@ -22,8 +22,8 @@ Currently GitHub Actions is not configured to build the book, we use ghp-import 
 So the process is:
 
 ```
-cd book
-ghp-import -n -p -f _build/html
+jb build book/
+ghp-import -n -p -f book/_build/html
 ```
 
 This pushes the book to the branch `gh-pages`.
