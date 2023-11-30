@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>AIfA telescope data reduction tutorial &#8212; My sample book</title>
+    <title>AIfA telescope data reduction tutorial &#8212; AIfA telescope data reduction tutorial</title>
   
   
   
@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Markdown Files" href="markdown.html" />
+    <link rel="next" title="Theoretical overview" href="overview.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -152,8 +152,8 @@ const thebe_selector_output = ".output, .cell_output"
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="My sample book - Home"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="My sample book - Home"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-light" alt="AIfA telescope data reduction tutorial - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="AIfA telescope data reduction tutorial - Home"/>`);</script>
   
   
 </a></div>
@@ -168,9 +168,10 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Theoretical overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Syntax demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
 </ul>
 
     </div>
@@ -225,7 +226,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+      <li><a href="https://github.com/aifatelescope/datared" target="_blank"
    class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -242,7 +243,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/aifatelescope/datared/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -343,7 +344,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -359,6 +362,15 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#foreword">Foreword</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-what-we-will-use">Overview of what we will use</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -370,18 +382,52 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="aifa-telescope-data-reduction-tutorial">
 <h1>AIfA telescope data reduction tutorial<a class="headerlink" href="#aifa-telescope-data-reduction-tutorial" title="Permalink to this heading">#</a></h1>
-<p>Foreword</p>
-<p>This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out <a class="reference external" href="https://jupyterbook.org">the Jupyter Book documentation</a> for more information.</p>
-<p>Check out the content pages bundled with this sample book to see more.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<section id="foreword">
+<h2>Foreword<a class="headerlink" href="#foreword" title="Permalink to this heading">#</a></h2>
+<p>The aim of this tutorial is to show you a way to “reduce” data acquired with the AIfA telescope, that is to turn the raw data into a scientific result.
+This task can typically be split into two separate parts:</p>
+<ol class="arabic simple">
+<li><p><strong>Pre-reduction of the images</strong></p></li>
+</ol>
+<ul class="simple">
+<li><p>Remove the instrumental signatures</p></li>
+<li><p>Mask (or flag) defects and missing data</p></li>
+<li><p>Characterize the noise, create a weight map</p></li>
+<li><p>Calibrate the images astrometrically and photometrically (and for spectra: perform wavelength calibration)</p></li>
+<li><p>Produce a stack (coaddition)</p></li>
 </ul>
+<ol class="arabic simple" start="2">
+<li><p><strong>Extracting the information of interest</strong></p></li>
+</ol>
+<ul class="simple">
+<li><p>For example: object detection and photometry, extraction of a spectrum, production of a color image…</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The name “reduction” is somewhat misleading. It won’t give you back disk space, on the contrary!</p>
+</div>
+<p>Many approaches and software solutions for data reduction exist. The focus of this particular tutorial is on:</p>
+<ul class="simple">
+<li><p>keeping it short and simple, suited for a lab course,</p></li>
+<li><p>preferring well documented and easily installable tools, so that the tutorial can be used on any platform,</p></li>
+<li><p>getting you to code a little bit, to interact with every step (versus a black-box automated pipeline),</p></li>
+<li><p>providing background information on the key concepts. Computational efficiency is less important.</p></li>
+</ul>
+</section>
+<section id="overview-of-what-we-will-use">
+<h2>Overview of what we will use<a class="headerlink" href="#overview-of-what-we-will-use" title="Permalink to this heading">#</a></h2>
+<p>TBW</p>
+<ul class="simple">
+<li><p>ccdproc</p></li>
+<li><p>photutils</p></li>
+<li><p>Source Extractor (keep this given its status as industry standard?)</p>
+<ul>
+<li><p>Could consider going for SourceXtractor++ instead, still bleeding edge, but it installs via conda (Warning: follow the advice to install this in a separate env!) <a class="github reference external" href="https://github.com/astrorama/SourceXtractorPlusPlus">astrorama/SourceXtractorPlusPlus</a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<div class="toctree-wrapper compound">
 </div>
 </section>
 
@@ -416,11 +462,11 @@ It does not go in-depth into any particular topic - check out <a class="referenc
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="markdown.html"
+       href="overview.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Markdown Files</p>
+        <p class="prev-next-title">Theoretical overview</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -431,6 +477,21 @@ It does not go in-depth into any particular topic - check out <a class="referenc
             
             
               
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#foreword">Foreword</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-of-what-we-will-use">Overview of what we will use</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -440,7 +501,7 @@ It does not go in-depth into any particular topic - check out <a class="referenc
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By The AIfA telescope team
 </p>
 
   </div>
@@ -448,21 +509,20 @@ By The Jupyter Book Community
   <div class="footer-item">
     
 
-  <p class="copyright">
+  </div>
+  
+  <div class="footer-item">
     
-      © Copyright 2022.
-      <br/>
+  </div>
+  
+  <div class="footer-item">
     
-  </p>
+<div class="extra_footer">
+  <p>
+All content released under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>
+</p>
 
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
+</div>
   </div>
   
 </div>
