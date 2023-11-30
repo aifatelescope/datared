@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="103.01112mm"
+   height="53.622223mm"
+   viewBox="0 0 103.01112 53.622223"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/Users/mtewes/Desktop/bitmap.png"
+   inkscape:export-xdpi="100.10958"
+   inkscape:export-ydpi="100.10958"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.64052329"
+     inkscape:cx="139.7295"
+     inkscape:cy="403.57627"
+     inkscape:window-width="1312"
+     inkscape:window-height="969"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-15.205833,-46.509468)">
+    <image
+       width="103.01112"
+       height="53.622223"
+       preserveAspectRatio="none"
+       xlink:href="cdk14_cutout.jpeg"
+       id="image892"
+       x="-118.21696"
+       y="46.509468"
+       transform="scale(-1,1)" />
+    <rect
+       style="fill:#4d4d4d;stroke:none;stroke-width:0.276817;stroke-dasharray:0.553634, 0.276817"
+       id="rect1026"
+       width="29.905867"
+       height="22.429399"
+       x="75.097137"
+       y="64.323402" />
+    <image
+       width="53.316841"
+       height="22.073853"
+       preserveAspectRatio="none"
+       xlink:href="aifa_logo_01_malte_color_edit_white_bar_bkg_white.png"
+       id="image1000"
+       x="50.777733"
+       y="63.265068" />
+  </g>
+</svg>
