@@ -29,7 +29,7 @@ Currently GitHub Actions is not configured to build the book, we use ghp-import 
 So the process is:
 
 ```
-jb build book/
+jupyter-book build book/
 ```
 
 You can now preview the book in your local browser, as mentionned in the output of the above command.

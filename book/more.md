@@ -10,6 +10,9 @@ Sources:
 
 
 Alternatives:
+
+* SourceXtractor++ , still bleeding edge, but it installs via conda (Warning: follow the advice to install this in a separate env!) https://github.com/astrorama/SourceXtractorPlusPlus
+
 * Many professional image reduction pipelines built upon the Astromatic suite (https://www.astromatic.net, https://github.com/astromatic). One very nice way of using these is via THELI v3: https://github.com/schirmermischa/THELI
 
 

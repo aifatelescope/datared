@@ -33,10 +33,15 @@ Many approaches and software solutions for data reduction exist. The focus of th
 
 TBW 
 
+* astropy
 * ccdproc
 * photutils
-* Source Extractor (keep this given its status as industry standard?)
-    * Could consider going for SourceXtractor++ instead, still bleeding edge, but it installs via conda (Warning: follow the advice to install this in a separate env!) https://github.com/astrorama/SourceXtractorPlusPlus
+* matplotlib
+
+All this is based on numpy, of course. 
+
+
+We no longer use SourceExtractor / SCAMP / SWarp or Theli, to make the installation as easy as possible (among other reasons). See [](more.md).
 
 
 
