@@ -41,7 +41,7 @@ TBW
 All this is based on numpy, of course. 
 
 
-We no longer use SourceExtractor / SCAMP / SWarp or Theli, to make the installation as easy as possible (among other reasons). See [](more.md)
+We no longer use SourceExtractor / SCAMP / SWarp or Theli, to make the installation as easy as possible (among other reasons). See [](more.md).
 
 
 
