@@ -31,19 +31,15 @@ Many approaches and software solutions for data reduction exist. The focus of th
 ## Overview of what we will use
 
 
-TBW 
+The whole data reduction and analysis is done in Python, using a series of professional packages under active developement:
 
-* astropy
-* ccdproc
-* photutils
-* matplotlib
 
-All this is based on numpy, of course. 
-
+* `ccdproc` (framework for the image pre-reduction)
+* `photutils` (for source detection and photometry)
+* `astropy` (basis of the above, but also for manipulating catalogs)
+* `matplotlib` (for visualization)
 
 We no longer use SourceExtractor / SCAMP / SWarp or Theli, to make the installation as easy as possible (among other reasons). See [](more.md).
-
-
 
 
 % ```{tableofcontents}

@@ -4,7 +4,8 @@
 format: jb-book
 root: intro
 chapters:
-- file: overview
 - file: installation
+- file: overview
+- file: pythontools
 - file: demo
 - file: more
