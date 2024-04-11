@@ -392,8 +392,8 @@ document.write(`
 <p>First, install miniconda, from here: <a class="reference external" href="https://docs.anaconda.com/free/miniconda/index.html">https://docs.anaconda.com/free/miniconda/index.html</a></p>
 <p>Then, open a terminal, and run the following commands.</p>
 <ul class="simple">
-<li><p>The first line creates a new environnment, called “datared”, and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).</p></li>
-<li><p>The second line activates this environnment (it makes the software available). You’ll have to activate it in every terminal window you want to work in.</p></li>
+<li><p>The first line creates a new environment, called “datared”, and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).</p></li>
+<li><p>The second line activates this environment (it makes the software available). You’ll have to activate it in every terminal window you want to work in.</p></li>
 <li><p>The third line takes a little longer, and will ask you to confirm the installation. It’s a good idea to install all those packages in “one shot” as done here, to better manage dependencies.</p></li>
 </ul>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create -n datared python=3.11
@@ -403,8 +403,8 @@ conda install -c conda-forge ccdproc photutils matplotlib ipykernel ipympl astro
 </div>
 <section id="optional-astrometry-net">
 <h2>Optional: <a class="reference external" href="http://astrometry.net">astrometry.net</a><a class="headerlink" href="#optional-astrometry-net" title="Permalink to this heading">#</a></h2>
-<p>A reliable tool to perform astrometric calibration of an image is the software <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code>. It will blindly “plate solve” the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-complient WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see <a class="reference external" href="https://astrometry.net">https://astrometry.net</a>, and <a class="reference external" href="http://data.astrometry.net">http://data.astrometry.net</a> for how to get the index files.</p>
-<p>With conda, you can easily install <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> locally, using the environnment created above:</p>
+<p>A reliable tool to perform astrometric calibration of an image is the software <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code>. It will blindly “plate solve” the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-compliant WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see <a class="reference external" href="https://astrometry.net">https://astrometry.net</a>, and <a class="reference external" href="http://data.astrometry.net">http://data.astrometry.net</a> for how to get the index files.</p>
+<p>With conda, you can easily install <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> locally, using the environment created above:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda activate datared
 conda install -c conda-forge astrometry
 </pre></div>
