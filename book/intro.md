@@ -15,7 +15,7 @@ This task can typically be split into two separate parts:
 
 
 2) **Extracting the information of interest**
- * For example: object detection and photometry, extraction of a spectrum, production of a color image...
+ * For example: object detection and photometry, creating a light curve, extraction of a spectrum, production of a color image...
 
 :::{note}
 The name "reduction" is somewhat misleading. It won't give you back disk space, on the contrary!
