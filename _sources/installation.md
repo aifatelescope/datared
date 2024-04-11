@@ -4,15 +4,14 @@
 You can skip this part when working with a computer in the AIfA lab room, everything is already installed there!
 :::
 
-
-A big advantage of this choice is that everything should be very easy to install, on any platform!
+A big motivation for using Python is that everything should be very easy to install, on any platform.
 
 First, install miniconda, from here: https://docs.anaconda.com/free/miniconda/index.html
 
 Then, open a terminal, and run the following commands.
 * The first line creates a new environnment, called "datared", and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).
 * The second line activates this environnment (it makes the software available). You'll have to activate it in every terminal window you want to work in.
-* The third line takes a little longer, and will ask you to confirm the installation. It's a good idea to install all those packages in "one shot", to better manage dependencies.
+* The third line takes a little longer, and will ask you to confirm the installation. It's a good idea to install all those packages in "one shot" as done here, to better manage dependencies.
 
 
 ```none
