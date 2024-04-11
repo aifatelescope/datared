@@ -31,7 +31,7 @@ Many approaches and software solutions for data reduction exist. The focus of th
 ## Overview of what we will use
 
 
-The whole data reduction and analysis is done in Python, using a series of professional packages under active developement:
+The whole data reduction and analysis is done in Python, using a series of professional packages under active development:
 
 
 * `ccdproc` (framework for the image pre-reduction)

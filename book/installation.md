@@ -9,8 +9,8 @@ A big motivation for using Python is that everything should be very easy to inst
 First, install miniconda, from here: https://docs.anaconda.com/free/miniconda/index.html
 
 Then, open a terminal, and run the following commands.
-* The first line creates a new environnment, called "datared", and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).
-* The second line activates this environnment (it makes the software available). You'll have to activate it in every terminal window you want to work in.
+* The first line creates a new environment, called "datared", and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).
+* The second line activates this environment (it makes the software available). You'll have to activate it in every terminal window you want to work in.
 * The third line takes a little longer, and will ask you to confirm the installation. It's a good idea to install all those packages in "one shot" as done here, to better manage dependencies.
 
 
@@ -23,10 +23,10 @@ conda install -c conda-forge ccdproc photutils matplotlib ipykernel ipympl astro
 
 ## Optional: astrometry.net
 
-A reliable tool to perform astrometric calibration of an image is the software `astrometry.net`. It will blindly "plate solve" the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-complient WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see https://astrometry.net, and http://data.astrometry.net for how to get the index files.
+A reliable tool to perform astrometric calibration of an image is the software `astrometry.net`. It will blindly "plate solve" the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-compliant WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see https://astrometry.net, and http://data.astrometry.net for how to get the index files.
 
 
-With conda, you can easily install `astrometry.net` locally, using the environnment created above:
+With conda, you can easily install `astrometry.net` locally, using the environment created above:
 
 ```none
 conda activate datared
