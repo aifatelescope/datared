@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Theoretical overview" href="overview.html" />
+    <link rel="next" title="Requirements and installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -168,8 +168,9 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Theoretical overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Theoretical overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pythontools.html">Python tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Syntax demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
 </ul>
@@ -416,14 +417,13 @@ This task can typically be split into two separate parts:</p>
 </section>
 <section id="overview-of-what-we-will-use">
 <h2>Overview of what we will use<a class="headerlink" href="#overview-of-what-we-will-use" title="Permalink to this heading">#</a></h2>
-<p>TBW</p>
+<p>The whole data reduction and analysis is done in Python, using a series of professional packages under active developement:</p>
 <ul class="simple">
-<li><p>astropy</p></li>
-<li><p>ccdproc</p></li>
-<li><p>photutils</p></li>
-<li><p>matplotlib</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ccdproc</span></code> (framework for the image pre-reduction)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">photutils</span></code> (for source detection and photometry)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy</span></code> (basis of the above, but also for manipulating catalogs)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (for visualization)</p></li>
 </ul>
-<p>All this is based on numpy, of course.</p>
 <p>We no longer use SourceExtractor / SCAMP / SWarp or Theli, to make the installation as easy as possible (among other reasons). See <a class="reference internal" href="more.html"><span class="doc std std-doc">Further information</span></a>.</p>
 </section>
 <div class="toctree-wrapper compound">
@@ -461,11 +461,11 @@ This task can typically be split into two separate parts:</p>
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="overview.html"
+       href="installation.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Theoretical overview</p>
+        <p class="prev-next-title">Requirements and installation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

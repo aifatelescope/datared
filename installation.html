@@ -65,8 +65,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'installation';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Syntax demo" href="demo.html" />
-    <link rel="prev" title="Theoretical overview" href="overview.html" />
+    <link rel="next" title="Theoretical overview" href="overview.html" />
+    <link rel="prev" title="AIfA telescope data reduction tutorial" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -169,8 +169,9 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Theoretical overview</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Requirements and installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Theoretical overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pythontools.html">Python tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Syntax demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
 </ul>
@@ -368,6 +369,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-astrometry-net">Optional: astrometry.net</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-comments">Further comments</a></li>
 </ul>
             </nav>
@@ -384,10 +386,9 @@ document.write(`
 <h1>Requirements and installation<a class="headerlink" href="#requirements-and-installation" title="Permalink to this heading">#</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can skip this part when working with a computer in AIfA lab room!</p>
+<p>You can skip this part when working with a computer in the AIfA lab room, everything is already installed there!</p>
 </div>
-<p>The whole data reduction and analysis is done in Python, using a series of professional packages mostly affiliated to astropy.
-A big advantage of this choice is that everything should be very easy to install, on any platform!</p>
+<p>A big advantage of this choice is that everything should be very easy to install, on any platform!</p>
 <p>First, install miniconda, from here: <a class="reference external" href="https://docs.anaconda.com/free/miniconda/index.html">https://docs.anaconda.com/free/miniconda/index.html</a></p>
 <p>Then, open a terminal, and run the following commands.</p>
 <ul class="simple">
@@ -400,21 +401,27 @@ conda activate datared
 conda install -c conda-forge ccdproc photutils matplotlib ipykernel ipympl astroquery
 </pre></div>
 </div>
-<p>Note that in case you want to perform an astrometric calibration (that is “plate solving” and obtaining a good WCS solution), you can also easily install <a class="reference external" href="http://atrometry.net">atrometry.net</a> locally with</p>
+<section id="optional-astrometry-net">
+<h2>Optional: <a class="reference external" href="http://astrometry.net">astrometry.net</a><a class="headerlink" href="#optional-astrometry-net" title="Permalink to this heading">#</a></h2>
+<p>A reliable tool to perform astrometric calibration of an image is the software <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code>. It will blindly “plate solve” the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-complient WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see <a class="reference external" href="https://astrometry.net">https://astrometry.net</a>, and <a class="reference external" href="http://data.astrometry.net">http://data.astrometry.net</a> for how to get the index files.</p>
+<p>With conda, you can easily install <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> locally, using the environnment created above:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda activate datared
 conda install -c conda-forge astrometry
 </pre></div>
 </div>
-<p>You’ll then have to download some index files:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">path_to</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">datared</span><span class="o">/</span><span class="n">data</span><span class="o">/</span>
+<p>You’ll then have to download some index files. Below are the ones useful for our telescope (TODO: optimize this):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">your_path_to</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">datared</span><span class="o">/</span><span class="n">data</span><span class="o">/</span>
 <span class="n">curl</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">portal</span><span class="o">.</span><span class="n">nersc</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">cosmo</span><span class="o">/</span><span class="n">temp</span><span class="o">/</span><span class="n">dstn</span><span class="o">/</span><span class="n">index</span><span class="o">-</span><span class="mi">5200</span><span class="o">/</span><span class="n">LITE</span><span class="o">/</span><span class="n">index</span><span class="o">-</span><span class="mi">5205</span><span class="o">-</span><span class="p">[</span><span class="mi">00</span><span class="o">-</span><span class="mi">47</span><span class="p">]</span><span class="o">.</span><span class="n">fits</span> <span class="o">--</span><span class="n">remote</span><span class="o">-</span><span class="n">name</span>
 <span class="n">curl</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">portal</span><span class="o">.</span><span class="n">nersc</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">cosmo</span><span class="o">/</span><span class="n">temp</span><span class="o">/</span><span class="n">dstn</span><span class="o">/</span><span class="n">index</span><span class="o">-</span><span class="mi">5200</span><span class="o">/</span><span class="n">LITE</span><span class="o">/</span><span class="n">index</span><span class="o">-</span><span class="mi">5206</span><span class="o">-</span><span class="p">[</span><span class="mi">00</span><span class="o">-</span><span class="mi">47</span><span class="p">]</span><span class="o">.</span><span class="n">fits</span> <span class="o">--</span><span class="n">remote</span><span class="o">-</span><span class="n">name</span>
 </pre></div>
 </div>
-<p>This is how you could then run <a class="reference external" href="http://astrometry.net">astrometry.net</a> (for example):</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>solve-field --overwrite --downsample 4 -v -t 3 --guess-scale bla.fits 
+<p>This is how you could then use <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> to write a WCS into the header of a FITS image:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>solve-field -h 
+
+solve-field --overwrite --downsample 4 -v -t 3 --guess-scale myimage.fits 
 </pre></div>
 </div>
+</section>
 <section id="further-comments">
 <h2>Further comments<a class="headerlink" href="#further-comments" title="Permalink to this heading">#</a></h2>
 <p>python=3.12 currently leads to an issue with ccdproc / astroscrappy.</p>
@@ -452,20 +459,20 @@ conda install -c conda-forge astrometry
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="overview.html"
+       href="intro.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Theoretical overview</p>
+        <p class="prev-next-title">AIfA telescope data reduction tutorial</p>
       </div>
     </a>
     <a class="right-next"
-       href="demo.html"
+       href="overview.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Syntax demo</p>
+        <p class="prev-next-title">Theoretical overview</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -484,6 +491,7 @@ conda install -c conda-forge astrometry
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-astrometry-net">Optional: astrometry.net</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-comments">Further comments</a></li>
 </ul>
   </nav></div>
