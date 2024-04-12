@@ -6,7 +6,7 @@ Before dwelving into code, we need some definitions and a theoretical overview. 
 ## CCD and CMOS cameras
 
 * Full-well capacity
-* ADU
+* ADU, ADC, bias
 * Gain
 * Bit depth
 * Dark current
@@ -17,7 +17,7 @@ Before dwelving into code, we need some definitions and a theoretical overview. 
 
 ## Calibration frames
 
-* Flatfield difficulty, color dependence
+* Flat difficulty, color dependence
 
 ## Artifacts and cosmic rays ?
 
@@ -27,11 +27,12 @@ Before dwelving into code, we need some definitions and a theoretical overview. 
 
 ## Coaddition
 
-* reprojection
+* reprojection techniques
 * average vs median
 
 ## Photometry
 
+* aperture vs fitting
 
 
 

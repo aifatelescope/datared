@@ -4,7 +4,7 @@
 You can skip this part when working with a computer in the AIfA lab room, everything is already installed there!
 :::
 
-A big motivation for using Python is that everything should be very easy to install, on any platform.
+The software tools that we'll use the the data reduction should be very easy to install, on any platform.
 
 First, install miniconda, from here: https://docs.anaconda.com/free/miniconda/index.html
 

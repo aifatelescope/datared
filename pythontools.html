@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'pythontools';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Syntax demo" href="demo.html" />
+    <link rel="next" title="Downloading the data" href="data.html" />
     <link rel="prev" title="Theoretical overview" href="overview.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -172,8 +172,11 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Theoretical overview</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Python tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="demo.html">Syntax demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Downloading the data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pre-red.html">Image pre-reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
 
     </div>
@@ -370,6 +373,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ccdproc"><code class="docutils literal notranslate"><span class="pre">ccdproc</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"></a></li>
 </ul>
             </nav>
         </div>
@@ -383,20 +387,23 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="python-tools">
 <h1>Python tools<a class="headerlink" href="#python-tools" title="Permalink to this heading">#</a></h1>
-<p>This pages gives a quick overview of the most important Python tools and objects that we will use in the following tutorial.</p>
+<p>This pages gives a very quick overview of specialized Python tools and objects that we will use in the following tutorial.</p>
 <p>TO BE WRITTEN</p>
 <section id="ccdproc">
 <h2><code class="docutils literal notranslate"><span class="pre">ccdproc</span></code><a class="headerlink" href="#ccdproc" title="Permalink to this heading">#</a></h2>
 <p>In principle, an image is just a 2D array, and we could use plain <code class="docutils literal notranslate"><span class="pre">numpy</span></code> to manipulate it.</p>
 <p>We will however use the <code class="docutils literal notranslate"><span class="pre">ccdproc</span></code> package (<a class="reference external" href="https://ccdproc.readthedocs.io">https://ccdproc.readthedocs.io</a>), which provides the framework for our pre-reduction.
-It has some convenient objects to handle images with uncertainties and masks.</p>
-<p>ccdproc.ImageFileCollection</p>
-<p>ccdproc.CCDData</p>
+It has some convenient objects to handle images and to propagate uncertainties and masks.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ccdproc.ImageFileCollection</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">ccdproc.CCDData</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-<span class="n">bias_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;BIAS&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">header_keywords</span><span class="p">)</span>
+<span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span>
 
 </pre></div>
 </div>
+</section>
+<section id="id1">
+<h2><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
 
@@ -440,11 +447,11 @@ It has some convenient objects to handle images with uncertainties and masks.</p
       </div>
     </a>
     <a class="right-next"
-       href="demo.html"
+       href="data.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Syntax demo</p>
+        <p class="prev-next-title">Downloading the data</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -464,6 +471,7 @@ It has some convenient objects to handle images with uncertainties and masks.</p
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ccdproc"><code class="docutils literal notranslate"><span class="pre">ccdproc</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"></a></li>
 </ul>
   </nav></div>
 

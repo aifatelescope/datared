@@ -1,4 +1,4 @@
-# Syntax demo
+# Test page
 
 See the cheat sheet: https://jupyterbook.org/en/stable/reference/cheatsheet.html#myst-syntax-cheat-sheet
 

@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'overview';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Useful Python Tools" href="pythontools.html" />
+    <link rel="next" title="Python tools" href="pythontools.html" />
     <link rel="prev" title="Requirements and installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -171,9 +171,12 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Theoretical overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pythontools.html">Useful Python Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="demo.html">Syntax demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pythontools.html">Python tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Downloading the data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pre-red.html">Image pre-reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
 
     </div>
@@ -395,7 +398,7 @@ document.write(`
 <h2>CCD and CMOS cameras<a class="headerlink" href="#ccd-and-cmos-cameras" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Full-well capacity</p></li>
-<li><p>ADU</p></li>
+<li><p>ADU, ADC, bias</p></li>
 <li><p>Gain</p></li>
 <li><p>Bit depth</p></li>
 <li><p>Dark current</p></li>
@@ -410,7 +413,7 @@ document.write(`
 <section id="calibration-frames">
 <h2>Calibration frames<a class="headerlink" href="#calibration-frames" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Flatfield difficulty, color dependence</p></li>
+<li><p>Flat difficulty, color dependence</p></li>
 </ul>
 </section>
 <section id="artifacts-and-cosmic-rays">
@@ -425,12 +428,15 @@ document.write(`
 <section id="coaddition">
 <h2>Coaddition<a class="headerlink" href="#coaddition" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>reprojection</p></li>
+<li><p>reprojection techniques</p></li>
 <li><p>average vs median</p></li>
 </ul>
 </section>
 <section id="photometry">
 <h2>Photometry<a class="headerlink" href="#photometry" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>aperture vs fitting</p></li>
+</ul>
 </section>
 <section id="mini-python-intro">
 <h2>Mini Python intro ?<a class="headerlink" href="#mini-python-intro" title="Permalink to this heading">#</a></h2>
@@ -481,7 +487,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Useful Python Tools</p>
+        <p class="prev-next-title">Python tools</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
