@@ -5,10 +5,13 @@ format: jb-book
 root: intro
 chapters:
 - file: installation
-- file: overview
-- file: pythontools
+- file: background-info
+- file: overview-pythontools
 - file: data
 - file: pre-red
 - file: stack
+- file: photometry
+- file: CMD
+- file: lightcurve
 - file: more
 - file: demo
