@@ -11,7 +11,7 @@ Save the directory you want to work with on your system, and extract/decompress 
 
 ## Configuring the reduction
 
-It's convenient to store some settings that will get reused for different reduction steps in a separate python module.
+Some settings that will get reused for different reduction steps are conveniently written in a dedicated python module.
 
 * Download the module {download}`dataredconfig.py <./dataredconfig.py>` and save it where you will be running the reduction code.
 * Then edit this file, to adapt the relevant path to where your raw data is.
