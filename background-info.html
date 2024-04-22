@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Theoretical overview &#8212; AIfA telescope data reduction tutorial</title>
+    <title>Background information on image reduction &#8212; AIfA telescope data reduction tutorial</title>
   
   
   
@@ -62,10 +62,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'overview';</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'background-info';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Python tools" href="pythontools.html" />
+    <link rel="next" title="Structure and Python tools" href="overview-pythontools.html" />
     <link rel="prev" title="Requirements and installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -170,11 +172,14 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Theoretical overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pythontools.html">Python tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data.html">Downloading the data</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Background information on image reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview-pythontools.html">Structure and Python tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Setting up the data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pre-red.html">Image pre-reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
+<li class="toctree-l1"><a class="reference internal" href="photometry.html">Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour Magnitude Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Lightcurve</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
@@ -248,7 +253,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/aifatelescope/datared/issues/new?title=Issue%20on%20page%20%2Foverview.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/aifatelescope/datared/issues/new?title=Issue%20on%20page%20%2Fbackground-info.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -278,7 +283,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/overview.md" target="_blank"
+      <li><a href="_sources/background-info.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -362,7 +367,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Theoretical overview</h1>
+    <h1>Background information on image reduction</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -391,8 +396,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="theoretical-overview">
-<h1>Theoretical overview<a class="headerlink" href="#theoretical-overview" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="background-information-on-image-reduction">
+<h1>Background information on image reduction<a class="headerlink" href="#background-information-on-image-reduction" title="Permalink to this heading">#</a></h1>
 <p>Before dwelving into code, we need some definitions and a theoretical overview. It’s kept as short as possible, and should help you understand what follows.</p>
 <section id="ccd-and-cmos-cameras">
 <h2>CCD and CMOS cameras<a class="headerlink" href="#ccd-and-cmos-cameras" title="Permalink to this heading">#</a></h2>
@@ -429,8 +434,24 @@ document.write(`
 <h2>Coaddition<a class="headerlink" href="#coaddition" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>reprojection techniques</p></li>
-<li><p>average vs median</p></li>
+<li><p>average vs median combination, little demo that avg is better in terms of noise.</p></li>
 </ul>
+<p>Once the</p>
+<aside class="sidebar">
+<p class="sidebar-title">Average or median?</p>
+<p>Assuming an ideal situation without any outliers, is it better to average-combine or median-combine images?</p>
+<p>For a large number of samples from a normal distribution, the variance of the median will by <span class="math notranslate nohighlight">\(\pi/2 = 1.57\)</span> times higher than the variance of the mean.</p>
+<p>The standard error of the median will be <span class="math notranslate nohighlight">\(\sqrt{\pi/2} = 1.25\)</span> times higher, or 25% greater, than the standard error of the mean</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Median">https://en.wikipedia.org/wiki/Median</a></p>
+</aside>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Why is combining several exposures usually better than taking a single exposure with a long exposure time?</p>
+<div class="dropdown admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Saturation, tracking, cosmic rays</p>
+</div>
+</div>
 </section>
 <section id="photometry">
 <h2>Photometry<a class="headerlink" href="#photometry" title="Permalink to this heading">#</a></h2>
@@ -483,11 +504,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="pythontools.html"
+       href="overview-pythontools.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Python tools</p>
+        <p class="prev-next-title">Structure and Python tools</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

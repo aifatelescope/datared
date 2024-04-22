@@ -66,7 +66,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Reprojecting, stacking and colour-combination" href="stack.html" />
-    <link rel="prev" title="Downloading the data" href="data.html" />
+    <link rel="prev" title="Setting up the data" href="data.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -170,11 +170,14 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Theoretical overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pythontools.html">Python tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data.html">Downloading the data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background-info.html">Background information on image reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview-pythontools.html">Structure and Python tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Setting up the data</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Image pre-reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
+<li class="toctree-l1"><a class="reference internal" href="photometry.html">Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour Magnitude Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Lightcurve</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
@@ -391,12 +394,11 @@ document.write(`
 <h1>Image pre-reduction<a class="headerlink" href="#image-pre-reduction" title="Permalink to this heading">#</a></h1>
 <p>This page will take us through the full pre-reduction of the science images.</p>
 <p>You could copy or write the code shown below in a script, or alternatively directly download this page as a <a class="reference download internal" download="" href="_downloads/cff5e9b9e741807cda14da9ba12eaf98/pre-red.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code></a> file.</p>
-<p>To run the code, first download the “date”-directory you want to analyse on your local machine from
-<a class="reference external" href="https://uni-bonn.sciebo.de/s/aKDd5Y3ln79Gg9W">https://uni-bonn.sciebo.de/s/aKDd5Y3ln79Gg9W</a> and adjust the path in the second cell below.</p>
-<p>As an example, we’ll use the night “2024-03-08”.</p>
+<p>Before running the code, make sure you’ve created and adjusted the module <code class="docutils literal notranslate"><span class="pre">dataredconfig.py</span></code>, as explained <a class="reference internal" href="data.html"><span class="doc std std-doc">here</span></a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dataredconfig</span>
+
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">astropy</span>
@@ -415,22 +417,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Where files are (it&#39;s good practice to not modify these files!):</span>
-<span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/Users/mtewes/Desktop/no_backup/2024-03-08&quot;</span><span class="p">)</span>
-
-<span class="c1"># Where things can be written:</span>
-<span class="n">work_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/Users/mtewes/Desktop/no_backup/workdir_2024-03-08&quot;</span><span class="p">)</span>
-<span class="n">work_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># To make things easier to read, we only display those header keywords:</span>
-<span class="n">header_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;imagetyp&quot;</span><span class="p">,</span> <span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="s2">&quot;exptime&quot;</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;xbinning&quot;</span><span class="p">,</span> <span class="s2">&quot;ybinning&quot;</span><span class="p">,</span> <span class="s2">&quot;naxis1&quot;</span><span class="p">,</span> <span class="s2">&quot;naxis2&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ignore some astropy warnings that get raised as our FITS headers (from NINA) are not 100%  standards compliant.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We&#39;ll ignore some astropy warnings that get raised as our FITS headers (from NINA) are not 100% standards compliant.</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">astropy</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">FITSFixedWarning</span><span class="p">)</span>
 </pre></div>
@@ -441,7 +428,7 @@ document.write(`
 <h2>Creating a master-bias<a class="headerlink" href="#creating-a-master-bias" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bias_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;BIAS&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">header_keywords</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bias_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;BIAS&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
 <span class="n">bias_files</span><span class="o">.</span><span class="n">summary</span>
 </pre></div>
 </div>
@@ -463,7 +450,7 @@ document.write(`
 
 <span class="n">masterbias</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;combined&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">masterbias</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">masterbias</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="c1"># Converts to float32 to save space</span>
-<span class="n">masterbias</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s1">&#39;masterbias.fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">masterbias</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s1">&#39;masterbias.fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;masterbias: standard deviation </span><span class="si">{</span><span class="n">masterbias</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ADU, median level </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">masterbias</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ADU&quot;</span><span class="p">)</span>
 </pre></div>
@@ -488,7 +475,7 @@ document.write(`
 <h2>Creating a master-dark<a class="headerlink" href="#creating-a-master-dark" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dark_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;DARK&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">header_keywords</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dark_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;DARK&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
 <span class="n">dark_files</span><span class="o">.</span><span class="n">summary</span>
 </pre></div>
 </div>
@@ -515,7 +502,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the masterdark</span>
 
-<span class="n">dest_dir</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;DARK_BIASSUB&quot;</span>
+<span class="n">dest_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;DARK_BIASSUB&quot;</span>
 <span class="n">dest_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># First loop over the dark frames to subtract the bias: </span>
@@ -542,7 +529,7 @@ document.write(`
 
 <span class="n">masterdark</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;combined&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">masterdark</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">masterdark</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="c1"># Converts to float32 to save space</span>
-<span class="n">masterdark</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s1">&#39;masterdark.fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">masterdark</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s1">&#39;masterdark.fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -566,7 +553,7 @@ document.write(`
 <h2>Creating the master-flats<a class="headerlink" href="#creating-the-master-flats" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flat_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;FLAT&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">header_keywords</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flat_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;FLAT&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
 <span class="n">flat_files</span><span class="o">.</span><span class="n">summary</span>
 </pre></div>
 </div>
@@ -590,7 +577,7 @@ document.write(`
 
     <span class="n">selected_flat_files</span> <span class="o">=</span> <span class="n">flat_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="n">selected_filter</span><span class="p">)</span>
     
-    <span class="n">dest_dir</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;FLAT_</span><span class="si">{</span><span class="n">selected_filter</span><span class="si">}</span><span class="s2">_BIASDARKSUB&quot;</span>
+    <span class="n">dest_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;FLAT_</span><span class="si">{</span><span class="n">selected_filter</span><span class="si">}</span><span class="s2">_BIASDARKSUB&quot;</span>
     <span class="n">dest_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># First subtract bias and dark from every flat:</span>
@@ -615,7 +602,7 @@ document.write(`
 
     <span class="n">masterflat</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;combined&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">masterflat</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">masterflat</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="c1"># Converts to float32 to save space</span>
-    <span class="n">masterflat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;masterflat_</span><span class="si">{</span><span class="n">selected_filter</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">masterflat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;masterflat_</span><span class="si">{</span><span class="n">selected_filter</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -624,7 +611,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Checking the masterflats</span>
 
-<span class="n">masterflat</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;masterflat_g.fits&quot;</span><span class="p">)</span>
+<span class="n">masterflat</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;masterflat_g.fits&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">masterflat</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -638,7 +625,7 @@ document.write(`
 <h2>Processing the science images<a class="headerlink" href="#processing-the-science-images" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">header_keywords</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT&quot;</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
 <span class="n">science_files</span><span class="o">.</span><span class="n">summary</span>
 </pre></div>
 </div>
@@ -647,15 +634,15 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Defining the directory where pre-reduced images should be written:</span>
-<span class="n">dest_dir</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT_PRERED&quot;</span>
+<span class="n">dest_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT_PRERED&quot;</span>
 <span class="n">dest_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Reading in from disk the master calibration frames:</span>
-<span class="n">masterbias</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;masterbias.fits&quot;</span><span class="p">)</span>
-<span class="n">masterdark</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;masterdark.fits&quot;</span><span class="p">)</span>
+<span class="n">masterbias</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;masterbias.fits&quot;</span><span class="p">)</span>
+<span class="n">masterdark</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;masterdark.fits&quot;</span><span class="p">)</span>
 <span class="c1"># For the flats, we build a dictionnary that holds the masterflat for each filter name:</span>
 <span class="n">available_flat_filters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">]</span>
-<span class="n">masterflats</span> <span class="o">=</span> <span class="p">{</span><span class="n">filtername</span><span class="p">:</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;masterflat_</span><span class="si">{</span><span class="n">filtername</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">filtername</span> <span class="ow">in</span> <span class="n">available_flat_filters</span><span class="p">}</span>
+<span class="n">masterflats</span> <span class="o">=</span> <span class="p">{</span><span class="n">filtername</span><span class="p">:</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;masterflat_</span><span class="si">{</span><span class="n">filtername</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">filtername</span> <span class="ow">in</span> <span class="n">available_flat_filters</span><span class="p">}</span>
 
 <span class="c1"># We loop over all files, selecting the right masterflat on the fly</span>
 <span class="k">for</span> <span class="n">ccd</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">science_files</span><span class="o">.</span><span class="n">ccds</span><span class="p">(</span><span class="n">ccd_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;adu&#39;</span><span class="p">},</span> <span class="n">return_fname</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -712,7 +699,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Downloading the data</p>
+        <p class="prev-next-title">Setting up the data</p>
       </div>
     </a>
     <a class="right-next"

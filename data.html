@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Downloading the data &#8212; AIfA telescope data reduction tutorial</title>
+    <title>Setting up the data &#8212; AIfA telescope data reduction tutorial</title>
   
   
   
@@ -66,7 +66,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Image pre-reduction" href="pre-red.html" />
-    <link rel="prev" title="Python tools" href="pythontools.html" />
+    <link rel="prev" title="Structure and Python tools" href="overview-pythontools.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -170,11 +170,14 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Theoretical overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pythontools.html">Python tools</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Downloading the data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background-info.html">Background information on image reduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview-pythontools.html">Structure and Python tools</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Setting up the data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pre-red.html">Image pre-reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
+<li class="toctree-l1"><a class="reference internal" href="photometry.html">Photometry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour Magnitude Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Lightcurve</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
@@ -349,7 +352,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -360,11 +365,20 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Downloading the data</h1>
+    <h1>Setting up the data</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download">Download</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-the-reduction">Configuring the reduction</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -374,10 +388,22 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="downloading-the-data">
-<h1>Downloading the data<a class="headerlink" href="#downloading-the-data" title="Permalink to this heading">#</a></h1>
-<p>Data acquired by the telescope gets synced to sciebo, and can be downloaded from here:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="setting-up-the-data">
+<h1>Setting up the data<a class="headerlink" href="#setting-up-the-data" title="Permalink to this heading">#</a></h1>
+<section id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this heading">#</a></h2>
+<p>Raw data acquired by the telescope gets synced to sciebo, and can be downloaded from here:</p>
 <p><a class="reference external" href="https://uni-bonn.sciebo.de/s/aKDd5Y3ln79Gg9W">https://uni-bonn.sciebo.de/s/aKDd5Y3ln79Gg9W</a></p>
+<p>Save the directory you want to work with on your system, and extract/decompress it if needed.</p>
+</section>
+<section id="configuring-the-reduction">
+<h2>Configuring the reduction<a class="headerlink" href="#configuring-the-reduction" title="Permalink to this heading">#</a></h2>
+<p>Some settings that will get reused for different reduction steps are conveniently written in a dedicated python module.</p>
+<ul class="simple">
+<li><p>Download the module <a class="reference download internal" download="" href="_downloads/047ef4fafffc7c0b704cd0cffe55dece/dataredconfig.py"><code class="xref download docutils literal notranslate"><span class="pre">dataredconfig.py</span></code></a> and save it where you will be running the reduction code.</p></li>
+<li><p>Then edit this file, to adapt the relevant path to where your raw data is.</p></li>
+</ul>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -411,12 +437,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="pythontools.html"
+       href="overview-pythontools.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Python tools</p>
+        <p class="prev-next-title">Structure and Python tools</p>
       </div>
     </a>
     <a class="right-next"
@@ -434,6 +460,21 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download">Download</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-the-reduction">Configuring the reduction</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
