@@ -2,6 +2,7 @@
 
 :::{note}
 You can skip this part when working with a computer in the AIfA lab room, everything is already installed there!
+Just make sure to execute `conda activate datared` in your terminal/shell, in order to use the right environment. 
 :::
 
 The software tools that we'll use the the data reduction should be very easy to install, on any platform.
@@ -27,6 +28,17 @@ If you plan to work with notebooks
 ```none
 conda install -c conda-forge jupyterlab
 ```
+
+You can then 
+
+```none
+cd /where/your/notebooks/are/
+
+jupyter lab
+```
+
+to launch JupyterLab.
+
 
 
 ## Optional: astrometry.net

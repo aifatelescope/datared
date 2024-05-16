@@ -13,11 +13,11 @@ parts:
   - caption: Basic reduction
     chapters:
     - file: pre-red
-    - file: stack
     - file: photometry
     - file: CMD
     - file: lightcurve
   - caption: Further pages
     chapters:
+    - file: stack
     - file: more
     - file: demo
