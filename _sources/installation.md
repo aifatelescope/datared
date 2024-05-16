@@ -2,6 +2,7 @@
 
 :::{note}
 You can skip this part when working with a computer in the AIfA lab room, everything is already installed there!
+Just make sure to execute `conda activate datared` in your terminal/shell, in order to use the right environment. 
 :::
 
 The software tools that we'll use the the data reduction should be very easy to install, on any platform.
@@ -18,7 +19,26 @@ Then, open a terminal, and run the following commands.
 conda create -n datared python=3.11
 conda activate datared
 conda install -c conda-forge ccdproc photutils matplotlib ipykernel ipympl astroquery
-````
+```
+
+## Optional: jupyterlab
+
+If you plan to work with notebooks
+
+```none
+conda install -c conda-forge jupyterlab
+```
+
+You can then 
+
+```none
+cd /where/your/notebooks/are/
+
+jupyter lab
+```
+
+to launch JupyterLab.
+
 
 
 ## Optional: astrometry.net
@@ -37,16 +57,37 @@ You'll then have to download some index files. Below are the ones useful for our
 
 ```
 cd /your_path_to/miniconda3/envs/datared/data/
+
+# The bare minimum seems to be
 curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5205-[00-47].fits --remote-name
 curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5206-[00-47].fits --remote-name
+
+
+# From larger to small scales (small to large files), all within 1 deg:
+
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5206-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5205-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5204-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5203-[00-47].fits --remote-name
+
+# For now I have not installed those, I guess we don't need them, to be seen
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5202-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5201-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5200-[00-47].fits --remote-name
+
 ```
 
 This is how you could then use `astrometry.net` to write a WCS into the header of a FITS image:
 
+WORK IN PROGRESS, THERE MIGHT BE ISSUES WITH SIP-QUALITY HERE
+
 ```none
 solve-field -h 
 
-solve-field --overwrite --downsample 4 -v -t 3 --guess-scale myimage.fits 
+solve-field --overwrite --downsample 4 -v -t 3 --guess-scale myimage.fits
+
+solve-field --overwrite --no-verify --scale-units arcsecperpix --scale-low 0.60 --scale-high 0.62 --downsample 4 -t 3 --objs 300 --dir astrometry --no-plots --skip-solved --new-fits %s.fits *.fits
+
 ```
 
 

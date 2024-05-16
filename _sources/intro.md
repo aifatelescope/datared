@@ -4,14 +4,24 @@
 
 
 The aim of this tutorial is to show you a way to "reduce" data acquired with the AIfA telescope, that is to turn the raw data into a scientific result.
-This task can typically be split into two separate parts:
+
+
+```{image} results_teaser.png
+:alt: Example results obtained with the reduction described in this tutorial
+:width: 100%
+:align: center
+```
+
+
+This "reduction" can often be broadly split into two separate parts, which may comprise some of these steps: 
 
 1) **Pre-reduction of the images**
- * Remove the instrumental signatures
+ * Remove instrumental signatures using calibration frames
  * Mask (or flag) defects and missing data
- * Characterize the noise, create a weight map
- * Calibrate the images astrometrically and photometrically (and for spectra: perform wavelength calibration)
- * Produce a stack (coaddition)
+ * Characterize the noise
+ * Calibrate the images astrometrically and photometrically (and in wavelength, in case of spectra)
+ * Model the sky background
+ * Produce a stack, aka coaddition (sometimes), or even a mosaic
 
 
 2) **Extracting the information of interest**
@@ -30,9 +40,7 @@ Many approaches and software solutions for data reduction exist. The focus of th
 
 ## Overview of what we will use
 
-
 The whole data reduction and analysis is done in Python, using a series of professional packages under active development:
-
 
 * `ccdproc` (framework for the image pre-reduction)
 * `photutils` (for source detection and photometry)

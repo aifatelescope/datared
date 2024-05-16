@@ -1,4 +1,4 @@
-# Further information
+# References and links
 
 Just a placeholder page for now, to keep some links.
 

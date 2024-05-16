@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Lightcurve &#8212; AIfA telescope data reduction tutorial</title>
+    <title>Light curve &#8212; AIfA telescope data reduction tutorial</title>
   
   
   
@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'lightcurve';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Further information" href="more.html" />
+    <link rel="next" title="Reprojecting, stacking and colour-combination" href="stack.html" />
     <link rel="prev" title="Colour Magnitude Diagram" href="CMD.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -168,17 +168,24 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Setup and theory</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="background-info.html">Background information on image reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview-pythontools.html">Structure and Python tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data.html">Setting up the data</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Basic reduction</span></p>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pre-red.html">Image pre-reduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
 <li class="toctree-l1"><a class="reference internal" href="photometry.html">Photometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour Magnitude Diagram</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lightcurve</a></li>
-<li class="toctree-l1"><a class="reference internal" href="more.html">Further information</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Light curve</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Further pages</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
+<li class="toctree-l1"><a class="reference internal" href="more.html">References and links</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
 
@@ -363,7 +370,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Lightcurve</h1>
+    <h1>Light curve</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -377,8 +384,202 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="lightcurve">
-<h1>Lightcurve<a class="headerlink" href="#lightcurve" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="light-curve">
+<h1>Light curve<a class="headerlink" href="#light-curve" title="Permalink to this heading">#</a></h1>
+<p>In this notebook we’ll assemble the light curve of a star, calibrated against other stars of the same field, with the purpose of uncovering an exoplanet transit.</p>
+<p>As usual, you can download this page as a <a class="reference download internal" download="" href="_downloads/c0621302a92ba54cea45d6976c0cde5d/lightcurve.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code></a> file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dataredconfig</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">astropy</span>
+<span class="kn">import</span> <span class="nn">astropy.table</span>
+<span class="kn">import</span> <span class="nn">astropy.visualization</span>
+<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="kn">import</span> <span class="nn">ccdproc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">photometry_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;PHOTOMETRY&quot;</span>
+
+<span class="n">object_to_process</span> <span class="o">=</span> <span class="s2">&quot;HD92670&quot;</span>
+
+<span class="n">catalog_filepaths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">photometry_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.fits&#39;</span><span class="p">)))</span>
+<span class="n">catalogs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">catalog_filepath</span> <span class="ow">in</span> <span class="n">catalog_filepaths</span><span class="p">:</span>
+    
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">catalog_filepath</span><span class="p">)</span>
+
+    <span class="c1"># We select the photometric catalogs of our object:  </span>
+    <span class="k">if</span> <span class="s2">&quot;OBJECT&quot;</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">meta</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">catalog</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;OBJECT&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">object_to_process</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog_filepath</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">catalog</span><span class="o">.</span><span class="n">meta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">catalogs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We combine these catalogs into a single table, in &quot;depth&quot;: columns will be 2D</span>
+<span class="n">catalog</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span><span class="n">catalogs</span><span class="p">,</span> <span class="n">join_type</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="n">metadata_conflicts</span><span class="o">=</span><span class="s2">&quot;silent&quot;</span><span class="p">)</span>
+
+<span class="c1"># We also produce a list of datetime objects, from the FITS headers:</span>
+<span class="n">date_strings</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;DATE-OBS&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">catalogs</span><span class="p">]</span>
+<span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">date_strings</span><span class="p">]</span>
+
+<span class="c1"># And while we are at it, same for the airmass:</span>
+<span class="n">airmasses</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;AIRMASS&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">catalogs</span><span class="p">]</span>
+
+<span class="c1"># We read the reference catalog, as this one contains the position of each star</span>
+<span class="n">ref_catalog</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">photometry_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;ref_catalog_</span><span class="si">{</span><span class="n">object_to_process</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ref_catalog</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span> <span class="c1"># Just a check that these are indeed of same length</span>
+
+<span class="c1"># We copy the positions from the reference catalog over to our combined catalog:</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span>
+
+<span class="c1"># No need for all the rest...</span>
+<span class="c1">#catalog = astropy.table.hstack([ref_catalog, catalog],</span>
+<span class="c1">#        join_type=&quot;exact&quot;, metadata_conflicts=&quot;silent&quot;)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of epochs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">catalogs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">catalog</span><span class="o">.</span><span class="n">colnames</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We display an image of the field, overplotting the indices of catalog sources</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We load one of the images, it does not have to be a specific one.</span>
+<span class="n">light_prered_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT_PRERED&quot;</span>
+<span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">light_prered_dir</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
+<span class="n">science_files</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">object_to_process</span><span class="p">)</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;adu&quot;</span><span class="p">)</span>
+<span class="n">image</span><span class="o">.</span><span class="n">data</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="c1"># Quick sky subtraction</span>
+
+<span class="c1"># And now create the figure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+    <span class="n">norm</span><span class="o">=</span><span class="n">astropy</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">simple_norm</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s2">&quot;sqrt&quot;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">500</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span>
+    <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">),</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="c1"># The size of these markers is not related to any measurement apertures!</span>
+    <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span>
+    <span class="p">)</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">catalog</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">line</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">line</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">degree</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">get_transform</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">),</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;cyan&quot;</span>
+        <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39;RA&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39;Dec&#39;</span><span class="p">)</span>
+<span class="c1">#ax.coords[0].set_ticks(spacing=5.*u.arcmin)</span>
+<span class="c1">#ax.coords[1].set_ticks(spacing=5.*u.arcmin)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target_index</span> <span class="o">=</span> <span class="mi">63</span>
+<span class="n">target_mag</span> <span class="o">=</span> <span class="mf">11.8</span>
+<span class="n">target_mag_first_n_images</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">transit_depth_ppt</span> <span class="o">=</span> <span class="mf">14.7</span>
+<span class="n">n_bright_stars_calib</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">n_bright_stars_show</span> <span class="o">=</span> <span class="mi">5</span>
+
+
+<span class="n">ingress_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s2">&quot;2024-04-21T22:32&quot;</span><span class="p">)</span> <span class="c1"># Both in UTC</span>
+<span class="n">egress_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s2">&quot;2024-04-22T00:18&quot;</span><span class="p">)</span>
+<span class="n">title_str</span> <span class="o">=</span> <span class="s2">&quot;WASP-104 b (Moon 96% @31°)&quot;</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sum_10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="c1"># a &quot;2D&quot; column (index, date)</span>
+
+<span class="n">zero_point</span> <span class="o">=</span> <span class="n">target_mag</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">target_index</span><span class="p">][</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zero-point: </span><span class="si">{</span><span class="n">zero_point</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">zero_point</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># one value per source</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">])</span>
+<span class="n">indices_calib</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">n_bright_stars_calib</span><span class="p">]</span>
+<span class="n">indices_show</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="n">n_bright_stars_show</span><span class="p">]</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;delta_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 2D - 1D -&gt; 2D (index, date)</span>
+
+
+<span class="n">same_calib_for_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;delta_mag&quot;</span><span class="p">][</span><span class="n">indices_calib</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Normalize this:</span>
+<span class="n">same_calib_for_all</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">)</span>
+<span class="c1"># And make it a colum of the catalog</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">catalog</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">transit_depth_mag</span> <span class="o">=</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">transit_depth_ppt</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">))</span>
+                                 
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">ingress_datetime</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">egress_datetime</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">target_mag</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">target_mag</span> <span class="o">+</span> <span class="n">transit_depth_mag</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot some field stars in grey:</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices_show</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">dates</span><span class="p">,</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.015</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+<span class="c1"># Plot the target in red:</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">dates</span><span class="p">,</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">],</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span>
+    <span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+<span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Airmass&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">airmasses</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;-.&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">dates</span><span class="o">.</span><span class="n">ConciseDateFormatter</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_major_locator</span><span class="p">()))</span>
+<span class="c1">#plt.colorbar(label=f&quot;Separation to target center in {cat[&#39;separation&#39;].unit}&quot;)</span>
+<span class="c1">#plt.xlabel(&quot;Date&quot;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;i Magnitude&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">autofmt_xdate</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title_str</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -421,11 +622,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="more.html"
+       href="stack.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Further information</p>
+        <p class="prev-next-title">Reprojecting, stacking and colour-combination</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
