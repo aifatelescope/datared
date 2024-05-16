@@ -18,7 +18,15 @@ Then, open a terminal, and run the following commands.
 conda create -n datared python=3.11
 conda activate datared
 conda install -c conda-forge ccdproc photutils matplotlib ipykernel ipympl astroquery
-````
+```
+
+## Optional: jupyterlab
+
+If you plan to work with notebooks
+
+```none
+conda install -c conda-forge jupyterlab
+```
 
 
 ## Optional: astrometry.net
@@ -43,10 +51,15 @@ curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5206
 
 This is how you could then use `astrometry.net` to write a WCS into the header of a FITS image:
 
+WORK IN PROGRESS, THERE MIGHT BE ISSUES WITH SIP-QUALITY HERE
+
 ```none
 solve-field -h 
 
-solve-field --overwrite --downsample 4 -v -t 3 --guess-scale myimage.fits 
+solve-field --overwrite --downsample 4 -v -t 3 --guess-scale myimage.fits
+
+solve-field --overwrite --no-verify --scale-units arcsecperpix --scale-low 0.60 --scale-high 0.62 --downsample 4 -t 3 --objs 300 --dir astrometry --no-plots --skip-solved --new-fits %s.fits *.fits
+
 ```
 
 
