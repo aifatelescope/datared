@@ -45,8 +45,24 @@ You'll then have to download some index files. Below are the ones useful for our
 
 ```
 cd /your_path_to/miniconda3/envs/datared/data/
+
+# The bare minimum seems to be
 curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5205-[00-47].fits --remote-name
 curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5206-[00-47].fits --remote-name
+
+
+# From larger to small scales (small to large files), all within 1 deg:
+
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5206-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5205-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5204-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5203-[00-47].fits --remote-name
+
+# For now I have not installed those, I guess we don't need them, to be seen
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5202-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5201-[00-47].fits --remote-name
+curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5200-[00-47].fits --remote-name
+
 ```
 
 This is how you could then use `astrometry.net` to write a WCS into the header of a FITS image:

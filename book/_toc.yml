@@ -3,15 +3,21 @@
 
 format: jb-book
 root: intro
-chapters:
-- file: installation
-- file: background-info
-- file: overview-pythontools
-- file: data
-- file: pre-red
-- file: stack
-- file: photometry
-- file: CMD
-- file: lightcurve
-- file: more
-- file: demo
+parts:
+  - caption: Setup and theory
+    chapters:
+    - file: installation
+    - file: background-info
+    - file: overview-pythontools
+    - file: data
+  - caption: Basic reduction
+    chapters:
+    - file: pre-red
+    - file: stack
+    - file: photometry
+    - file: CMD
+    - file: lightcurve
+  - caption: Further pages
+    chapters:
+    - file: more
+    - file: demo
