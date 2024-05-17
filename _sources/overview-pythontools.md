@@ -16,6 +16,10 @@ You might also be interested in:
  * [](./stack.ipynb): (optional!) reproject science frames on a common pixel grid, coadd them, and create a colour image
 
 
+```{note}
+This whole tutorial is still under construction. If you encounter any issues or have suggestions, feel invited to post them on our github repository, here: https://github.com/aifatelescope/datared/issues
+````
+
 
 ## Python tools
 

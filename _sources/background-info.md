@@ -21,12 +21,13 @@ name: image_basics
 Illustration of some basic image properties. Top: two stars (one has twice the flux of the other, but their FWHM is the same), and one galaxy. Bottom: horizontal section across the image, with pixel value on the y-axis.
 ```
 
-* Images of stars are not "point-like", but follow the profile of the *Point Spread Function* (PSF). For ground-based images, the origin of the PSF is dominated by **astronomical seeing**, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The image being projected on the detector can be seen as a convolution of the actual scene with this PSF. In other words, it gets blurred by the PSF, before being sampled by the pixel array of the detector. In a medium with normal dispersion (such as air), refraction is stronger for shorter wavelengths. Therefore ground-based images obtained through a red filter will be significantly sharper than images in a blue band.
+* Images of stars are not "point-like", but follow the profile of the *Point Spread Function* (PSF). For images obtained by simple ground-based telescopes, the origin of the PSF is dominated by **astronomical seeing**, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The images we record through those telescopes get blurred by this PSF. Mathematically, the observed image can be seen as a convolution of the actual scene with this PSF, sampled on the pixel array of the detector.
 
+* The PSF is wavelength-dependent. In a medium with normal dispersion (such as air), refraction is stronger for shorter wavelengths. Therefore ground-based images obtained through a red filter will be significantly sharper than images in a blue band.
 
 * On a ground-based image from an idealized detector, the PSF is relatively close to a Gaussian. If stars have the same spectrum (or if you use a very narrow filter) then these profiles have *the same width*, for example as measured by the *Full Width at Half Maximum* (**FWHM**, see figure above) of the stars. The same holds for the standard-deviation of a 2D-Gaussian fitted to these stars.
 
-* When displaying an image, brighter stars will seem wider, even if their FWHM is the same.
+* When displaying an image, brighter stars do have wider *isophotes* (i.e., curve around the star at a given brightness level) and therefore appear "larger", even if the FWHM is the same for stars (see figure above).
 
 * Sources of noise: 
     * photon noise aka "shot noise" (photons hitting each pixel follow a poisson process), from the source but also from the so-called "background" (in fact, a foreground: sky brightness).

@@ -27,9 +27,9 @@ Data reduction can often be broadly split into two separate parts, which may com
 2) **Extracting the information of interest**
  * For example: object detection and photometry, creating a light curve, extraction of a spectrum, production of a color image...
 
-:::{note}
+```{note}
 The name "reduction" is somewhat misleading. It won't give you back disk space, on the contrary!
-:::
+```
 
 Many approaches and software solutions for data reduction exist. The focus of this particular tutorial is on:
 * keeping it short and simple, suited for a lab course,
