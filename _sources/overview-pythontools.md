@@ -4,7 +4,7 @@ Here is an overview of what we will do on the following pages, that can be seen 
 
  * [](./data.md): download the data, and write a small configuration module
  * [](./pre-red.ipynb): analyse the calibration frames, create masterbias, masterdark, and masterflats, and apply the corresponding callibration to the science frames
- * [](./photometry.ipynb): perform *forced* aperture photometry on the individual science frames (i.e., estimate the flux of each star). "Forced" means that the same apertures are used for all your science frames.  
+ * [](./photometry.ipynb): perform forced aperture photometry on the individual science frames (i.e., estimate the flux with apertures at the same sky coordinates in each science frame).
 
 At this stage, you'll have one photometric catalog per science frame. Depending on your lab course, you can then proceed with one of the following: 
 

@@ -385,6 +385,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ccd-and-cmos-cameras">CCD and CMOS cameras</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#astronomical-images">Astronomical images</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits">FITS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration-frames">Calibration frames</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artifacts-and-cosmic-rays">Artifacts and cosmic rays ?</a></li>
@@ -414,6 +415,26 @@ document.write(`
 <li><p>Gain</p></li>
 <li><p>Bit depth</p></li>
 <li><p>Dark current</p></li>
+</ul>
+</section>
+<section id="astronomical-images">
+<h2>Astronomical images<a class="headerlink" href="#astronomical-images" title="Permalink to this heading">#</a></h2>
+<figure class="align-default" id="image-basics">
+<a class="reference internal image-reference" href="_images/image_basics.png"><img alt="_images/image_basics.png" src="_images/image_basics.png" style="width: 75%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Illustration of some basic image properties. Top: two stars (one has twice the flux of the other, but their FWHM is the same), and one galaxy. Bottom: horizontal section across the image, with pixel value on the y-axis.</span><a class="headerlink" href="#image-basics" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p>Images of stars are not “point-like”, but follow the profile of the <em>Point Spread Function</em> (PSF). For ground-based images, the origin of the PSF is dominated by <strong>astronomical seeing</strong>, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The image being projected on the detector can be seen as a convolution of the actual scene with this PSF. In other words, it gets blurred by the PSF, before being sampled by the pixel array of the detector. In a medium with normal dispersion (such as air), refraction is stronger for shorter wavelengths. Therefore ground-based images obtained through a red filter will be significantly sharper than images in a blue band.</p></li>
+<li><p>On a ground-based image from an idealized detector, the PSF is relatively close to a Gaussian. If stars have the same spectrum (or if you use a very narrow filter) then these profiles have <em>the same width</em>, for example as measured by the <em>Full Width at Half Maximum</em> (<strong>FWHM</strong>, see figure above) of the stars. The same holds for the standard-deviation of a 2D-Gaussian fitted to these stars.</p></li>
+<li><p>When displaying an image, brighter stars will seem wider, even if their FWHM is the same.</p></li>
+<li><p>Sources of noise:</p>
+<ul>
+<li><p>photon noise aka “shot noise” (photons hitting each pixel follow a poisson process), from the source but also from the so-called “background” (in fact, a foreground: sky brightness).</p></li>
+<li><p>readout noise of electronics</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="fits">
@@ -460,9 +481,20 @@ document.write(`
 </section>
 <section id="photometry">
 <h2>Photometry<a class="headerlink" href="#photometry" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p>aperture vs fitting</p></li>
-</ul>
+<p>The brightness measurement of objects on an image is called <em>photometry</em>. There are two main approaches to photometry on CCD images: digital aperture photometry, and PSF fitting.</p>
+<p><span id="id1">[<a class="reference internal" href="more.html#id2" title="Frederick R. Chromey. To Measure the Sky: An Introduction to Observational Astronomy. Cambridge University Press, Cambridge, 2016. URL: https://ui.adsabs.harvard.edu/abs/2016mesk.book.....C.">Chromey16</a>]</span></p>
+<dl class="simple myst">
+<dt>Digital aperture photometry</dt><dd><p>Definition</p>
+<p>PSF homogeneization</p>
+</dd>
+<dt>PSF fitting</dt><dd><p>Definition</p>
+</dd>
+</dl>
+<p>In this tutorial, we make use of <strong>forced photometry</strong>, meaning that we perform photometry by placing apertures at specific pre-defined locations of an image, without first “detecting” sources in that particular image. These locations are defined in sky coordinates in a reference catalog that we build from a reference image. This makes the subsequent analysis particularly easy, as we get consistent photometric catalogs for each exposure.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the sake of simplicity, we ignore here the effect that distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).</p>
+</div>
 </section>
 <section id="mini-python-intro">
 <h2>Mini Python intro ?<a class="headerlink" href="#mini-python-intro" title="Permalink to this heading">#</a></h2>
@@ -533,6 +565,7 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ccd-and-cmos-cameras">CCD and CMOS cameras</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#astronomical-images">Astronomical images</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits">FITS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration-frames">Calibration frames</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artifacts-and-cosmic-rays">Artifacts and cosmic rays ?</a></li>

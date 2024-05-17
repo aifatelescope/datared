@@ -6,14 +6,14 @@
 The aim of this tutorial is to show you a way to "reduce" data acquired with the AIfA telescope, that is to turn the raw data into a scientific result.
 
 
-```{image} results_teaser.png
+```{image} ./figures/results_teaser.png
 :alt: Example results obtained with the reduction described in this tutorial
 :width: 100%
 :align: center
 ```
 
 
-This "reduction" can often be broadly split into two separate parts, which may comprise some of these steps: 
+Data reduction can often be broadly split into two separate parts, which may comprise some of these steps: 
 
 1) **Pre-reduction of the images**
  * Remove instrumental signatures using calibration frames
@@ -47,7 +47,7 @@ The whole data reduction and analysis is done in Python, using a series of profe
 * `astropy` (basis of the above, but also for manipulating catalogs)
 * `matplotlib` (for visualization)
 
-We no longer use SourceExtractor / SCAMP / SWarp or Theli, to make the installation as easy as possible (among other reasons). See [](more.md).
+We no longer use SourceExtractor / SCAMP / SWarp or Theli, to make the installation as easy as possible (among other reasons). See [](more.md) if you are interested in these alternative solutions.
 
 
 % ```{tableofcontents}

@@ -11,6 +11,29 @@ Before dwelving into code, we need some definitions and a theoretical overview. 
 * Bit depth
 * Dark current
 
+## Astronomical images
+
+```{figure} ./figures/image_basics.png
+---
+width: 75%
+name: image_basics
+---
+Illustration of some basic image properties. Top: two stars (one has twice the flux of the other, but their FWHM is the same), and one galaxy. Bottom: horizontal section across the image, with pixel value on the y-axis.
+```
+
+* Images of stars are not "point-like", but follow the profile of the *Point Spread Function* (PSF). For ground-based images, the origin of the PSF is dominated by **astronomical seeing**, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The image being projected on the detector can be seen as a convolution of the actual scene with this PSF. In other words, it gets blurred by the PSF, before being sampled by the pixel array of the detector. In a medium with normal dispersion (such as air), refraction is stronger for shorter wavelengths. Therefore ground-based images obtained through a red filter will be significantly sharper than images in a blue band.
+
+
+* On a ground-based image from an idealized detector, the PSF is relatively close to a Gaussian. If stars have the same spectrum (or if you use a very narrow filter) then these profiles have *the same width*, for example as measured by the *Full Width at Half Maximum* (**FWHM**, see figure above) of the stars. The same holds for the standard-deviation of a 2D-Gaussian fitted to these stars.
+
+* When displaying an image, brighter stars will seem wider, even if their FWHM is the same.
+
+* Sources of noise: 
+    * photon noise aka "shot noise" (photons hitting each pixel follow a poisson process), from the source but also from the so-called "background" (in fact, a foreground: sky brightness).
+    * readout noise of electronics
+
+
+
 ## FITS
 
 * HDU
@@ -51,9 +74,26 @@ Saturation, tracking, cosmic rays
 
 ## Photometry
 
-* aperture vs fitting
+The brightness measurement of objects on an image is called *photometry*. There are two main approaches to photometry on CCD images: digital aperture photometry, and PSF fitting.
 
 
+{cite}`Chromey:2016`
+
+
+Digital aperture photometry
+: Definition
+
+  PSF homogeneization
+
+PSF fitting
+: Definition
+
+In this tutorial, we make use of **forced photometry**, meaning that we perform photometry by placing apertures at specific pre-defined locations of an image, without first "detecting" sources in that particular image. These locations are defined in sky coordinates in a reference catalog that we build from a reference image. This makes the subsequent analysis particularly easy, as we get consistent photometric catalogs for each exposure.
+
+
+```{note}
+For the sake of simplicity, we ignore here the effect that distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).
+```
 
 ## Mini Python intro ? 
 
