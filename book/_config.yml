@@ -4,7 +4,7 @@
 title: AIfA telescope data reduction tutorial
 author: The AIfA telescope team
 copyright: "2023"
-logo: logo.png
+logo: ./figures/logo.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
@@ -40,3 +40,15 @@ html:
 sphinx:
   config:
     html_show_copyright: false
+
+parse:
+  myst_enable_extensions:
+    # don't forget to list any other extensions you want enabled,
+    # including those that are enabled by default!
+    # See https://jupyterbook.org/en/stable/content/content-blocks.html
+    - dollarmath
+    - linkify
+    - substitution
+    - colon_fence
+    - deflist
+

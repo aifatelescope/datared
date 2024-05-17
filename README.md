@@ -31,7 +31,7 @@ So the process is:
 ```
 jupyter-book build book/
 
-# clean with jupyter-book clean --all book/
+# clean with: jupyter-book clean --all book/
 ```
 
 You can now preview the book in your local browser, as mentionned in the output of the above command.
