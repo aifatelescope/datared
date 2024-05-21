@@ -184,6 +184,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Further pages</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="astrometry.html">Astrometric calibration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">References and links</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
@@ -419,6 +420,8 @@ The procedure could also be applied to coadded images.</p>
 
 <span class="kn">import</span> <span class="nn">ccdproc</span>
 <span class="kn">import</span> <span class="nn">photutils</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 </pre></div>
 </div>
 </div>
@@ -631,19 +634,30 @@ This means that we use the sky coordinates of the sources detected in the refere
 <span class="sd">    An Astropy Table with measurements for several aperture radii at the given positions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        
     <span class="c1"># Estimate and subtract the background:</span>
     <span class="n">background</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">estimate_background</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="n">image_noback</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;adu&quot;</span><span class="p">))</span>
+
+    <span class="n">tend</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Background subtraction took </span><span class="si">{</span><span class="n">tend</span><span class="o">-</span><span class="n">tstart</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> sec&quot;</span><span class="p">)</span>
     
     <span class="n">aperture_radii</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="c1"># In arcsec</span>
 
+    <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="c1"># We first generate a separate catalog for each aperture radius, and combine these afterwards</span>
     <span class="n">aperture_catalogs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">aperture_radii</span><span class="p">:</span>
 
         <span class="n">apertures</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">aperture</span><span class="o">.</span><span class="n">SkyCircularAperture</span><span class="p">(</span><span class="n">sky_positions</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">arcsec</span><span class="p">)</span>
         <span class="n">aperture_measurements</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">aperture</span><span class="o">.</span><span class="n">ApertureStats</span><span class="p">(</span><span class="n">image_noback</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">aperture</span><span class="o">=</span><span class="n">apertures</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">image_noback</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
-        <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;fwhm&quot;</span><span class="p">,</span> <span class="s2">&quot;elongation&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;fwhm&quot;</span><span class="p">,</span> <span class="s2">&quot;elongation&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">])</span>
+            <span class="c1"># For some reason these fwhm and elongation sometimes lead to excessive runtime for large apertures (getting stuck...), to be investigated</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">])</span>
 
         <span class="c1"># Rename columns by adding the aperture radius, to get for example &quot;sum_4&quot; instead of sum</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">aperture_catalog</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
@@ -655,6 +669,9 @@ This means that we use the sky coordinates of the sources detected in the refere
     <span class="n">merged_catalog</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">aperture_catalogs</span><span class="p">,</span>
         <span class="n">join_type</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="n">metadata_conflicts</span><span class="o">=</span><span class="s2">&quot;silent&quot;</span>
         <span class="p">)</span>
+    
+    <span class="n">tend</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Photometry took </span><span class="si">{</span><span class="n">tend</span><span class="o">-</span><span class="n">tstart</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> sec&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">merged_catalog</span>
 </pre></div>
 </div>
@@ -706,7 +723,7 @@ This means that we use the sky coordinates of the sources detected in the refere
 <span class="c1"># And now we loop over all selected exposures:</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">science_file</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">science_files</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
 
-    <span class="c1">#if i &lt; 104:</span>
+    <span class="c1">#if i &lt; 104: # could use something like that to relaunch on selected files</span>
     <span class="c1">#    continue</span>
 
     <span class="n">image_filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">science_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>

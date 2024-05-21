@@ -11,8 +11,9 @@ At this stage, you'll have one photometric catalog per science frame. Depending 
  * [](./CMD.ipynb): construct and calibrate a CMD from the photometric catalogs
  * [](./lightcurve.ipynb): build a lightcurve (i.e., brightness as function of time) of an exoplanet transit based on the photometric catalogs
 
-You might also be interested in:
 
+You might also be interested in:
+ * [](./astrometry.ipynb): builds an accurate WCS for your science images. In case your images don't come with a WCS, use this before performing photometry or stacking!
  * [](./stack.ipynb): (optional!) reproject science frames on a common pixel grid, coadd them, and create a colour image
 
 

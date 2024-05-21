@@ -183,6 +183,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Further pages</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="astrometry.html">Astrometric calibration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">References and links</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
@@ -432,7 +433,7 @@ document.write(`
 </section>
 <section id="overview-of-what-we-will-use">
 <h2>Overview of what we will use<a class="headerlink" href="#overview-of-what-we-will-use" title="Permalink to this heading">#</a></h2>
-<p>The whole data reduction and analysis is done in Python, using a series of professional packages under active development:</p>
+<p>The whole data reduction and analysis is done in Python (except for the astrometric calibration, which is based on a local installation of <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> that we’ll call from within python). We make use of the following professional Python packages, all under active development:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ccdproc</span></code> (framework for the image pre-reduction)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">photutils</span></code> (for source detection and photometry)</p></li>
