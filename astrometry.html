@@ -419,12 +419,11 @@ While it’s not very elegant to constrain this distortion model independently f
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Locating the image files to run on:</span>
 
-<span class="c1">#input_dir = dataredconfig.work_dir / &quot;LIGHT_PRERED&quot;</span>
-
-<span class="n">input_dir</span> <span class="o">=</span> <span class="s2">&quot;/Users/mtewes/Desktop/no_backup/workdir_2024-03-08/LIGHT_PRERED&quot;</span>
+<span class="n">input_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT_PRERED&quot;</span>
 
 <span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
 
+<span class="c1"># You may want to use only some of the files in there, for example:</span>
 <span class="c1">#object_to_process = &quot;HD92670&quot;</span>
 <span class="c1">#science_files = science_files.filter(object=object_to_process)</span>
 
@@ -495,6 +494,7 @@ While it’s not very elegant to constrain this distortion model independently f
     
     <span class="k">if</span> <span class="n">fig_file_path</span><span class="p">:</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig_file_path</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     
 </pre></div>
 </div>
@@ -502,11 +502,11 @@ While it’s not very elegant to constrain this distortion model independently f
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_solvefield</span><span class="p">(</span><span class="n">input_fits_path</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_wcs_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checkplot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_solvefield</span><span class="p">(</span><span class="n">input_fits_path</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_wcs_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper to run solve-field in a subprocess, with some hard-coded settings.</span>
 
 <span class="sd">    The stdout and stderr are written to text files, as &quot;logs&quot; to check in case of problems. </span>
-<span class="sd">    The option verify is for the second run, to fine-tune the SIP.</span>
+<span class="sd">    Use settings=2 and provide the wcs of run 1 when running for the second time, to fine-tune the SIP.</span>
 
 <span class="sd">    A log file gets written along the other output files from solve-field</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -549,10 +549,11 @@ While it’s not very elegant to constrain this distortion model independently f
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;settings must be 1 or 2&quot;</span><span class="p">)</span>
 
-
+    <span class="c1"># Creating a log file:</span>
     <span class="n">log_filepath</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">input_fits_path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.log&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
     <span class="n">log_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
     
+    <span class="c1"># And running solve-field:</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">log_file</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
 
     <span class="n">log_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>

@@ -431,8 +431,10 @@ The procedure could also be applied to coadded images.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Locating the pre-reduced science images:</span>
 <span class="n">object_to_process</span> <span class="o">=</span> <span class="s2">&quot;HD92670&quot;</span>
 
-<span class="n">light_prered_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT_PRERED&quot;</span>
-<span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">light_prered_dir</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
+<span class="c1">#science_files_dir = dataredconfig.work_dir / &quot;LIGHT_PRERED&quot; # In case astrometric calibration was already performed before the pre-reduction</span>
+<span class="n">science_files_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;ASTROMETRY&quot;</span>
+
+<span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">science_files_dir</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
 
 <span class="n">science_files</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">object_to_process</span><span class="p">)</span>
 

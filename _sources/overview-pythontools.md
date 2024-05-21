@@ -13,7 +13,7 @@ At this stage, you'll have one photometric catalog per science frame. Depending 
 
 
 You might also be interested in:
- * [](./astrometry.ipynb): builds an accurate WCS for your science images. In case your images don't come with a WCS, use this before performing photometry or stacking!
+ * [](./astrometry.ipynb): builds an accurate WCS for your science images. In case your images don't come with a (good) WCS, use this before performing photometry or stacking. A good moment to run this is right after [](./pre-red.ipynb).
  * [](./stack.ipynb): (optional!) reproject science frames on a common pixel grid, coadd them, and create a colour image
 
 
