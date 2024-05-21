@@ -40,7 +40,7 @@ Many approaches and software solutions for data reduction exist. The focus of th
 
 ## Overview of what we will use
 
-The whole data reduction and analysis is done in Python, using a series of professional packages under active development:
+The whole data reduction and analysis is done in Python (except for the astrometric calibration, which is based on a local installation of `astrometry.net` that we'll call from within python). We make use of the following professional Python packages, all under active development:
 
 * `ccdproc` (framework for the image pre-reduction)
 * `photutils` (for source detection and photometry)

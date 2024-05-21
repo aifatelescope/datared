@@ -5,7 +5,8 @@ You can skip this part when working with a computer in the AIfA lab room, everyt
 Just make sure to execute `conda activate datared` in your terminal/shell, in order to use the right environment. 
 :::
 
-The software tools that we'll use the the data reduction should be very easy to install, on any platform.
+The software tools that we'll use the the data reduction is very easy to install, on any platform (with the exception of `astrometry.net` on Windows, as detailed below). 
+
 
 First, install miniconda, from here: https://docs.anaconda.com/free/miniconda/index.html
 
@@ -45,8 +46,7 @@ to launch JupyterLab.
 
 A reliable tool to perform astrometric calibration of an image is the software `astrometry.net`. It will blindly "plate solve" the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-compliant WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see https://astrometry.net, and http://data.astrometry.net for how to get the index files.
 
-
-With conda, you can easily install `astrometry.net` locally, using the environment created above:
+On Linux and macOS, you can easily install `astrometry.net` with conda, using the environment created above:
 
 ```none
 conda activate datared
@@ -77,19 +77,8 @@ curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5200
 
 ```
 
-This is how you could then use `astrometry.net` to write a WCS into the header of a FITS image:
 
-WORK IN PROGRESS, THERE MIGHT BE ISSUES WITH SIP-QUALITY HERE
-
-```none
-solve-field -h 
-
-solve-field --overwrite --downsample 4 -v -t 3 --guess-scale myimage.fits
-
-solve-field --overwrite --no-verify --scale-units arcsecperpix --scale-low 0.60 --scale-high 0.62 --downsample 4 -t 3 --objs 300 --dir astrometry --no-plots --skip-solved --new-fits %s.fits *.fits
-
-```
-
+We do not provide instructions to install `astrometry.net` on Windows (but this might well be possible, we just don't support it as the current conda package does not work on Windows).
 
 
 ## Further comments

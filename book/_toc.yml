@@ -18,6 +18,7 @@ parts:
     - file: lightcurve
   - caption: Further pages
     chapters:
+    - file: astrometry
     - file: stack
     - file: more
     - file: demo
