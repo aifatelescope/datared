@@ -30,12 +30,12 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -49,18 +49,14 @@
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="_static/scripts/sphinx-book-theme.js"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'astrometry';</script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -158,7 +154,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -388,11 +395,11 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="astrometric-calibration">
 <h1>Astrometric calibration<a class="headerlink" href="#astrometric-calibration" title="Permalink to this heading">#</a></h1>
 <p>This page presents a way get an accurate WCS-transformation for the science frames.</p>
-<p>We’ll make use a local <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> software, named <code class="docutils literal notranslate"><span class="pre">solve-field</span></code>, by calling it from within python as detailed below. For each image, <code class="docutils literal notranslate"><span class="pre">solve-field</span></code> will get called twice, with different settings. The first iteration is for rough plate-solving (identifying where the image is on the sky), and the second iteartion is to fine-tune a distortion model. See <a class="reference internal" href="installation.html"><span class="doc std std-doc">Requirements and installation</span></a> for more information about <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code>.
+<p>We make use of the local <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> (see <a class="reference internal" href="installation.html"><span class="std std-doc">Requirements and installation</span></a>), calling it from within python via <code class="docutils literal notranslate"><span class="pre">subprocess</span></code>. For each image, <code class="docutils literal notranslate"><span class="pre">solve-field</span></code> will get called twice, with different settings. The first iteration is for rough plate-solving (identifying where the image is on the sky), and the second iteration is to fine-tune a distortion model. The page <a class="reference internal" href="installation.html"><span class="std std-doc">Requirements and installation</span></a> gives more information about <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code>.
 While it’s not very elegant to constrain this distortion model independently for every image, this approach remains very flexible, and works even when the camera got rotated (for example).</p>
 <p>We want the WCS to be accurate enough for stacking, with residuals significantly smaller than a pixel. A plot of astrometric residuals is created to check this.</p>
 <p>As before, you could copy or write the code shown below in a script, or alternatively directly download this page as a <a class="reference download internal" download="" href="_downloads/b0a3b9fdbc44c20450042e257e32afda/astrometry.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code></a> file.</p>
-<p>To run the code, you’ll need the module <code class="docutils literal notranslate"><span class="pre">dataredconfig.py</span></code>, as explained <a class="reference internal" href="data.html"><span class="doc std std-doc">here</span></a>.</p>
+<p>To run the code, you’ll need the module <code class="docutils literal notranslate"><span class="pre">dataredconfig.py</span></code>, as explained <a class="reference internal" href="data.html"><span class="std std-doc">here</span></a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dataredconfig</span>
@@ -450,7 +457,7 @@ While it’s not very elegant to constrain this distortion model independently f
 </div>
 </div>
 </div>
-<p>Defining functions for visualization and running <a class="reference external" href="http://astrometry.net">astrometry.net</a>:</p>
+<p>We now define one function for visualization:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_corr_file</span><span class="p">(</span><span class="n">corr_file_path</span><span class="p">,</span> <span class="n">fig_file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -500,6 +507,7 @@ While it’s not very elegant to constrain this distortion model independently f
 </div>
 </div>
 </div>
+<p>And a function to run <code class="docutils literal notranslate"><span class="pre">solve-field</span></code>. See the documentation of <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> (<a class="reference external" href="http://astrometry.net/doc/readme.html">http://astrometry.net/doc/readme.html</a>) and the man-page of <code class="docutils literal notranslate"><span class="pre">solve-field</span></code> (<a class="reference external" href="https://manpages.debian.org/bullseye/astrometry.net/solve-field.1.en.html">https://manpages.debian.org/bullseye/astrometry.net/solve-field.1.en.html</a>) to learn more about the options we use below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_solvefield</span><span class="p">(</span><span class="n">input_fits_path</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_wcs_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
