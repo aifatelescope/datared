@@ -58,11 +58,9 @@
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'lightcurve';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lightcurve_full';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Astrometric calibration" href="astrometry.html" />
-    <link rel="prev" title="Colour Magnitude Diagram" href="CMD.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -183,11 +181,11 @@
 <li class="toctree-l1"><a class="reference internal" href="data.html">Setting up the data</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Basic reduction</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pre-red.html">Image pre-reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="photometry.html">Photometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour Magnitude Diagram</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Light curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Light curve</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Further pages</span></p>
 <ul class="nav bd-sidenav">
@@ -266,7 +264,7 @@
       
       
       
-      <li><a href="https://github.com/aifatelescope/datared/issues/new?title=Issue%20on%20page%20%2Flightcurve.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/aifatelescope/datared/issues/new?title=Issue%20on%20page%20%2Flightcurve_full.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -296,7 +294,7 @@
       
       
       
-      <li><a href="_sources/lightcurve.ipynb" target="_blank"
+      <li><a href="_sources/lightcurve_full.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -390,10 +388,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preparation-of-the-data">Preparation of the data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration">Calibration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-light-curves">Plotting the light curves</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-the-exoplanet-transit">Discussion of the exoplanet transit</a></li>
 </ul>
             </nav>
         </div>
@@ -431,8 +426,6 @@ document.write(`
 </div>
 </div>
 </div>
-<section id="preparation-of-the-data">
-<h2>Preparation of the data<a class="headerlink" href="#preparation-of-the-data" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">photometry_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;PHOTOMETRY&quot;</span>
@@ -529,11 +522,9 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Which stars (&quot;source indices&quot;) should we plot?</span>
-<span class="n">indices_show</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">17</span><span class="p">]</span>
+<span class="n">indices_show</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="c1"># We compute an &quot;instrumental magnitude&quot; from all our flux measurements</span>
-<span class="c1"># Note that this is the line where we select which aperture to consider.</span>
-<span class="c1"># Of course, you can try to figure out which apertures works best for your data.</span>
+<span class="c1"># We compute an &quot;instrumental magnitude&quot; from our flux measurements:</span>
 <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sum_10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="c1"># this is a &quot;2D&quot; column: (source index, date)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
@@ -559,54 +550,102 @@ document.write(`
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>Do you observe any trends in these light curves, common to all stars? Comment on what could cause these trends.</p>
+<p>Do you observe any trends in these light curves, and are these common to all stars? Comment on what could cause these trends.</p>
 </div>
-</section>
 <section id="calibration">
 <h2>Calibration<a class="headerlink" href="#calibration" title="Permalink to this heading">#</a></h2>
 <p>To reveal the transit itself, some empirical calibration of the flux (or magnitude) measured in each exposure is needed.</p>
-<p>Before implementing a calibration, we need to define a strategy.</p>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
 <p>What would be the properties of good reference stars to use for the calibration?</p>
 </div>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>What causes the flux variations between exposures and what is the best way to correct for them? Try to come up with a formalism (i.e., equations) of a simple correction strategy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For the calibration (and to produce a nice figure afterwards) some &quot;settings&quot;:</span>
+
+<span class="n">target_index</span> <span class="o">=</span> <span class="mi">12</span> <span class="c1"># Which index in the field image from above corresponds to the target star (the one that shows the transit)?</span>
+<span class="n">n_bright_stars_calib</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1"># How many of the brightest stars to use for calibration</span>
+<span class="n">n_bright_stars_show</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># How many of the brightest stars should be plotted </span>
+<span class="n">title_str</span> <span class="o">=</span> <span class="s2">&quot;My target (Moon 50% @10°)&quot;</span>
+
+<span class="c1"># Some values from the literature:</span>
+
+<span class="n">target_mag</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="c1"># What magnitude does this star have?</span>
+<span class="n">transit_depth_ppt</span> <span class="o">=</span> <span class="mf">12.0</span> <span class="c1"># How deep is the transit (in parts per thousands &quot;ppt&quot;) </span>
+<span class="n">ingress_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s2">&quot;2024-04-21T22:32&quot;</span><span class="p">)</span> <span class="c1"># Both in UTC</span>
+<span class="n">egress_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s2">&quot;2024-04-22T00:18&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># We compute the instrumental magnitude, for the desired aperture size (Maybe you did this already, but it doesn&#39;t harm)</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sum_10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="c1"># a &quot;2D&quot; column (index, date)</span>
+
+<span class="n">zero_point</span> <span class="o">=</span> <span class="n">target_mag</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">target_index</span><span class="p">][</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zero-point: </span><span class="si">{</span><span class="n">zero_point</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">zero_point</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># one value per source</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">])</span>
+<span class="n">indices_calib</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">n_bright_stars_calib</span><span class="p">]</span>
+<span class="n">indices_show</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">n_bright_stars_show</span><span class="p">]</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;delta_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 2D - 1D -&gt; 2D (index, date)</span>
+
+
+<span class="n">same_calib_for_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;delta_mag&quot;</span><span class="p">][</span><span class="n">indices_calib</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Normalize this:</span>
+<span class="n">same_calib_for_all</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">)</span>
+<span class="c1"># And make it a colum of the catalog</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">catalog</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">transit_depth_mag</span> <span class="o">=</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">transit_depth_ppt</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">))</span>
+             
+</pre></div>
 </div>
-</section>
-<section id="plotting-the-light-curves">
-<h2>Plotting the light curves<a class="headerlink" href="#plotting-the-light-curves" title="Permalink to this heading">#</a></h2>
-<p>Once we have computed a calibration, we can plot the light curve of the exoplanet system!</p>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>In addition to the light curve of the target star, also plot the light curves of some reference stars (after calibration), on the same axes or a separate figure. Use this to verify that your corrections are successful, and that you did not pick up variable stars as reference sources.
-Do you see residual correlations between some stars?</p>
 </div>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>If you see stars with strong residuals after the calibration, what could be the reasons?
-You can try to optimize the calibration by adapting the code to ignore particular stars.</p>
 </div>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>Can you identify the start and/or end of the transit?
-Give an estimate for the uncertainty of your estimate.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>                    
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">ingress_datetime</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">egress_datetime</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">target_mag</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">target_mag</span> <span class="o">+</span> <span class="n">transit_depth_mag</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot some field stars in grey:</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices_show</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">dates</span><span class="p">,</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.015</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+<span class="c1"># Plot the target in red:</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">dates</span><span class="p">,</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">],</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span>
+    <span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+<span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Airmass&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">airmasses</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;-.&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">dates</span><span class="o">.</span><span class="n">ConciseDateFormatter</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_major_locator</span><span class="p">()))</span>
+<span class="c1">#plt.colorbar(label=f&quot;Separation to target center in {cat[&#39;separation&#39;].unit}&quot;)</span>
+<span class="c1">#plt.xlabel(&quot;Date&quot;)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;i Magnitude&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">autofmt_xdate</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title_str</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
 </div>
-</section>
-<section id="discussion-of-the-exoplanet-transit">
-<h2>Discussion of the exoplanet transit<a class="headerlink" href="#discussion-of-the-exoplanet-transit" title="Permalink to this heading">#</a></h2>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>What “depth” (in magnitude) do you measure on your transit. Can you convert your value to the commonly used “parts per thousand” (ppt)?</p>
 </div>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>Are your findings regarding the transit consistent with “literature” measurements (depth, duration, start/end time of the transit)?</p>
-</div>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>Calculate the radius of the exoplanet relative to its host star from your measurement of the lightcurve. Think as well of how you could estimate the uncertainties.</p>
 </div>
 </section>
 </section>
@@ -641,24 +680,6 @@ Give an estimate for the uncertainty of your estimate.</p>
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="CMD.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Colour Magnitude Diagram</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="astrometry.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Astrometric calibration</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -674,10 +695,7 @@ Give an estimate for the uncertainty of your estimate.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preparation-of-the-data">Preparation of the data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration">Calibration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-light-curves">Plotting the light curves</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-the-exoplanet-transit">Discussion of the exoplanet transit</a></li>
 </ul>
   </nav></div>
 
