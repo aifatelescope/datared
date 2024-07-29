@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Background information on image reduction &#8212; AIfA telescope data reduction tutorial</title>
+    <title>Introduction to optical observations &#8212; AIfA telescope data reduction tutorial</title>
   
   
   
@@ -180,7 +180,7 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Setup and theory</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Background information on image reduction</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction to optical observations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview-pythontools.html">Structure and Python tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data.html">Setting up the data</a></li>
 </ul>
@@ -382,7 +382,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Background information on image reduction</h1>
+    <h1>Introduction to optical observations</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -392,7 +392,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ccd-and-cmos-cameras">CCD and CMOS cameras</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#telescope-optics">Telescope optics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resolution">Resolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seeing-and-airmass">Seeing and airmass</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-instrument-the-camera">Imaging instrument: the camera</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-detectors-ccd-or-cmos">Imaging detectors (CCD or CMOS)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#astronomical-images">Astronomical images</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits">FITS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration-frames">Calibration frames</a></li>
@@ -412,11 +416,63 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="background-information-on-image-reduction">
-<h1>Background information on image reduction<a class="headerlink" href="#background-information-on-image-reduction" title="Permalink to this heading">#</a></h1>
-<p>Before dwelving into code, we need some definitions and a theoretical overview. It’s kept as short as possible, and should help you understand what follows.</p>
-<section id="ccd-and-cmos-cameras">
-<h2>CCD and CMOS cameras<a class="headerlink" href="#ccd-and-cmos-cameras" title="Permalink to this heading">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-optical-observations">
+<h1>Introduction to optical observations<a class="headerlink" href="#introduction-to-optical-observations" title="Permalink to this heading">#</a></h1>
+<p>This page summarizes important concepts concerning observations in optical astronomy, gives definitions that are essential to understanding the tutorial, and touches some very practical points. It’s kept as short as possible.</p>
+<section id="telescope-optics">
+<h2>Telescope optics<a class="headerlink" href="#telescope-optics" title="Permalink to this heading">#</a></h2>
+<p>A reflecting telescope uses a combination of (curved) mirrors to form an image in its so-called focal plane, also known as the image plane.
+The optical design of the AIfA telescope is a <strong>variation of a Cassegrain</strong> telescope, illustrated below.</p>
+<figure class="align-default" id="cassegrain">
+<a class="reference internal image-reference" href="_images/cassegrain.png"><img alt="_images/cassegrain.png" src="_images/cassegrain.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Optical layout of a Cassegrain telescope</span><a class="headerlink" href="#cassegrain" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The in-falling light first meets the concave primary mirror (M1) to be then re-reflected by the convex secondary mirror (M2). The light gets collimated in the focal plane, after passing through an opening in M1. Due to the folding of its optical path, such a Cassegrain system allows for a compact construction. More precisely, the AIfA telescope is a  “<a class="reference external" href="https://www.planewave.eu/en/technologies/cdk-optical-design">corrected Dall-Kirkham</a>” telescope, where M1 is ellipsoidal with a diameter of 35 cm (the <strong>aperture</strong> of the telescope), M2 is spherical, and an additional lens group located before the focal plane, roughly in the opening of M1, corrects the design against aberrations on a wide and flat focal plane.</p>
+</section>
+<section id="resolution">
+<h2>Resolution<a class="headerlink" href="#resolution" title="Permalink to this heading">#</a></h2>
+<p>Due to diffraction, a telescope has a finite <a class="reference external" href="https://en.wikipedia.org/wiki/Angular_resolution">angular resolution</a>. Note that this notion of resolution is <em>not</em> related to the sampling by a camera (i.e., pixel size), discussed later. Instead, it is a fundamental property of the optical system.</p>
+<p>The light distribution in the image plane resulting from an (apparently) point-like source (star) is termed <strong>point-spread function (PSF)</strong>.
+In the idealised (so-called <em>diffraction-limited</em>) case, the PSF of a circular aperture is given by the <a class="reference external" href="https://en.wikipedia.org/wiki/Airy_disk">Airy disc</a>. Using the Rayleigh criterion for spatial resolution, a telescope of primary aperture <span class="math notranslate nohighlight">\(D\)</span> at a wavelength <span class="math notranslate nohighlight">\(\lambda\)</span> is in principle capable of resolving structure with an angular separation (in radians) of</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta \theta = 1.22 \frac{\lambda}{D}. 
+\]</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What’s the diffraction-limited angular resolution of a telescope with an aperture of 35 cm, at a wavelength of 700 nm, in arcseconds?</p>
+</div>
+<p>As we’ll see in the following, for simple ground-based telescopes, the actual resolution will be lower, due to the effects of Earth’s atmosphere.</p>
+</section>
+<section id="seeing-and-airmass">
+<h2>Seeing and airmass<a class="headerlink" href="#seeing-and-airmass" title="Permalink to this heading">#</a></h2>
+<p>For ground-based astronomical observations, Earth’s atmosphere has to be considered as part of the optical system, leading to numerous effects. Most importantly, turbulence in the atmosphere leads to variations of the refractive index on short spatial and temporal scales. The “instantaneous” image of a star seen in the telescope is no longer an Airy disc, but has an irregular shape that randomly changes and moves around. When integrating an image with any exposure time longer than about a tenth of a second, this results in a blurring of the PSF. The PSF of such a long exposure can to some extent be represented by a two-dimensional Gaussian (a better approximation is given by the Moffat profile).</p>
+<p>The size of such a stellar image, as given by the <strong>full width at half maximum (FWHM)</strong> of the Gaussian, is called the <strong>seeing</strong> of the image and measures the actual resolution in a particular observation. The less turbulent the atmosphere, the higher the resolution and thus the data quality that can be achieved. For Bonn, a seeing of 2 arcsec is a very rare and good value, while in excellent locations like Hawaii or the Atacama desert 0.5 arcsec are common.</p>
+<p>The best possible observing conditions are achieved near the zenith, where the length of the light path through the atmosphere is minimal. On the contrary, extinction and disturbing seeing effects get worse for observations at lower elevations. These effects are often expressed in terms of the object’s <strong>airmass</strong> <span class="math notranslate nohighlight">\(a\)</span>, which tells you through how much atmosphere (column density) the light travels compared to vertical in-fall. For an angular distance <span class="math notranslate nohighlight">\(z\)</span> from the zenith (zenith = in vertical direction from the ground) it can in good approximation be computed as <span class="math notranslate nohighlight">\(a = 1 / \cos(z)\)</span> such that <span class="math notranslate nohighlight">\(a = 1\)</span> for an object at the zenith and formally <span class="math notranslate nohighlight">\(a = \infty\)</span> at the horizon.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Both the diffraction-limited resolution of a telescope and the seeing are wavelength-dependent!
+The diffraction-limited image would be sharpest for shorter wavelength. But refraction of visible light in the atmosphere (that is a medium with normal dispersion) is <em>stronger</em> for short wavelengths than it is for long wavelengths. Therefore, assuming similar atmospheric conditions, an image taken in a red (or infrared) filter will be sharper than an image in a blue filter!</p>
+</div>
+</section>
+<section id="imaging-instrument-the-camera">
+<h2>Imaging instrument: the camera<a class="headerlink" href="#imaging-instrument-the-camera" title="Permalink to this heading">#</a></h2>
+<p>A <strong>camera</strong> is an instrument attached to the telescope, such that the camera’s imaging sensor (sometimes also called detector) lies in the focal plane of the telescope. The sensor in the camera will <em>sample</em> the image, by recording the intensity of the light in an array of <em>pixels</em> (short for picture elements).</p>
+<p>A first important characteristic of a camera, when attached to a telescope, is the resulting pixel scale. It corresponds to the angular size a pixel subtends on the sky, and is expressed in arcseconds.</p>
+<p>Binning</p>
+</section>
+<section id="imaging-detectors-ccd-or-cmos">
+<h2>Imaging detectors (CCD or CMOS)<a class="headerlink" href="#imaging-detectors-ccd-or-cmos" title="Permalink to this heading">#</a></h2>
+<p>Modern optical cameras use electronic sensors: the incoming photons create free electrons in silicon, and these free electrons are collected in potential wells. Two “competing” types of sensors for optical astronomy cameras are CCD and CMOS chips. A key difference between these is about where and how the collected charges in each pixel are amplified and converted to a digital signal: for the CCD, many pixels are read out by a single amplifier one after the other (with the charges of these pixels being transfered pixel to pixel towards the amplifier), while for the CMOS, each pixel has its own amplifier.</p>
+<p>The difference in
+In the scope of this tutorial,</p>
+<p>the charges in each pixel get moved pixel by pixel towards</p>
+<p>known as CCD or CMOS chips. We will briefly comment on the difference between CCD and CMOS
+Photons create free electrons in silicon
+• Collected in potential wells</p>
+<p>There are two</p>
 <ul class="simple">
 <li><p>Full-well capacity</p></li>
 <li><p>ADU, ADC, bias</p></li>
@@ -430,7 +486,7 @@ document.write(`
 <figure class="align-default" id="image-basics">
 <a class="reference internal image-reference" href="_images/image_basics.png"><img alt="_images/image_basics.png" src="_images/image_basics.png" style="width: 75%;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Illustration of some basic image properties. Top: two stars (one has twice the flux of the other, but their FWHM is the same), and one galaxy. Bottom: horizontal section across the image, with pixel value on the y-axis.</span><a class="headerlink" href="#image-basics" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Illustration of some basic image properties. Top: two stars (one has twice the flux of the other, but their FWHM is the same), and one galaxy. Bottom: horizontal section across the image, with pixel value on the y-axis.</span><a class="headerlink" href="#image-basics" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <ul class="simple">
@@ -573,7 +629,11 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ccd-and-cmos-cameras">CCD and CMOS cameras</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#telescope-optics">Telescope optics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resolution">Resolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seeing-and-airmass">Seeing and airmass</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-instrument-the-camera">Imaging instrument: the camera</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-detectors-ccd-or-cmos">Imaging detectors (CCD or CMOS)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#astronomical-images">Astronomical images</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits">FITS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration-frames">Calibration frames</a></li>

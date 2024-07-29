@@ -1,9 +1,87 @@
-# Background information on image reduction
+# Introduction to optical observations
 
-Before dwelving into code, we need some definitions and a theoretical overview. It's kept as short as possible, and should help you understand what follows.
+This page summarizes important concepts concerning observations in optical astronomy, gives definitions that are essential to understanding the tutorial, and touches some very practical points. It's kept as short as possible.
 
 
-## CCD and CMOS cameras
+
+## Telescope optics
+
+A reflecting telescope uses a combination of (curved) mirrors to form an image in its so-called focal plane, also known as the image plane.
+The optical design of the AIfA telescope is a **variation of a Cassegrain** telescope, illustrated below.
+
+
+```{figure} ./figures/cassegrain.png
+---
+width: 80%
+name: cassegrain
+---
+Optical layout of a Cassegrain telescope
+```
+
+The in-falling light first meets the concave primary mirror (M1) to be then re-reflected by the convex secondary mirror (M2). The light gets collimated in the focal plane, after passing through an opening in M1. Due to the folding of its optical path, such a Cassegrain system allows for a compact construction. More precisely, the AIfA telescope is a  "[corrected Dall-Kirkham](https://www.planewave.eu/en/technologies/cdk-optical-design)" telescope, where M1 is ellipsoidal with a diameter of 35 cm (the **aperture** of the telescope), M2 is spherical, and an additional lens group located before the focal plane, roughly in the opening of M1, corrects the design against aberrations on a wide and flat focal plane.
+
+## Resolution
+
+Due to diffraction, a telescope has a finite [angular resolution](https://en.wikipedia.org/wiki/Angular_resolution). Note that this notion of resolution is *not* related to the sampling by a camera (i.e., pixel size), discussed later. Instead, it is a fundamental property of the optical system. 
+
+The light distribution in the image plane resulting from an (apparently) point-like source (star) is termed **point-spread function (PSF)**.
+In the idealised (so-called *diffraction-limited*) case, the PSF of a circular aperture is given by the [Airy disc](https://en.wikipedia.org/wiki/Airy_disk). Using the Rayleigh criterion for spatial resolution, a telescope of primary aperture $D$ at a wavelength $\lambda$ is in principle capable of resolving structure with an angular separation (in radians) of
+
+$$
+\Delta \theta = 1.22 \frac{\lambda}{D}. 
+$$
+
+````{admonition} Question
+What's the diffraction-limited angular resolution of a telescope with an aperture of 35 cm, at a wavelength of 700 nm, in arcseconds?
+````
+
+As we'll see in the following, for simple ground-based telescopes, the actual resolution will be lower, due to the effects of Earth’s atmosphere.
+
+
+## Seeing and airmass
+
+For ground-based astronomical observations, Earth’s atmosphere has to be considered as part of the optical system, leading to numerous effects. Most importantly, turbulence in the atmosphere leads to variations of the refractive index on short spatial and temporal scales. The "instantaneous" image of a star seen in the telescope is no longer an Airy disc, but has an irregular shape that randomly changes and moves around. When integrating an image with any exposure time longer than about a tenth of a second, this results in a blurring of the PSF. The PSF of such a long exposure can to some extent be represented by a two-dimensional Gaussian (a better approximation is given by the Moffat profile).
+
+The size of such a stellar image, as given by the **full width at half maximum (FWHM)** of the Gaussian, is called the **seeing** of the image and measures the actual resolution in a particular observation. The less turbulent the atmosphere, the higher the resolution and thus the data quality that can be achieved. For Bonn, a seeing of 2 arcsec is a very rare and good value, while in excellent locations like Hawaii or the Atacama desert 0.5 arcsec are common.
+
+The best possible observing conditions are achieved near the zenith, where the length of the light path through the atmosphere is minimal. On the contrary, extinction and disturbing seeing effects get worse for observations at lower elevations. These effects are often expressed in terms of the object’s **airmass** $a$, which tells you through how much atmosphere (column density) the light travels compared to vertical in-fall. For an angular distance $z$ from the zenith (zenith = in vertical direction from the ground) it can in good approximation be computed as $a = 1 / \cos(z)$ such that $a = 1$ for an object at the zenith and formally $a = \infty$ at the horizon.
+
+
+```{hint}
+Both the diffraction-limited resolution of a telescope and the seeing are wavelength-dependent!
+The diffraction-limited image would be sharpest for shorter wavelength. But refraction of visible light in the atmosphere (that is a medium with normal dispersion) is *stronger* for short wavelengths than it is for long wavelengths. Therefore, assuming similar atmospheric conditions, an image taken in a red (or infrared) filter will be sharper than an image in a blue filter!
+```
+
+## Imaging instrument: the camera
+
+A **camera** is an instrument attached to the telescope, such that the camera's imaging sensor (sometimes also called detector) lies in the focal plane of the telescope. The sensor in the camera will *sample* the image, by recording the intensity of the light in an array of *pixels* (short for picture elements).
+
+A first important characteristic of a camera, when attached to a telescope, is the resulting pixel scale. It corresponds to the angular size a pixel subtends on the sky, and is expressed in arcseconds.
+
+
+Binning
+
+
+
+## Imaging detectors (CCD or CMOS)
+
+Modern optical cameras use electronic sensors: the incoming photons create free electrons in silicon, and these free electrons are collected in potential wells. Two "competing" types of sensors for optical astronomy cameras are CCD and CMOS chips. A key difference between these is about where and how the collected charges in each pixel are amplified and converted to a digital signal: for the CCD, many pixels are read out by a single amplifier one after the other (with the charges of these pixels being transfered pixel to pixel towards the amplifier), while for the CMOS, each pixel has its own amplifier.
+
+The difference in 
+In the scope of this tutorial, 
+
+the charges in each pixel get moved pixel by pixel towards 
+
+
+
+ known as CCD or CMOS chips. We will briefly comment on the difference between CCD and CMOS
+Photons create free electrons in silicon
+• Collected in potential wells
+
+
+
+There are two 
+
 
 * Full-well capacity
 * ADU, ADC, bias
@@ -12,6 +90,9 @@ Before dwelving into code, we need some definitions and a theoretical overview. 
 * Dark current
 
 ## Astronomical images
+
+
+
 
 ```{figure} ./figures/image_basics.png
 ---
