@@ -10,10 +10,10 @@ A reflecting telescope uses a combination of (curved) mirrors to form an image i
 The optical design of the AIfA telescope is a **variation of a Cassegrain** telescope, illustrated below.
 
 
-```{figure} ./figures/cassegrain.png
+```{figure} ./figures/cassegrain_layout.png
 ---
 width: 80%
-name: cassegrain
+name: cassegrain_layout
 ---
 Optical layout of a Cassegrain telescope
 ```
