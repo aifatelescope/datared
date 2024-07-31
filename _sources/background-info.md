@@ -54,40 +54,53 @@ The diffraction-limited image would be sharpest for shorter wavelength. But refr
 
 ## Imaging instrument: the camera
 
-A **camera** is an instrument attached to the telescope, such that the camera's imaging sensor (sometimes also called detector) lies in the focal plane of the telescope. The sensor in the camera will *sample* the image, by recording the intensity of the light in an array of *pixels* (short for picture elements).
+A *camera* is an instrument attached to the telescope, such that the camera's imaging sensor (sometimes also called detector) lies in the focal plane of the telescope. The sensor in the camera will *sample* the image, by recording the intensity of the light in an array of *pixels* (short for picture elements).
 
-A first important characteristic of a camera, when attached to a telescope, is the resulting pixel scale. It corresponds to the angular size a pixel subtends on the sky, and is expressed in arcseconds.
+While the sensors used in optical astronomy can virtually *count* individual photons, they are not sensitive to their wavelength. Therefore, two obtain any kind of color information, a filter needs to be placed in the optical path before the imaging sensor. In practice, several filters are mounted into a filter wheel which is located in front of the sensor, allowing for a fast filter change.
 
-
-Binning
+The combination of a camera with a telescope yields a particular size of the field of view, and a resulting pixel scale. The pixel scale corresponds to the angular size a pixel subtends on the sky, and is expressed in arcseconds. For example, the camera used at the 35 cm AIfA telescope has a field of 48 arcmin by 32 arcmin, and a pixel scale of 0.3 arcsec. Given how small these pixels are compared to the typical seeing, we systematically operate the camera with a "2x2 binning", meaning in this particular case that adjacent pixels are summed together in groups of 2x2 pixels, with the benefit of reduced file size. **The effective pixel size of those images is 0.607 arcsec.**
 
 
 
 ## Imaging detectors (CCD or CMOS)
 
-Modern optical cameras use electronic sensors: the incoming photons create free electrons in silicon, and these free electrons are collected in potential wells. Two "competing" types of sensors for optical astronomy cameras are CCD and CMOS chips. A key difference between these is about where and how the collected charges in each pixel are amplified and converted to a digital signal: for the CCD, many pixels are read out by a single amplifier one after the other (with the charges of these pixels being transfered pixel to pixel towards the amplifier), while for the CMOS, each pixel has its own amplifier.
+Modern optical cameras use electronic sensors: the incoming photons create free electrons in silicon, and these free electrons are collected in potential wells, before being read out once the desired exposure time completed.
+Two types of sensors for optical astronomy cameras are CCD and CMOS chips. A key difference between these is about where and how the collected charges in each pixel are amplified and converted to a digital signal: for the CCD, many pixels are read out by a single amplifier one after the other (with the charges of these pixels being transfered pixel to pixel towards the amplifier), while for the CMOS, each pixel has its own amplifier directly attached to it.
 
-The difference in 
-In the scope of this tutorial, 
+Historically, CCDs where better suited for astronomical imaging (mainly due to lower noise and higher sensitivity).
+Hence, most of the literature on astronomical image reduction is about CCDs. But CMOS sensors have now caught up for many applications, and the camera used at the AIfA telescope uses a CMOS sensor.
+In the scope of this tutorial, we will pass over the rather minor differences in the optimal processing of CCD or CMOS data. The general ideas that we will implement can be equally applied to both detectors.
 
-the charges in each pixel get moved pixel by pixel towards 
+We now describe some nomenclature as well as important aspects of these sensors. These are equally applicable to both types.
+
+### Full-well capacity
+
+The charge capacity of CCD pixels is limited. The maximum number of electrons fitting into a single pixel is called full well capacity or simply "full well". Typical scientific sensors have a full well of the order of $10^5$ electrons. If the charge level is approaching full well the signal is getting non-linear and charges may spill over into adjacent pixels. Note that the full-well capacity is a physical property of the sensor's pixels, and not just a "software issue" about how the pixel values are stored in a computer.
+
+### ADC, ADU, and gain
+
+After the exposure, the electrons captured in a pixel get amplified, and the resulting potential is then converted to a digital number (the pixel value) by an electronic circuit called **Analog-to-Digital Converter (ADC)**. For clarity, one attaches a "unit" to these digital numbers: pixel values are quoted in **ADU**, which is an acronym for *Analog to Digital Unit*. It is important to distinguish ADUs and numbers of electrons: these are different values! One defines the **gain** of the detector as the differential change in charge that produces a change of one ADU (e.g., 0.6 e/ADU). In other words, this gain can be seen as the conversion factor between electrons and ADU (assuming an idealized detector with constant gain). This gain is set by the amplifier and the ADC.
+
+### Bit depth
+
+The bit depth is the number of bits used to express pixel values. It is a property of the ADC, and later of the image file.
+For example, a common ADC with 16 bits (unsigned) gives $2^{16} = 65536$ (positive) integer values.
+The gain of an ADC is usually adjusted so that ADC saturates in the linear regime of the CCD, *before* the full-well capacity is reached. In this way, when we observe a pixel to have a value lower than 65536 ADU, we can be sure that we did not saturate the charge capacity of that pixel.
+
+Note that raw images have integer pixel values. Once we process these images, we typically use floats.
+
+### Bias level
+
+The bias level or simply *bias* is a small negative potential added by the electronics before the analog-to-digital conversion.
+This bias is needed to keep any fluctuations (noise) in the conversion range of the ADC. Without bias, empty pixels would randomly show positive or negative potentials due to noise of the amplification, and these fluctuations would then get truncated by the ADC as it can only handle positive inputs.
+
+The bias level results in an additive offset on the image: when an empty CCD is read out, one will still get positive numbers. As we will see, it's a priori trivial to measure and remove this effect from the acquired images. Note however that the origin of this offset is an analogue signal. The bias level is not perfectly stable, it can drift with time, and in particular for CCD sensors it can fluctuate during readout, resulting in stripes of the image having different bias level.
+
+
+### Dark current
 
 
 
- known as CCD or CMOS chips. We will briefly comment on the difference between CCD and CMOS
-Photons create free electrons in silicon
-• Collected in potential wells
-
-
-
-There are two 
-
-
-* Full-well capacity
-* ADU, ADC, bias
-* Gain
-* Bit depth
-* Dark current
 
 ## Astronomical images
 
@@ -176,6 +189,4 @@ In this tutorial, we make use of **forced photometry**, meaning that we perform 
 ```{note}
 For the sake of simplicity, we ignore here the effect that distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).
 ```
-
-## Mini Python intro ? 
 
