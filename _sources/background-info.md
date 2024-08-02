@@ -73,9 +73,13 @@ In the scope of this tutorial, we will pass over the rather minor differences in
 
 We now describe some nomenclature as well as important aspects of these sensors. These are equally applicable to both types.
 
+### Quantum efficiency
+
+The quantum efficiency (QE) is the ratio of produced electrons to the number of photons hitting the detector surface, characterizing the sensitivity of the sensor. QEs of top grade sensors are above 90% over a significant wavelength range. For many considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably.
+
 ### Full-well capacity
 
-The charge capacity of CCD pixels is limited. The maximum number of electrons fitting into a single pixel is called full well capacity or simply "full well". Typical scientific sensors have a full well of the order of $10^5$ electrons. If the charge level is approaching full well the signal is getting non-linear and charges may spill over into adjacent pixels. Note that the full-well capacity is a physical property of the sensor's pixels, and not just a "software issue" about how the pixel values are stored in a computer.
+The charge capacity of a pixel is limited. The maximum number of electrons fitting into a single pixel is called full well capacity or simply "full well". Typical scientific sensors have a full well of the order of $10^5$ electrons. If the charge level is approaching full well the signal is getting non-linear and charges may spill over into adjacent pixels. Note that the full-well capacity is a physical property of the sensor's pixels, and not just a "software issue" about how the pixel values are stored in a computer.
 
 ### ADC, ADU, and gain
 
@@ -102,7 +106,7 @@ The bias level results in an additive offset on the image: when an empty CCD is 
 Another property of all photosensitive sensors is the *dark current*, which describes the accumulation of electrons in the pixels even if no outside photons hit the sensor, per unit of time. Dark current is due to the "thermal" random movement of electrons, which "fall" into the potential wells of the pixels. The intensity of the dark current increases with temperature. Cooling the sensor is therefore a way to mitigate dark current.
 
 ```{note}
-The "problem" with dark current is that the actual number of thermal electrons which gets added to each pixel of the sensor is subject to *[shot noise](https://en.wikipedia.org/wiki/Shot_noise)* (also called Poisson noise). If this amount of electrons would be completely predictable (given an exposure time, and the sensor temperature), it would be trivial to perfectly subtract it when calibrating the images. But while the dark current itself might be perfectly stable, the amount of thermal electrons it generates is random, and increases with exposure time. **It's this randomness which harms the observation of faint sources.**
+The "problem" with dark current is that the actual number of thermal electrons which gets added to each pixel of the sensor is subject to shot noise, further discussed below. If this amount of electrons would be completely predictable (given an exposure time, and the sensor temperature), it would be trivial to perfectly subtract it when calibrating the images. But while the dark current itself might be perfectly stable, the amount of thermal electrons it generates is random, and increases with exposure time. **It's this randomness which harms the observation of faint sources.**
 ```
 
 
@@ -112,7 +116,7 @@ Finally, when pixel values are read out, the electronic amplifier (right before 
 In the context of the observations described in this tutorial, the read-out noise is not significant.
 
 
-## Images and noise
+## Images, background, and noise
 
 
 ```{figure} ./figures/image_basics.png
@@ -129,61 +133,128 @@ Recall that images of stars are not "point-like", but follow the profile of the 
 
 Also recall that the PSF is wavelength-dependent: ground-based images obtained through a red filter will be significantly sharper than images in a blue band.
 
-A few important comments can be made:
+Some comments about the apparent size of stars can be made:
 
-* If two stars have a similar spectrum (or if you use a relatively narrow filter), then their profiles on the image have *the same width*, for example as measured by the *Full Width at Half Maximum* (**FWHM**, see figure above) of the stars. Obviously the same holds for the standard-deviation of a 2D-Gaussian fitted to these stars, or any other measure.
+* If two stars have a similar spectrum (or if you use a relatively narrow filter), then their profiles on the image have *the same width*, for example as measured by the *Full Width at Half Maximum* (**FWHM**, see {numref}`image_basics` above) of the stars. Obviously the same holds for the standard-deviation of a 2D-Gaussian fitted to these stars, or any other measure.
 
-* Brighter stars will have wider *isophotes*. An isophote is a closed curve around a star at a given brightness level. When displaying an image (i.e., when attributing a grey level to each pixel value), brighter stars will therefore *appear* "larger", even if the FWHM is the same for all stars (see figure above).
-
-Another fundamental topic is the noise in those images.
-
-* Sources of noise: 
-    * photon noise aka "shot noise" (photons hitting each pixel follow a poisson process), from the source but also from the so-called "background" (in fact, a foreground: sky brightness).
-    * readout noise of electronics
-
-Noise is usually quantified by the standard deviation of the signal level in question. Additionally, the signal-to-noise ratio (S/N) quantifies how strong the level of the desired signal is compared to background level.
+* Brighter stars will have wider *isophotes*. An isophote is a closed curve around a star at a given brightness level. When displaying an image (i.e., when attributing a grey level to each pixel value), brighter stars will therefore appear "larger", even if the FWHM is the same for all stars (see {numref}`image_basics` above).
 
 
+Another point illustrated in {numref}`image_basics` is the presence of a so-called "background", in otherwise empty areas of the image, which is here at a level of about 2000 ADU. For ground-based observations, the main source of background comes from Earth's atmosphere: even at night, the sky is not fully dark. Light pollution, Moon light, [airglow](https://en.wikipedia.org/wiki/Airglow) in our atmosphere, but also [zodiacal light](https://en.wikipedia.org/wiki/Zodiacal_light) all contribute to this. When observing from Bonn at new Moon, it's the light pollution which will dominate. Only when observing from a dark site (e.g., the Atacama desert in Chile), airglow can play the major role. In all these cases, the "background" is in fact mostly a "foreground".
 
 
-## FITS
+```{sidebar} 
+The standard deviation equals $\sqrt{N}$ *only* when $N$ designates the number of electrons (or equivalently photons). This relation does not hold for $N$ given in ADU (assuming that the gain is different from 1.0). A typical image will be stored in units of ADU, and care must be taken to convert pixel values into electrons when performing such calculations, using the gain.
+```
 
-* HDU
-
-## Calibration
-
-The aim of image calibration is to remove all "artificial" offsets from the pixel values, so that the pixel 
-
-Calibration frames
-For successful observations of astronomical targets, one does not only need to observe the target itself, but it is also necessary to take a number of calibration frames. These frames are used in the so called image reduction which is performed after the observations. They are essential to make full use of the scientific observations of the target (called SCIENCE frames). In the following the different kinds of calibration frames are explained.
+All accumulated electrons (from the astronomical source, the background, or the dark current) are subject to *[shot noise](https://en.wikipedia.org/wiki/Shot_noise)* (also called Poisson noise). In any pixel, the number of recorded electrons follows a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), such that if the expectation value of a pixel is $N$ electrons, the standard deviation of the noise in that pixel will be $\sqrt{N}$ electrons. In other words, the higher the expected value of a pixel, the noisier its value will be.
 
 
 
-* Flat difficulty, color dependence
 
-## Artifacts and cosmic rays ?
+```{note}
+The noise in a raw image originates from the shot noise of the source, the shot noise of the background, the shot noise of thermal electrons (dark current), and the read-out noise from the electronics.
 
-* Hot pixels
+While one can easily subtract any offset or smooth model from an image, **one can never subtract the actual noise**.
 
-## Coordinates, WCS, distortions
+It is therefore important to minimize noise in the first place, for example by selecting a dark observing site and cooling the camera. 
 
-Astronomers make use of different coordinate systems to quantify the positions of celestial objects which in different ways take into account Earth’s motion.
-The most common system for identifying and cataloguing sources is the equatorial system pro- jecting the grid of terrestrial latitudes and longitudes from the centre of Earth onto the sky. The declination is defined in analogy to latitude in geography. The (North) polar star is in approximate extension of the rotation axis of the Earth, having a declination of δ = 90◦, while the projection of the South Pole is defined to have δ = −90◦. Right ascension, α, is the equivalent to longitude. Its zero point is the vernal equinox point, the position of the Sun at March equinox. Right ascensions are expressed as times ranging from 0 hours to 24 hours, due to their close connection to the rotation of the Earth. Subsequently, subdivisions are given as time minutes and seconds rather than angular minutes and seconds!
+```
+
+The signal-to-noise ratio (S/N) quantifies how strong the level of a desired signal (for example, the flux of a galaxy) is compared to its standard deviation. {numref}`image_basics` illustrates how the counts from the target can be significantly lower than the background level.
+
+
+
+
+## FITS files
+
+In optical astronomy, images are commonly stored in the FITS file format. We briefly introduce some nomenclature related to these FITS files, which are extensively used in the tutorial.
+
+FITS (Flexible Image Transport System) is a standard in use since 1981, and therefore the format of choice for any long-term storage. FITS is flexible: a single file may contain several images, but also higher-dimensional arrays, data tables, or mixtures of these. Each of these entities is typically stored in a "header-data unit" (HDU). As the name implies, a HDU is composed of a "header" (holding metadata, such as the date of observation and the filter) and the actual data (such as the image). In this tutorial, we will only deal with FITS files containing a single HDU.
+
+
+
+
+## Calibration (aka pre-reduction)
+
+The aim of image calibration (also known as image pre-reduction) is to remove all "artificial" or "instrumental" effects from the pixel values.
+Broadly speaking, these effects can be categorized as either multiplicative or additive. For example, dirt on the filter will have a multiplicative effect on the flux, as it will take away a fraction of the light of a source for certain pixels affected by this dirt. While the bias level is an example of an additive effect, that we want to subtract.
+
+Image calibration attempts to cleanly separate and correct for these effects, ideally without adding any significant additional noise to the raw images.
+Details of an optimal pre-reduction will depend on the pecularities of the telescopes and instruments, but the basic procedure described in the following is often part of it.
+
+It makes use of three "calibration frames": **bias** frames, **dark** frames, and **flat** frames.
+
+### Bias frames
+
+Bias frames $\mathbf{B}$ are frames taken with a zero exposure time. They contain the bias level, and read-out noise: all signals added by the read-out electronics.
+
+### Dark frames
+
+Dark frames $\mathbf{D}$ are taken with an exposure time $t_{\mathbf{D}}$, with closed shutter, i.e., without any photons reaching the sensor. They comprise $\mathbf{B}$, and in addition contain the thermally generated charge which increases linearly with the exposure time (integrated "dark current"). Their exposure time matters: assuming that the dark current is constant, one can use the exposure time to rescale the dark level between different exposures.
+
+Even if the dark current might be negligible for a cooled camera, these dark frames also reveal artifacts such as hot pixels.
+
+
+### Flat frames
+
+Flat frames $\mathbf{F}$ are taken with an exposure time $t_{\mathbf{F}}$, on an ideally uniform target. They do comprise the effects seen by $\mathbf{B}$ and $\mathbf{D}$, and in addition a view of the flat target contaminated by inhomogeneous sensitivity.
+Their purpose is to capture all multiplicative effects affecting the pixel values, such as differences in gain or quantum efficiency of the pixels, or inhomogeneous illumination of the sensor by the telescope (e.g., vignetting) or filter.
+Possible flatfield targets include the bright twilight sky, or an illuminated surface inside the dome. Obtaining "good" flat frames is fundamentally difficult, as the homogeneity of a target over the full field is never perfect. Furthermore the QE variations in sensors do depend on wavelength, so that the colour of the flat target matters. As will become clear, a 1% error in the flat field will yield a 1% error in the photometry of sources.
+
+
+### Science frames
+
+We call "science frames" $\mathbf{S}$ the actual raw exposures of the target, taken with an exposure time $t_{\mathbf{S}}$. These images are contaminated by all the effects described above.
+
+### Pre-reduction
+
+The general process of pre-reduction of $\mathbf{S}$ can now be written as follows:
+
+$$
+\mathbf{S}_{\mathrm{prered}} = \frac{\mathbf{S} - \mathbf{B} - \frac{t_{\mathbf{S}}}{t_{\mathbf{D}}}(\mathbf{D} - \mathbf{B})}{\left[\mathbf{F} - \mathbf{B} - \frac{t_{\mathbf{F}}}{t_{\mathbf{D}}}(\mathbf{D} - \mathbf{B})\right]_{\mathrm{normalized}}},
+$$
+
+where "normalized" in the denominator means that we ensure that the frame has a mean value close to one, for example by dividing it by its median pixel value. This normalization is done to avoid rescaling all pixel values in our science image by some arbitrary number.
+
+In practice, instead of single bias, dark, and flat frames, one uses a **masterbias**, **masterdark**, and **masterflat**, i.e., combinations of several (typically 10 to 20) frames. The reason is that we don't want to add any noise in the pre-reduction process. Combining frames (for example by taking for each pixel the median or average across several exposures) reduces the random noise compared to the signal common to the individual frames.
+
+
+```{note}
+Depending on the quality and noise of calibration frames, and on the kind of measurement one wants to perform, it can be advantageous to *not* calibrate, instead of performing a poor calibration.
+```
+
+
+## Artifacts
+
+* *Hot pixels* are defective pixels (both on CCD and CMOS sensors), which accumulate thermal electrons much faster than regular pixels. In result, when taking an image with a significant exposure time, these hot pixels will stand out as single bright points.
+
+
+## Coordinates, WCS
+
+Astronomers make use of different coordinate systems to quantify the positions of celestial objects.
+
+On an image, the position of objects is described in pixel coordinates, that is coordinates counting pixels along the axes of the image.
+
+On the other hand, a *World Coordinate System* (WCS) is a coordinate system that describes a location in "real-world units", such as the position on the celestial sphere.
+The most common WCS for identifying and cataloguing sources is the equatorial system projecting the grid of terrestrial latitudes and longitudes from the centre of Earth onto the sky. The **declination** (Dec, $\delta$) is defined in analogy to latitude in geography. The (North) polar star is in approximate extension of the rotation axis of the Earth, having a declination of $\delta = 90^{\circ}$, while the projection of the South Pole is defined to have $\delta = -90^{\circ}$. **Right ascension** (RA, $\alpha$) is the equivalent to longitude. Its zero point is the vernal equinox point, the position of the Sun at March equinox. Both declination and right ascension are angles, but often right ascensions are expressed as times ranging from 0 hours to 24 hours, due to their close connection to the rotation of the Earth. Subsequently, subdivisions are given as time minutes and seconds rather than angular minutes and seconds!
+
+The aim of *astrometric calibration* is to establish an accurate transformation between pixel coordinates and sky coordinates (e.g., RA and Dec). Such a transformation is also called "astrometric solution". There are standard formats to write such a transformation into the header of FITS file, so that it can be very conveniently used by software tools manipulating images.
+
 
 
 ## Coaddition
 
+(coaddition is currently not used in this tutorial, section still to be written)
 
 * reprojection techniques
-* average vs median combination, little demo that avg is better in terms of noise.
 
 
 ```{sidebar} Average or median?
 Assuming an ideal situation without any outliers, is it better to average-combine or median-combine images?
 
-For a large number of samples from a normal distribution, the standard error of the median will be $\sqrt{\pi/2} = 1.25$ times higher, or 25% greater, than the standard error of the mean.
+For a large number of samples from a normal distribution, the standard error of the median will be $\sqrt{\pi/2} = 1.25$ times higher, or 25% greater, than the standard error of the mean ([see details](https://en.wikipedia.org/wiki/Median)).
 
-https://en.wikipedia.org/wiki/Median
 ```
 
 ````{admonition} Question
@@ -201,19 +272,10 @@ Saturation, tracking, cosmic rays
 
 The brightness measurement of objects on an image is called *photometry*. There are two main approaches to photometry on CCD images: digital aperture photometry, and PSF fitting.
 
+In this tutorial, we make use of digital aperture photometry, which corresponds to summing the pixel values within some aperture defined around a source (including fractional pixels, who contribute only a fraction of their value).
 
-{cite}`Chromey:2016`
 
-
-Digital aperture photometry
-: Definition
-
-  PSF homogeneization
-
-PSF fitting
-: Definition
-
-In this tutorial, we make use of **forced photometry**, meaning that we perform photometry by placing apertures at specific pre-defined locations of an image, without first "detecting" sources in that particular image. These locations are defined in sky coordinates in a reference catalog that we build from a reference image. This makes the subsequent analysis particularly easy, as we get consistent photometric catalogs for each exposure.
+More specifically, we will use **forced photometry**, meaning that we perform photometry by placing apertures at specific pre-defined locations of an image, without first "detecting" sources in that particular image. These locations are defined in sky coordinates in a reference catalog that we build from a reference image. This makes the subsequent analysis particularly easy, as we get consistent photometric catalogs for each exposure.
 
 
 ```{note}
@@ -222,10 +284,10 @@ For the sake of simplicity, we ignore here the effect that distortions have on p
 
 ## Apparent magnitudes
 
-The apparent brightness of a source in optical astronomy is denoted by its magnitude. Magnitudes are a logarithmic scale of the flux that we observe from a source. For a source of flux $S$, the magnitude is given by
+The apparent brightness of a source in optical astronomy is denoted by its magnitude. Magnitudes are a logarithmic scale of the flux that we observe from a source. For a source of flux $F$, the magnitude is given by
 
 $$
-m = -2.5 \log_{10}(S) + C,
+m = -2.5 \log_{10}(F) + C,
 $$
 
 where $C$ is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration can vary. While it is relatively easy to compare fluxes, connecting your observations to a referential zero point can be a challenging task. In practice, this relies on the observation of standard stars whose magnitudes are known from a reference catalogue.
@@ -233,7 +295,7 @@ where $C$ is a constant that calibrates the magnitude scale, often called zero p
 As long as the calibration done consistently, $C$ cancels out when forming a difference in magnitudes between two sources:
 
 $$
-m_1 - m_2 = -2.5 \log_{10}(\frac{S_1}{S_2}).
+m_1 - m_2 = -2.5 \log_{10}(\frac{F_1}{F_2}).
 $$
 
 A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values do not have a unit, but often the word *magnitude* or *mag* is used as if it were a unit.
@@ -241,3 +303,10 @@ A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values
 ```{note}
 Fainter sources have higher magnitudes!
 ```
+
+````{admonition} Questions
+* What flux ratio corresponds to a difference of one magnitude?
+* What magnitude difference corresponds to a change in flux of $1\%$?
+* And what about a change in flux of $0.1\%$ (i.e., one part per thousand, or one "ppt")?
+````
+
