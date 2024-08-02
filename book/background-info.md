@@ -175,20 +175,55 @@ FITS (Flexible Image Transport System) is a standard in use since 1981, and ther
 
 
 
-## Calibration
+## Calibration (aka pre-reduction)
 
-The aim of image calibration is to remove all "artificial" offsets from the pixel values, so that the pixel 
+The aim of image calibration (also known as image pre-reduction) is to remove all "artificial" or "instrumental" effects from the pixel values.
+Broadly speaking, these effects can be categorized as either multiplicative or additive. For example, dirt on the filter will have a multiplicative effect on the flux, as it will take away a fraction of the light of a source for certain pixels affected by this dirt. While the bias level is an example of an additive effect, that we want to subtract.
 
-Calibration frames
-For successful observations of astronomical targets, one does not only need to observe the target itself, but it is also necessary to take a number of calibration frames. These frames are used in the so called image reduction which is performed after the observations. They are essential to make full use of the scientific observations of the target (called SCIENCE frames). In the following the different kinds of calibration frames are explained.
+Image calibration attempts to cleanly separate and correct for these effects, ideally without adding any significant additional noise to the raw images.
+Details of an optimal pre-reduction will depend on the pecularities of the telescopes and instruments, but the basic procedure described in the following is often part of it.
+
+It makes use of three "calibration frames": **bias** frames, **dark** frames, and **flat** frames.
+
+### Bias frames
+
+Bias frames $\mathbf{B}$ are frames taken with a zero exposure time. They contain the bias level, and read-out noise: all signals added by the read-out electronics.
+
+### Dark frames
+
+Dark frames $\mathbf{D}$ are taken with an exposure time $t_{\mathbf{D}}$, with closed shutter, i.e., without any photons reaching the sensor. They comprise $\mathbf{B}$, and in addition contain the thermally generated charge which increases linearly with the exposure time (integrated "dark current"). Their exposure time matters: assuming that the dark current is constant, one can use the exposure time to rescale the dark level between different exposures.
+
+Even if the dark current might be negligible for a cooled camera, these dark frames also reveal artifacts such as hot pixels.
 
 
-In addition, when calibrating the image, care must be taken to not add noise!
+### Flat frames
 
-It can be better to not calibrate than to badly calibrate.
+Flat frames $\mathbf{F}$ are taken with an exposure time $t_{\mathbf{F}}$, on an ideally uniform target. They do comprise the effects seen by $\mathbf{B}$ and $\mathbf{D}$, and in addition a view of the flat target contaminated by inhomogeneous sensitivity.
+Their purpose is to capture all multiplicative effects affecting the pixel values, such as differences in gain or quantum efficiency of the pixels, or inhomogeneous illumination of the sensor by the telescope (e.g., vignetting) or filter.
+Possible flatfield targets include the bright twilight sky, or an illuminated surface inside the dome. Obtaining "good" flat frames is fundamentally difficult, as the homogeneity of a target over the full field is never perfect. Furthermore the QE variations in sensors do depend on wavelength, so that the colour of the flat target matters. As will become clear, a 1% error in the flat field will yield a 1% error in the photometry of sources.
 
 
-* Flat difficulty, color dependence
+### Science frames
+
+We call "science frames" $\mathbf{S}$ the actual raw exposures of the target, taken with an exposure time $t_{\mathbf{S}}$. These images are contaminated by all the effects described above.
+
+### Pre-reduction
+
+The general process of pre-reduction of $\mathbf{S}$ can now be written as follows:
+
+$$
+\mathbf{S}_{\mathrm{prered}} = \frac{\mathbf{S} - \mathbf{B} - \frac{t_{\mathbf{S}}}{t_{\mathbf{D}}}(\mathbf{D} - \mathbf{B})}{\left[\mathbf{F} - \mathbf{B} - \frac{t_{\mathbf{F}}}{t_{\mathbf{D}}}(\mathbf{D} - \mathbf{B})\right]_{\mathrm{normalized}}},
+$$
+
+where "normalized" in the denominator means that we ensure that the frame has a mean value close to one, for example by dividing it by its median pixel value. This normalization is done to avoid rescaling all pixel values in our science image by some arbitrary number.
+
+In practice, instead of single bias, dark, and flat frames, one uses a **masterbias**, **masterdark**, and **masterflat**, i.e., combinations of several (typically 10 to 20) frames. The reason is that we don't want to add any noise in the pre-reduction process. Combining frames (for example by taking for each pixel the median or average across several exposures) reduces the random noise compared to the signal common to the individual frames.
+
+
+```{note}
+Depending on the quality and noise of calibration frames, and on the kind of measurement one wants to perform, it can be advantageous to *not* calibrate, instead of performing a poor calibration.
+```
+
 
 ## Artifacts
 
@@ -198,9 +233,13 @@ It can be better to not calibrate than to badly calibrate.
 ## Coordinates, WCS
 
 Astronomers make use of different coordinate systems to quantify the positions of celestial objects.
-The most common system for identifying and cataloguing sources is the equatorial system projecting the grid of terrestrial latitudes and longitudes from the centre of Earth onto the sky. The declination is defined in analogy to latitude in geography. The (North) polar star is in approximate extension of the rotation axis of the Earth, having a declination of $\delta = 90^{\circ}$, while the projection of the South Pole is defined to have $\delta = -90^{\circ}$. **Right ascension**, $\alpha$, is the equivalent to longitude. Its zero point is the vernal equinox point, the position of the Sun at March equinox. Right ascensions are expressed as times ranging from 0 hours to 24 hours, due to their close connection to the rotation of the Earth. Subsequently, subdivisions are given as time minutes and seconds rather than angular minutes and seconds!
 
+On an image, the position of objects is described in pixel coordinates, that is coordinates counting pixels along the axes of the image.
 
+On the other hand, a *World Coordinate System* (WCS) is a coordinate system that describes a location in "real-world units", such as the position on the celestial sphere.
+The most common WCS for identifying and cataloguing sources is the equatorial system projecting the grid of terrestrial latitudes and longitudes from the centre of Earth onto the sky. The **declination** (Dec, $\delta$) is defined in analogy to latitude in geography. The (North) polar star is in approximate extension of the rotation axis of the Earth, having a declination of $\delta = 90^{\circ}$, while the projection of the South Pole is defined to have $\delta = -90^{\circ}$. **Right ascension** (RA, $\alpha$) is the equivalent to longitude. Its zero point is the vernal equinox point, the position of the Sun at March equinox. Both declination and right ascension are angles, but often right ascensions are expressed as times ranging from 0 hours to 24 hours, due to their close connection to the rotation of the Earth. Subsequently, subdivisions are given as time minutes and seconds rather than angular minutes and seconds!
+
+The aim of *astrometric calibration* is to establish an accurate transformation between pixel coordinates and sky coordinates (e.g., RA and Dec). Such a transformation is also called "astrometric solution". There are standard formats to write such a transformation into the header of FITS file, so that it can be very conveniently used by software tools manipulating images.
 
 
 
