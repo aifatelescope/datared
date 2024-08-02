@@ -75,7 +75,7 @@ We now describe some nomenclature as well as important aspects of these sensors.
 
 ### Quantum efficiency
 
-The quantum efficiency (QE) is the ratio of produced electrons to the number of photons hitting the detector surface, characterizing the sensitivity of the sensor. QEs of top grade sensors are above 90% over a significant wavelength range. For many considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably.
+The quantum efficiency (QE) is the ratio of electrons to the number of photons hitting the pixel. QEs of top grade sensors are far above 90% over a significant wavelength range. For many basic considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably.
 
 ### Full-well capacity
 
