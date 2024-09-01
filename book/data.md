@@ -6,8 +6,15 @@ Raw data acquired by the telescope gets synced to sciebo, and can be downloaded 
 
 https://uni-bonn.sciebo.de/s/aKDd5Y3ln79Gg9W
 
-Save the directory you want to work with on your system, and extract/decompress it if needed.
 On the `fprak`-computers in the lab room, we keep all this in the directory `~/Data`.
+
+Save the directory you want to work with on your system, and extract/decompress it if needed, for example using `unzip`:
+
+```none
+mv Downloads/2024-06-05.zip Data/
+cd Data
+unzip 2024-06-05.zip
+```
 
 
 ## Configuring the reduction
