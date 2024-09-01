@@ -24,8 +24,12 @@ This whole tutorial is still under construction. If you encounter any issues or 
 
 ## Python tools
 
-This section gives a very quick overview of specialized Python tools and objects that we will use in the following tutorial.
+```{note}
+This section remains to be written, just skip it for now. We provide plenty of examples, so that the following pages are self-explanatory even without this section.  
+````
 
+
+This section will give a very quick overview of specialized Python tools and objects that we will use in the following tutorial.
 
 TO BE WRITTEN, add link to doc.
 
