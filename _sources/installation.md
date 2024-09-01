@@ -5,7 +5,7 @@ You can skip this part when working with a computer in the AIfA lab room, everyt
 Just make sure to execute `conda activate datared` in your terminal/shell, in order to use the right environment. 
 :::
 
-The software tools that we'll use the the data reduction is very easy to install, on any platform (with the exception of `astrometry.net` on Windows, as detailed below). 
+The software tools that we'll use the the data reduction are very easy to install, on any platform (with the exception of `astrometry.net` on Windows, as detailed below). 
 
 
 First, install miniconda, from here: https://docs.anaconda.com/free/miniconda/index.html
