@@ -613,6 +613,10 @@ Of course, depending on the data to be processed, you might want to adjust (hard
 </div>
 </div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A large reference catalog will slow down the photometry. It’s helpful to adapt the flux threshold above to keep mainly those stars you actually care about, and not every tiny detection.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For reference, we write the reference catalog in this directory.</span>
@@ -625,7 +629,7 @@ Of course, depending on the data to be processed, you might want to adjust (hard
 </section>
 <section id="forced-aperture-photometry">
 <h2>Forced aperture photometry<a class="headerlink" href="#forced-aperture-photometry" title="Permalink to this heading">#</a></h2>
-<p>We’ll now perform forced aperture photometry on all science images of our target.
+<p>We’ll now perform forced aperture photometry on all science images of our target, with a series of aperture sizes (radii given in arcseconds in the code below).
 This means that we use the sky coordinates of the sources detected in the reference frame to place the same apertures on all dithered exposures of the target.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -665,6 +669,8 @@ This means that we use the sky coordinates of the sources detected in the refere
         <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
             <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;fwhm&quot;</span><span class="p">,</span> <span class="s2">&quot;elongation&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">])</span>
             <span class="c1"># For some reason these fwhm and elongation sometimes lead to excessive runtime for large apertures (getting stuck...), to be investigated</span>
+            <span class="c1"># In case of trouble, replace the line above by the following, to measure only the flux:</span>
+            <span class="c1">#aperture_catalog = aperture_measurements.to_table(columns=[&quot;sum&quot;])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">])</span>
 
@@ -699,25 +705,26 @@ This means that we use the sky coordinates of the sources detected in the refere
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check plot of the aperture photometry catalog, magnitude versus size, stellar locus.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># At this stage one could inspect the aperture photometry catalog, and make for instance a magnitude versus size plot to see the stellar locus.</span>
+<span class="c1"># We&#39;ll skip this here, as our current size measurements (if done at all) are not that great -- to be improved.</span>
 
-<span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;mag_8&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;sum_8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="c1">#ref_photo_cat[&quot;mag_8&quot;] = -2.5 * np.log10(ref_photo_cat[&quot;sum_8&quot;].value)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;fwhm_8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> 
-    <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;mag_8&quot;</span><span class="p">],</span> 
-    <span class="n">c</span><span class="o">=</span><span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;elongation_8&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-    <span class="n">vmin</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
-    <span class="n">s</span><span class="o">=</span><span class="mi">15</span>
-<span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Elongation&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;FWHM [pix]&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Instrumental magnitude&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1">#plt.figure()</span>
+<span class="c1">#plt.scatter(</span>
+<span class="c1">#    ref_photo_cat[&quot;fwhm_8&quot;].value, </span>
+<span class="c1">#    ref_photo_cat[&quot;mag_8&quot;], </span>
+<span class="c1">#    c=ref_photo_cat[&quot;elongation_8&quot;].value,</span>
+<span class="c1">#    vmin=1.0, vmax=1.5,</span>
+<span class="c1">#    cmap=&quot;jet&quot;,</span>
+<span class="c1">#    s=15</span>
+<span class="c1">#)</span>
+<span class="c1">#plt.gca().invert_yaxis()</span>
+<span class="c1">#plt.colorbar(label=&quot;Elongation&quot;)</span>
+<span class="c1">#plt.xlabel(&quot;FWHM [pix]&quot;)</span>
+<span class="c1">#plt.ylabel(&quot;Instrumental magnitude&quot;)</span>
+<span class="c1">#plt.tight_layout()</span>
+<span class="c1">#plt.show()</span>
 </pre></div>
 </div>
 </div>
