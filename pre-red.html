@@ -460,7 +460,7 @@ document.write(`
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>We’ll now build our master-bias by averaging over the bias frames. Assuming that the bias frames contain pure uncorrelated noise (in addition to a prefectly constant bias level), what pixel-to-pixel standard deviation would you expect to observe in the master-bias, and why? Compare this with the actual measurement, and comment the result.</p>
+<p>We’ll now build our master-bias by averaging over the bias frames. Assuming that the bias frames contain pure uncorrelated noise (in addition to a prefectly constant bias level), what pixel-to-pixel standard deviation would you expect to observe in the master-bias, and why? Compare this with the actual measurement.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -477,8 +477,8 @@ document.write(`
 </div>
 </div>
 <p>Let’s now inspect this master bias visually, to see if it has any structure.</p>
-<p>With the code below, you could zoom around in the masterbias. Does it look “random”?
-We also create a smoothed version of the masterbias, to highlight a bit some larger scale structures. We will of course not use this smoothed version in the pre-reduction, but it might help to visualize some of the structure.</p>
+<p>With the code below, you could zoom around in the masterbias. Does it look homogeneous?
+We also create a smoothed version of the masterbias, to highlight a bit some (potential) larger scale structures. We will of course not use this smoothed version in the pre-reduction, but it might help to visualize some of the structure.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Median-smoothing the masterbias (only for display purposes):</span>
