@@ -411,7 +411,8 @@ document.write(`
 <p>As usual, you can download this page as a <a class="reference download internal" download="" href="_downloads/c0621302a92ba54cea45d6976c0cde5d/lightcurve.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code></a> file.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>All that we’ll need from here on are the files inside the <code class="docutils literal notranslate"><span class="pre">PHOTOMETRY</span></code> directory (including the reference catalog), as well as one of the pre-reduced images (from <code class="docutils literal notranslate"><span class="pre">LIGHT_PRERED</span></code>). This is a relatively small amount of data (compared to the raw images), so you might find it useful to copy these files, in the case you are working on an AIfA lab room computer.</p>
+<p>In case you have been working on an AIfA lab room computer until this point, you might be interested in moving to a personal laptop (for example) for these last steps.
+All that we’ll need from here on is the content of the <code class="docutils literal notranslate"><span class="pre">PHOTOMETRY</span></code> directory (including the reference catalog), as well as <strong>one</strong> of the pre-reduced images (from <code class="docutils literal notranslate"><span class="pre">LIGHT_PRERED</span></code>). This is a relatively small amount of data (compared to the raw or pre-reduced images), so you could consider to copy just these files to your own computer. The CPU requirements for these last steps will also be negligible.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -579,23 +580,25 @@ The following code is there as an example on how to use and manipulate the <code
 </div>
 </div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>An interesting plot could be a scatter plot of the mean (instrumental) magnitude versus the standard deviation of each light curve (i.e., source). This could help you identify (for example) a magnitude threshold beyond which stars are saturated, and therefore can’t be used for calibration.</p>
-</div>
+<p>It’s good to play around with these raw light curves a bit.</p>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
 <p>Do you observe any trends in these light curves, common to all stars or to some of these stars? Comment on what could cause these trends.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An interesting plot could be a scatter plot of the mean (instrumental) magnitude versus the standard deviation of each light curve (i.e., source). This could help you identify (for example) a magnitude threshold beyond which stars are saturated, and therefore can’t be used for calibration. Indeed, stars that are close to saturation will typically show an excess scatter in their light curves, compared to stars that are safely below saturation.</p>
 </div>
 </section>
 <section id="calibration">
 <h2>Calibration<a class="headerlink" href="#calibration" title="Permalink to this heading">#</a></h2>
 <p>To reveal the transit itself, some empirical calibration of the flux (or magnitude) measured in each exposure is needed.</p>
-<p>Before implementing a calibration, we need to define a strategy.</p>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>What would be the properties of good reference stars to use for the calibration?</p>
+<p>In theory, what would be the properties of good reference stars to use for the calibration?</p>
 </div>
+<p>It’s good to keep in mind that some technical or instrumental effects might possibly have strong effects on the calibration, and influence the optimal selection of reference stars. So in practice, it’s mandatory to actually test the calibration, instead of relying on theoretical considerations.</p>
+<p>Before implementing a calibration, we now need to define a strategy.</p>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
 <p>What causes the flux variations between exposures and what is the best way to correct for them? Try to come up with a formalism (i.e., equations) of a simple correction strategy.</p>
@@ -632,7 +635,7 @@ Give an estimate for the uncertainty of your estimate.</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>Calculate the radius of the exoplanet relative to its host star from your measurement of the lightcurve. Think as well of how you could estimate the uncertainties.</p>
+<p>Calculate the radius of the exoplanet relative to its host star from your measurement of the light curve. Think as well of how you could estimate the uncertainties.</p>
 </div>
 </section>
 </section>
