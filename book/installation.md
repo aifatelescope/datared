@@ -17,20 +17,14 @@ Then, open a terminal, and run the following commands.
 
 
 ```none
-conda create -n datared python=3.11
+conda create -n datared python=3.11.8
 conda activate datared
-conda install -c conda-forge ccdproc photutils matplotlib ipykernel ipympl astroquery
+conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7 sqlite=3.41.2
 ```
 
 ## Optional: jupyterlab
 
-If you plan to work with notebooks
-
-```none
-conda install -c conda-forge jupyterlab
-```
-
-You can then 
+The above also installs JupyterLab. If you want to work with notebooks, you can 
 
 ```none
 cd /where/your/notebooks/are/
@@ -50,7 +44,7 @@ On Linux and macOS, you can easily install `astrometry.net` with conda, using th
 
 ```none
 conda activate datared
-conda install -c conda-forge astrometry
+conda install -c conda-forge astrometry=0.95
 ```
 
 You'll then have to download some index files.
