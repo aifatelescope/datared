@@ -419,18 +419,14 @@ Just make sure to execute <code class="docutils literal notranslate"><span class
 <li><p>The second line activates this environment (it makes the software available). You’ll have to activate it in every terminal window you want to work in.</p></li>
 <li><p>The third line takes a little longer, and will ask you to confirm the installation. It’s a good idea to install all those packages in “one shot” as done here, to better manage dependencies.</p></li>
 </ul>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create -n datared python=3.11
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create -n datared python=3.11.8
 conda activate datared
-conda install -c conda-forge ccdproc photutils matplotlib ipykernel ipympl astroquery
+conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7 sqlite=3.41.2
 </pre></div>
 </div>
 <section id="optional-jupyterlab">
 <h2>Optional: jupyterlab<a class="headerlink" href="#optional-jupyterlab" title="Permalink to this heading">#</a></h2>
-<p>If you plan to work with notebooks</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge jupyterlab
-</pre></div>
-</div>
-<p>You can then</p>
+<p>The above also installs JupyterLab. If you want to work with notebooks, you can</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd /where/your/notebooks/are/
 
 jupyter lab
@@ -443,7 +439,7 @@ jupyter lab
 <p>A reliable tool to perform astrometric calibration of an image is the software <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code>. It will blindly “plate solve” the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-compliant WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see <a class="reference external" href="https://astrometry.net">https://astrometry.net</a>, and <a class="reference external" href="http://data.astrometry.net">http://data.astrometry.net</a> for how to get the index files.</p>
 <p>On Linux and macOS, you can easily install <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> with conda, using the environment created above:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda activate datared
-conda install -c conda-forge astrometry
+conda install -c conda-forge astrometry=0.95
 </pre></div>
 </div>
 <p>You’ll then have to download some index files.
