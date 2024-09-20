@@ -20,5 +20,6 @@ parts:
     chapters:
     - file: astrometry
     - file: stack
+    - file: camera-charact
     - file: more
     - file: demo

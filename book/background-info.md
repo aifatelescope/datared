@@ -83,7 +83,7 @@ The charge capacity of a pixel is limited. The maximum number of electrons fitti
 
 ### ADC, ADU, and gain
 
-After the exposure, the electrons captured in a pixel get amplified, and the resulting potential is then converted to a digital number (the pixel value) by an electronic circuit called **Analog-to-Digital Converter (ADC)**. For clarity, one attaches a "unit" to these digital numbers: pixel values are quoted in **ADU**, which is an acronym for *Analog to Digital Unit*. It is important to distinguish ADUs and numbers of electrons: these are different values! One defines the **gain** of the detector as the differential change in charge that produces a change of one ADU (e.g., 0.6 e/ADU). In other words, this gain can be seen as the conversion factor between electrons and ADU (assuming an idealized detector with constant gain). This gain is set by the amplifier and the ADC.
+After the exposure, the electrons captured in a pixel get amplified, and the resulting potential is then converted to a digital number (the pixel value) by an electronic circuit called **Analog-to-Digital Converter (ADC)**. For clarity, one attaches a "unit" to these digital numbers: pixel values are quoted in **ADU**, which is an acronym for *Analog to Digital Unit*. It is important to distinguish ADUs and numbers of electrons: these are different values! One defines the **gain** of the detector as the differential change in charge that produces a change of one ADU. In other words, this gain can be seen as the conversion factor between electrons and ADU (assuming an idealized detector with constant gain). This gain is set by the amplifier and the ADC. For our imaging camera at the AIfA telescope, the gain is 0.376 e/ADU when using our default settings (see the page [](camera-charact) if you're interested in how this can be measured).
 
 ### Bit depth
 
@@ -295,7 +295,7 @@ where $C$ is a constant that calibrates the magnitude scale, often called zero p
 As long as the calibration done consistently, $C$ cancels out when forming a difference in magnitudes between two sources:
 
 $$
-m_1 - m_2 = -2.5 \log_{10}(\frac{F_1}{F_2}).
+m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
 $$
 
 A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values do not have a unit, but often the word *magnitude* or *mag* is used as if it were a unit.
