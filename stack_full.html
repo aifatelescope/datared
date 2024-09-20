@@ -58,11 +58,9 @@
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'stack';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'stack_full';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Camera characterization" href="camera-charact.html" />
-    <link rel="prev" title="Astrometric calibration" href="astrometry.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -190,9 +188,9 @@
 <li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Light curve</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Further pages</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="astrometry.html">Astrometric calibration</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Reprojecting, stacking and colour-combination</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
 <li class="toctree-l1"><a class="reference internal" href="camera-charact.html">Camera characterization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">References and links</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
@@ -267,7 +265,7 @@
       
       
       
-      <li><a href="https://github.com/aifatelescope/datared/issues/new?title=Issue%20on%20page%20%2Fstack.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/aifatelescope/datared/issues/new?title=Issue%20on%20page%20%2Fstack_full.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -297,7 +295,7 @@
       
       
       
-      <li><a href="_sources/stack.ipynb" target="_blank"
+      <li><a href="_sources/stack_full.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -392,7 +390,6 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#colour-combination">Colour-combination</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-greyscale-png-file-from-a-stacked-image">Creating a greyscale png file from a stacked image</a></li>
 </ul>
             </nav>
         </div>
@@ -422,13 +419,14 @@ document.write(`
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">import</span> <span class="nn">ccdproc</span>
+<span class="kn">import</span> <span class="nn">photutils</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">light_prered_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT_PRERED&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">light_prered_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT_WCS&quot;</span>
 <span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">light_prered_dir</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
 
 <span class="c1"># Let&#39;s first get an overview of all available files:</span>
@@ -451,8 +449,8 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select object and filter:</span>
-<span class="n">selected_object</span> <span class="o">=</span> <span class="s2">&quot;M 37&quot;</span>
-<span class="n">selected_filter</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span>
+<span class="n">selected_object</span> <span class="o">=</span> <span class="s2">&quot;M 27&quot;</span>
+<span class="n">selected_filter</span> <span class="o">=</span> <span class="s2">&quot;Halpha&quot;</span>
 
 <span class="n">selected_science_files</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">selected_object</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">selected_filter</span><span class="p">)</span>
 <span class="n">selected_science_files</span><span class="o">.</span><span class="n">summary</span>
@@ -462,11 +460,63 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">estimate_background</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to estimate the background (in form of an image),</span>
+<span class="sd">    and the root-mean-square deviation (RMS) of the background.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    image: a CCDData object</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    background, background_rms: two numpy arrays</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">bkg</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">background</span><span class="o">.</span><span class="n">Background2D</span><span class="p">(</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">box_size</span><span class="o">=</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span>
+        <span class="n">filter_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="n">bkg_estimator</span><span class="o">=</span><span class="n">photutils</span><span class="o">.</span><span class="n">background</span><span class="o">.</span><span class="n">MedianBackground</span><span class="p">())</span>
+    
+    <span class="k">return</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background_rms</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We run this on one image</span>
+<span class="n">test_image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">selected_science_files</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;adu&quot;</span><span class="p">)</span>
+<span class="n">background</span><span class="p">,</span> <span class="n">background_rms</span> <span class="o">=</span> <span class="n">estimate_background</span><span class="p">(</span><span class="n">test_image</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize the background image</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select first image as the target to project on (note: same image for *all* filters!)</span>
-<span class="n">target_image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">science_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">selected_object</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;adu&#39;</span><span class="p">)</span>
+<span class="n">target_image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">science_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">selected_object</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;adu&quot;</span><span class="p">)</span>
 
 <span class="c1"># Looping over the images to do the reprojection (takes a while):</span>
 <span class="k">for</span> <span class="n">ccd</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">selected_science_files</span><span class="o">.</span><span class="n">ccds</span><span class="p">(</span><span class="n">ccd_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;adu&#39;</span><span class="p">},</span> <span class="n">return_fname</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    
+
+    <span class="c1"># Estimate and subtract the background:</span>
+    <span class="n">background</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">estimate_background</span><span class="p">(</span><span class="n">ccd</span><span class="p">)</span>
+    <span class="c1">#ccd_noback = ccd.subtract(ccdproc.CCDData(background, unit=&quot;adu&quot;))</span>
+
+    <span class="n">ccd</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">ccd</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">background</span><span class="o">.</span><span class="n">data</span>
+    
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reprojecting </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
     
     <span class="n">ccd</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">wcs_project</span><span class="p">(</span><span class="n">ccd</span><span class="p">,</span> <span class="n">target_image</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
@@ -480,12 +530,11 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Combine the reprojected images of that filter:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_to_combine</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">)</span><span class="o">.</span><span class="n">files_filtered</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">selected_object</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">selected_filter</span><span class="p">,</span> <span class="n">include_path</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">files_to_combine</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">)</span><span class="o">.</span><span class="n">files_filtered</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">selected_object</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">selected_filter</span><span class="p">,</span> <span class="n">include_path</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">ccd</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">files_to_combine</span><span class="p">,</span>
-                        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;average&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">sigma_clip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sigma_clip_low_thresh</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">sigma_clip_high_thresh</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">sigma_clip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sigma_clip_low_thresh</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sigma_clip_high_thresh</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                         <span class="n">sigma_clip_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">,</span> <span class="n">signma_clip_dev_func</span><span class="o">=</span><span class="n">astropy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">mad_std</span><span class="p">,</span>
                         <span class="n">mem_limit</span><span class="o">=</span><span class="mf">1e9</span>
                     <span class="p">)</span>
@@ -497,16 +546,11 @@ document.write(`
 </div>
 </div>
 </div>
-<p>At this stage you might want to:</p>
-<ul class="simple">
-<li><p>combine images of separate filters to get a color image (see below)</p></li>
-<li><p>create a greyscale image (png file) from a single stack (see further below)</p></li>
-</ul>
 <section id="colour-combination">
 <h2>Colour-combination<a class="headerlink" href="#colour-combination" title="Permalink to this heading">#</a></h2>
 <p>This is the colour-combination algorithm used by SDSS.
 It might not be “optimal” for pretty pictures (well that’s a matter of taste), but it is scientifically interesting.</p>
-<p>Details can be found here: <a class="reference external" href="https://docs.astropy.org/en/stable/visualization/rgb.html#astropy-visualization-rgb">https://docs.astropy.org/en/stable/visualization/rgb.html#astropy-visualization-rgb</a></p>
+<p>Todo: describe more, and also compare with simple RGB composite.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g_ccd</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;combi_</span><span class="si">{</span><span class="n">selected_object</span><span class="si">}</span><span class="s2">_g.fits&quot;</span><span class="p">)</span>
@@ -543,24 +587,18 @@ It might not be “optimal” for pretty pictures (well that’s a matter of tas
 </div>
 </div>
 </div>
-</section>
-<section id="creating-a-greyscale-png-file-from-a-stacked-image">
-<h2>Creating a greyscale png file from a stacked image<a class="headerlink" href="#creating-a-greyscale-png-file-from-a-stacked-image" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read the stack we want to use:</span>
-<span class="n">stackccd</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;combi_</span><span class="si">{</span><span class="n">selected_object</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">selected_filter</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stackccd</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;combi_</span><span class="si">{</span><span class="n">selected_object</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">selected_filter</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># It can be helpful so see a histogram:</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">stackccd</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">10000</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">stackccd</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -569,16 +607,16 @@ It might not be “optimal” for pretty pictures (well that’s a matter of tas
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Adjusting cuts and scale parameters is best done on an interactive figure:</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">stackccd</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="mf">1800.0</span><span class="p">),</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">stackccd</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="mi">50</span><span class="p">),</span>
           <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>
-          <span class="n">vmin</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">,</span>
+          <span class="n">vmin</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
           <span class="n">vmax</span> <span class="o">=</span> <span class="mf">3.5</span><span class="p">,</span>
+          <span class="c1">#norm = matplotlib.colors.Normalize(vmin = 1700, vmax = 4000),</span>
           <span class="c1">#norm = matplotlib.colors.LogNorm(vmin = 1600, vmax = 4000),</span>
           <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span>
+         
          <span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -588,16 +626,15 @@ It might not be “optimal” for pretty pictures (well that’s a matter of tas
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The same parameters from the figure above can now be copied in imsave to write a full resolution png:</span>
-
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If needed, one can also write the image manually for example with matplotlib:</span>
 <span class="kn">import</span> <span class="nn">matplotlib.image</span>
-<span class="n">matplotlib</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">imsave</span><span class="p">(</span><span class="s2">&quot;pretty.png&quot;</span><span class="p">,</span> 
-        <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">stackccd</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="mf">1800.0</span><span class="p">),</span>
-        <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>
-        <span class="n">vmin</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">,</span>
-        <span class="n">vmax</span> <span class="o">=</span> <span class="mf">3.5</span><span class="p">,</span>
-        <span class="c1">#norm = matplotlib.colors.LogNorm(vmin = 1600, vmax = 4000),</span>
-        <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">imsave</span><span class="p">(</span><span class="s2">&quot;pretty.png&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">stackccd</span><span class="o">.</span><span class="n">data</span><span class="o">+</span><span class="mi">50</span><span class="p">),</span>
+          <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>
+          <span class="n">vmin</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
+          <span class="n">vmax</span> <span class="o">=</span> <span class="mf">3.5</span><span class="p">,</span>
+          <span class="c1">#norm = matplotlib.colors.Normalize(vmin = 1700, vmax = 4000),</span>
+          <span class="c1">#norm = matplotlib.colors.LogNorm(vmin = 1600, vmax = 4000),</span>
+          <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;Greys_r&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 </pre></div>
 </div>
@@ -636,24 +673,6 @@ It might not be “optimal” for pretty pictures (well that’s a matter of tas
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="astrometry.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Astrometric calibration</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="camera-charact.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Camera characterization</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -670,7 +689,6 @@ It might not be “optimal” for pretty pictures (well that’s a matter of tas
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#colour-combination">Colour-combination</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-greyscale-png-file-from-a-stacked-image">Creating a greyscale png file from a stacked image</a></li>
 </ul>
   </nav></div>
 

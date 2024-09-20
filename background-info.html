@@ -195,6 +195,7 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="astrometry.html">Astrometric calibration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
+<li class="toctree-l1"><a class="reference internal" href="camera-charact.html">Camera characterization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">References and links</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
@@ -497,7 +498,7 @@ In the scope of this tutorial, we will pass over the rather minor differences in
 </section>
 <section id="adc-adu-and-gain">
 <h3>ADC, ADU, and gain<a class="headerlink" href="#adc-adu-and-gain" title="Permalink to this heading">#</a></h3>
-<p>After the exposure, the electrons captured in a pixel get amplified, and the resulting potential is then converted to a digital number (the pixel value) by an electronic circuit called <strong>Analog-to-Digital Converter (ADC)</strong>. For clarity, one attaches a “unit” to these digital numbers: pixel values are quoted in <strong>ADU</strong>, which is an acronym for <em>Analog to Digital Unit</em>. It is important to distinguish ADUs and numbers of electrons: these are different values! One defines the <strong>gain</strong> of the detector as the differential change in charge that produces a change of one ADU (e.g., 0.6 e/ADU). In other words, this gain can be seen as the conversion factor between electrons and ADU (assuming an idealized detector with constant gain). This gain is set by the amplifier and the ADC.</p>
+<p>After the exposure, the electrons captured in a pixel get amplified, and the resulting potential is then converted to a digital number (the pixel value) by an electronic circuit called <strong>Analog-to-Digital Converter (ADC)</strong>. For clarity, one attaches a “unit” to these digital numbers: pixel values are quoted in <strong>ADU</strong>, which is an acronym for <em>Analog to Digital Unit</em>. It is important to distinguish ADUs and numbers of electrons: these are different values! One defines the <strong>gain</strong> of the detector as the differential change in charge that produces a change of one ADU. In other words, this gain can be seen as the conversion factor between electrons and ADU (assuming an idealized detector with constant gain). This gain is set by the amplifier and the ADC. For our imaging camera at the AIfA telescope, the gain is 0.376 e/ADU when using our default settings (see the page <a class="reference internal" href="camera-charact.html"><span class="doc std std-doc">Camera characterization</span></a> if you’re interested in how this can be measured).</p>
 </section>
 <section id="bit-depth">
 <h3>Bit depth<a class="headerlink" href="#bit-depth" title="Permalink to this heading">#</a></h3>
@@ -656,7 +657,7 @@ m = -2.5 \log_{10}(F) + C,
 <p>As long as the calibration done consistently, <span class="math notranslate nohighlight">\(C\)</span> cancels out when forming a difference in magnitudes between two sources:</p>
 <div class="math notranslate nohighlight">
 \[
-m_1 - m_2 = -2.5 \log_{10}(\frac{F_1}{F_2}).
+m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
 \]</div>
 <p>A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values do not have a unit, but often the word <em>magnitude</em> or <em>mag</em> is used as if it were a unit.</p>
 <div class="admonition note">
