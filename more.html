@@ -62,7 +62,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Test page" href="demo.html" />
-    <link rel="prev" title="Reprojecting, stacking and colour-combination" href="stack.html" />
+    <link rel="prev" title="Camera characterization" href="camera-charact.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -193,6 +193,7 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="astrometry.html">Astrometric calibration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
+<li class="toctree-l1"><a class="reference internal" href="camera-charact.html">Camera characterization</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">References and links</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
@@ -414,6 +415,7 @@ document.write(`
 <li><p>An excellent resource to learn a bit more about the python packages we are using here</p></li>
 <li><p><a class="gitlab reference external" href="https://gitlab.com/vaubaill/astro_reduce">vaubaill/astro_reduce</a></p></li>
 <li><p><a class="reference external" href="https://ethz.ch/content/dam/ethz/special-interest/phys/particle-physics/quanz-group-dam/documents-old-s-and-p/Courses/vp-asl-astro/tortorelli_data_reduction_steps.pdf">https://ethz.ch/content/dam/ethz/special-interest/phys/particle-physics/quanz-group-dam/documents-old-s-and-p/Courses/vp-asl-astro/tortorelli_data_reduction_steps.pdf</a></p></li>
+<li><p>General overview of photometry: <a class="reference external" href="https://www.aavso.org/ccd-camera-photometry-guide">https://www.aavso.org/ccd-camera-photometry-guide</a></p></li>
 </ul>
 </section>
 <section id="bibliography">
@@ -424,6 +426,8 @@ document.write(`
 <ul class="simple">
 <li><p>SourceXtractor++ for source detection and measurement, still bleeding edge, but it installs via conda (Warning: follow the advice to install this in a separate env!) <a class="github reference external" href="https://github.com/astrorama/SourceXtractorPlusPlus">astrorama/SourceXtractorPlusPlus</a></p></li>
 <li><p>Many professional image reduction pipelines built upon the Astromatic suite (<a class="reference external" href="https://www.astromatic.net">https://www.astromatic.net</a>, <a class="github reference external" href="https://github.com/astromatic">astromatic</a>). One very nice way of using these is via THELI v3: <a class="github reference external" href="https://github.com/schirmermischa/THELI">schirmermischa/THELI</a></p></li>
+<li><p>Alternative way of running <a class="reference external" href="http://astrometry.net">astrometry.net</a> from within python: <a class="reference external" href="https://pypi.org/project/astrometry/">https://pypi.org/project/astrometry/</a></p></li>
+<li><p>GUI-Software to reduce exoplanet transit data: <a class="reference external" href="https://www.exoworldsspies.com/en/software/">https://www.exoworldsspies.com/en/software/</a></p></li>
 </ul>
 <p>Made with <a class="reference external" href="https://jupyterbook.org">Jupyter Book</a></p>
 </section>
@@ -460,12 +464,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="stack.html"
+       href="camera-charact.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Reprojecting, stacking and colour-combination</p>
+        <p class="prev-next-title">Camera characterization</p>
       </div>
     </a>
     <a class="right-next"
@@ -509,7 +513,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By The AIfA telescope team
+By Malte Tewes / AIfA telescope team
 </p>
 
   </div>

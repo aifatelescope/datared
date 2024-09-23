@@ -414,7 +414,7 @@ document.write(`
 <h1>Camera characterization<a class="headerlink" href="#camera-characterization" title="Permalink to this heading">#</a></h1>
 <section id="estimating-the-gain">
 <h2>Estimating the gain<a class="headerlink" href="#estimating-the-gain" title="Permalink to this heading">#</a></h2>
-<p>The sections shows how the gain of our camera can be empirically measured. Note that for a typical CMOS camera, the gain can be controled via software, and therefore depends on camera settings and the selected “readout mode”. One of these settings might be called “GAIN”, but this is just a number, typically between 0 and 100. In this context, the actual gain we are interested in is sometimes called “system gain”, but in the following we’ll just refer to it as gain.</p>
+<p>The sections shows how the gain of our camera can be empirically measured. Note that for a typical CMOS camera, the gain can be controled via software, and therefore depends on camera settings and the selected “readout mode”. One of these settings might be called “GAIN”, but this is just a software parameter, typically between 0 and 100. In this context, the actual gain we are interested in is sometimes called “system gain”, but in the following we’ll just refer to it as gain.</p>
 <section id="theory">
 <h3>Theory<a class="headerlink" href="#theory" title="Permalink to this heading">#</a></h3>
 <p>Recall that the gain <span class="math notranslate nohighlight">\(g\)</span> can be seen as the conversion factor between electrons (<span class="math notranslate nohighlight">\(e\)</span>) and ADUs (<span class="math notranslate nohighlight">\(a\)</span>), assuming that this gain is constant over the full dynamic range of the camera:</p>
@@ -953,7 +953,7 @@ g = \frac{\text{Number of electrons in a pixel}}{\text{Number of ADUs of this pi
   <div class="footer-item">
     
 <p class="component-author">
-By The AIfA telescope team
+By Malte Tewes / AIfA telescope team
 </p>
 
   </div>
