@@ -2,7 +2,7 @@
 # Learn more at https://jupyterbook.org/customize/config.html
 
 title: AIfA telescope data reduction tutorial
-author: Malte Tewes / AIfA telescope team
+author: "the AIfA telescope team / M. Tewes"
 copyright: "2024"
 logo: ./figures/logo.png
 
