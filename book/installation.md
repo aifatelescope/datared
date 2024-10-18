@@ -51,7 +51,7 @@ You'll then have to download some index files.
 Below are the ones useful for our telescope (48 arcmin x 32 arcmin field), from larger to small scales (small to large files), all within 1 deg.
 
 ```
-cd /your_path_to/miniconda3/envs/datared/data/
+cd /your_path_to/miniforge3/envs/datared/data/
 
 curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5205-[00-47].fits --remote-name
 curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5206-[00-47].fits --remote-name
