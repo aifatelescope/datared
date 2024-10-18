@@ -8,7 +8,7 @@ Just make sure to execute `conda activate datared` in your terminal/shell, in or
 The software tools that we'll use for the data reduction are easy to install, on any platform (with the exception of `astrometry.net` on Windows, as detailed below). 
 
 
-First, install miniconda, from here: https://docs.anaconda.com/free/miniconda/index.html
+First, download and install Miniforge, from here: https://conda-forge.org/download/ . This will allow you to set up a small isolated environment containing everything needed for the data reduction.
 
 Then, open a terminal, and run the following commands.
 * The first line creates a new environment, called "datared", and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).
@@ -19,7 +19,7 @@ Then, open a terminal, and run the following commands.
 ```none
 conda create -n datared python=3.11.8
 conda activate datared
-conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7 sqlite=3.41.2
+conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7
 ```
 
 ## Optional: jupyterlab
@@ -51,7 +51,7 @@ You'll then have to download some index files.
 Below are the ones useful for our telescope (48 arcmin x 32 arcmin field), from larger to small scales (small to large files), all within 1 deg.
 
 ```
-cd /your_path_to/miniconda3/envs/datared/data/
+cd /your_path_to/miniforge3/envs/datared/data/
 
 curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5205-[00-47].fits --remote-name
 curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5206-[00-47].fits --remote-name

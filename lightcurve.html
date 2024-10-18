@@ -413,7 +413,7 @@ document.write(`
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In case you have been working on an AIfA lab room computer until this point, you might be interested in moving to a personal laptop (for example) for these last steps.
-All that we’ll need from here on is the content of the <code class="docutils literal notranslate"><span class="pre">PHOTOMETRY</span></code> directory (including the reference catalog), as well as <strong>one</strong> of the pre-reduced images (from <code class="docutils literal notranslate"><span class="pre">LIGHT_PRERED</span></code>). This is a relatively small amount of data (compared to the raw or pre-reduced images), so you could consider to copy just these files to your own computer. The CPU requirements for these last steps will also be negligible.</p>
+All that we’ll need from here on is the content of the <code class="docutils literal notranslate"><span class="pre">PHOTOMETRY</span></code> directory (including the reference catalog), as well as <strong>one</strong> of the pre-reduced images that has a WCS-transformation in its header (from <code class="docutils literal notranslate"><span class="pre">ASTROMETRY</span></code> of <code class="docutils literal notranslate"><span class="pre">LIGHT_PRERED</span></code>, depending on how the processing was run). This is a relatively small amount of data (compared to the raw or pre-reduced images), so you could consider to copy just these files to your own computer. The CPU requirements for these last steps will also be negligible.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -434,6 +434,15 @@ All that we’ll need from here on is the content of the <code class="docutils l
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="kn">import</span> <span class="nn">ccdproc</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We&#39;ll ignore some astropy warnings that get raised as our FITS headers (from NINA) are not 100% standards compliant.</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">astropy</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">FITSFixedWarning</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -482,15 +491,18 @@ All that we’ll need from here on is the content of the <code class="docutils l
 <span class="c1"># We copy the positions from the reference catalog over to our combined catalog:</span>
 <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of epochs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">catalogs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of epochs: </span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># And just for your information, the column names of our &quot;combined&quot; catalogue are:</span>
-<span class="n">catalog</span><span class="o">.</span><span class="n">colnames</span>
+<span class="c1"># And just for information, we print the column names and column shapes of our &quot;combined&quot; catalogue.</span>
+<span class="c1"># Indeed, most of the &quot;columns&quot; are in fact 2D arrays: </span>
+<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">colname</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">catalog</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>We display an image of the field, overplotting the “source indices” corresponding to rows of our catalog.</p>
+<p>We now display an image of the field, overplotting the “source indices” corresponding to rows of our catalog.</p>
 <p>This will allow us to identify the target and reference stars.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -502,7 +514,16 @@ All that we’ll need from here on is the content of the <code class="docutils l
 <span class="n">image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;adu&quot;</span><span class="p">)</span>
 <span class="n">image</span><span class="o">.</span><span class="n">data</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="c1"># Quick sky subtraction</span>
 
-<span class="c1"># And now create the figure</span>
+<span class="c1"># We test that the selected image does have WCS information, to prevent unexpected errors being raised further below. </span>
+<span class="k">if</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">wcs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;This image has no WCS, make sure you specify the correct directory (i.e., with WCS) above!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># And now create the figure</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
@@ -722,7 +743,7 @@ Give an estimate for the uncertainty of your estimate.</p>
   <div class="footer-item">
     
 <p class="component-author">
-By Malte Tewes / AIfA telescope team
+By the AIfA telescope team / M. Tewes
 </p>
 
   </div>

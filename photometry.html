@@ -436,6 +436,15 @@ The procedure could also be applied to coadded images.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We&#39;ll ignore some astropy warnings that get raised as our FITS headers (from NINA) are not 100% standards compliant.</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">astropy</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">FITSFixedWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Locating the pre-reduced science images:</span>
 <span class="n">object_to_process</span> <span class="o">=</span> <span class="s2">&quot;HD92670&quot;</span>
 
@@ -462,6 +471,9 @@ But we start by picking one reference image, used to detect sources and to check
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ref_image_filepath</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">ref_image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ref_image_filepath</span><span class="p">)</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">ref_image</span><span class="o">.</span><span class="n">wcs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span> <span class="c1"># Performing forced photometry requires each frame to have a good WCS. This test is just to avoid obvious mistakes.</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;The image has no WCS, make sure you specify the correct directory (i.e., with WCS) above!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -737,14 +749,15 @@ This means that we use the sky coordinates of the sources detected in the refere
 <span class="n">ref_catalog</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">photometry_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;ref_catalog_</span><span class="si">{</span><span class="n">object_to_process</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">)</span>
 
 
+<span class="n">n_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">science_files</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>
 <span class="c1"># And now we loop over all selected exposures:</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">science_file</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">science_files</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
 
     <span class="c1">#if i &lt; 104: # could use something like that to relaunch on selected files</span>
     <span class="c1">#    continue</span>
-
+    
     <span class="n">image_filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">science_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">science_files</span><span class="o">.</span><span class="n">files</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">image_filename</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== Processing image </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_files</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">image_filename</span><span class="si">}</span><span class="s2"> ===&quot;</span><span class="p">)</span>
 
     <span class="n">image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">science_file</span><span class="p">)</span>
 
@@ -854,7 +867,7 @@ This means that we use the sky coordinates of the sources detected in the refere
   <div class="footer-item">
     
 <p class="component-author">
-By Malte Tewes / AIfA telescope team
+By the AIfA telescope team / M. Tewes
 </p>
 
   </div>

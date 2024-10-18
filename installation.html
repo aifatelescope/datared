@@ -413,7 +413,7 @@ document.write(`
 Just make sure to execute <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">datared</span></code> in your terminal/shell, in order to use the right environment.</p>
 </div>
 <p>The software tools that we’ll use for the data reduction are easy to install, on any platform (with the exception of <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> on Windows, as detailed below).</p>
-<p>First, install miniconda, from here: <a class="reference external" href="https://docs.anaconda.com/free/miniconda/index.html">https://docs.anaconda.com/free/miniconda/index.html</a></p>
+<p>First, download and install Miniforge, from here: <a class="reference external" href="https://conda-forge.org/download/">https://conda-forge.org/download/</a> . This will allow you to set up a small isolated environment containing everything needed for the data reduction.</p>
 <p>Then, open a terminal, and run the following commands.</p>
 <ul class="simple">
 <li><p>The first line creates a new environment, called “datared”, and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).</p></li>
@@ -422,7 +422,7 @@ Just make sure to execute <code class="docutils literal notranslate"><span class
 </ul>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create -n datared python=3.11.8
 conda activate datared
-conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7 sqlite=3.41.2
+conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7
 </pre></div>
 </div>
 <section id="optional-jupyterlab">
@@ -445,7 +445,7 @@ conda install -c conda-forge astrometry=0.95
 </div>
 <p>You’ll then have to download some index files.
 Below are the ones useful for our telescope (48 arcmin x 32 arcmin field), from larger to small scales (small to large files), all within 1 deg.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">your_path_to</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">datared</span><span class="o">/</span><span class="n">data</span><span class="o">/</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">your_path_to</span><span class="o">/</span><span class="n">miniforge3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">datared</span><span class="o">/</span><span class="n">data</span><span class="o">/</span>
 
 <span class="n">curl</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">portal</span><span class="o">.</span><span class="n">nersc</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">cosmo</span><span class="o">/</span><span class="n">temp</span><span class="o">/</span><span class="n">dstn</span><span class="o">/</span><span class="n">index</span><span class="o">-</span><span class="mi">5200</span><span class="o">/</span><span class="n">LITE</span><span class="o">/</span><span class="n">index</span><span class="o">-</span><span class="mi">5205</span><span class="o">-</span><span class="p">[</span><span class="mi">00</span><span class="o">-</span><span class="mi">47</span><span class="p">]</span><span class="o">.</span><span class="n">fits</span> <span class="o">--</span><span class="n">remote</span><span class="o">-</span><span class="n">name</span>
 <span class="n">curl</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">portal</span><span class="o">.</span><span class="n">nersc</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">cosmo</span><span class="o">/</span><span class="n">temp</span><span class="o">/</span><span class="n">dstn</span><span class="o">/</span><span class="n">index</span><span class="o">-</span><span class="mi">5200</span><span class="o">/</span><span class="n">LITE</span><span class="o">/</span><span class="n">index</span><span class="o">-</span><span class="mi">5206</span><span class="o">-</span><span class="p">[</span><span class="mi">00</span><span class="o">-</span><span class="mi">47</span><span class="p">]</span><span class="o">.</span><span class="n">fits</span> <span class="o">--</span><span class="n">remote</span><span class="o">-</span><span class="n">name</span>
@@ -553,7 +553,7 @@ Below are the ones useful for our telescope (48 arcmin x 32 arcmin field), from 
   <div class="footer-item">
     
 <p class="component-author">
-By Malte Tewes / AIfA telescope team
+By the AIfA telescope team / M. Tewes
 </p>
 
   </div>
