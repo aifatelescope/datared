@@ -277,6 +277,7 @@ In this tutorial, we make use of digital aperture photometry, which corresponds 
 
 More specifically, we will use **forced photometry**, meaning that we perform photometry by placing apertures at specific pre-defined locations of an image, without first "detecting" sources in that particular image. These locations are defined in sky coordinates in a reference catalog that we build from a reference image. This makes the subsequent analysis particularly easy, as we get consistent photometric catalogs for each exposure.
 
+In practice, photometry will deliver instrumental fluxes, measured in units of ADU, for each source (or aperture) on an exposure. 
 
 ```{note}
 For the sake of simplicity, we ignore here the effect that distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).
@@ -284,15 +285,26 @@ For the sake of simplicity, we ignore here the effect that distortions have on p
 
 ## Apparent magnitudes
 
-The apparent brightness of a source in optical astronomy is denoted by its magnitude. Magnitudes are a logarithmic scale of the flux that we observe from a source. For a source of flux $F$, the magnitude is given by
+The apparent brightness of a source in optical astronomy, as seen in some defined passband, is denoted by an **apparent magnitude** in that passband. Magnitudes are a logarithmic scale of the flux that we observe from a source.
+
+For an instrumental flux $F$ (e.g., in ADU) obtained via photometry, one can compute an "instrumental magnitude" often defined as
+
+$$
+m_{\mathrm{instr}} = -2.5 \log_{10}(F[ADU]).
+$$
+
+Clearly, this $m_{\mathrm{instr}}$ is dependent on the instrument (and the telescope), but also on the exposure time, the aperture size, the atmospheric transparency, etc. In other words, the instrumental magnitude is a completely *uncalibrated* apparent magnitude, which nevertheless can be used to compare for example fluxes measured with the same observational setup.
+
+
+More generally, for a source of flux $F$ (in any appropriate unit), the magnitude is given by
 
 $$
 m = -2.5 \log_{10}(F) + C,
 $$
 
-where $C$ is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration can vary. While it is relatively easy to compare fluxes, connecting your observations to a referential zero point can be a challenging task. In practice, this relies on the observation of standard stars whose magnitudes are known from a reference catalogue.
+where $C$ is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration can vary, and connecting your observations to a referential zero point can be a challenging task. In practice, this relies on the observation of standard sources whose magnitudes are known from a reference catalogue. Note that for many applications (such as the analysis of exoplanet transit light curves), an accurate magnitude calibration is not required, as we care only about *relative* photometry (i.e., differences in magnitudes).
 
-As long as the calibration done consistently, $C$ cancels out when forming a difference in magnitudes between two sources:
+Indeed, $C$ cancels out when forming a difference in magnitudes between two sources:
 
 $$
 m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
@@ -303,6 +315,14 @@ A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values
 ```{note}
 Fainter sources have higher magnitudes!
 ```
+
+```{note}
+The magnitude scale is logarithmic. Any multiplicative effect on flux (such as extinction by interstellar dust, absorption by clouds, dirt on the telescope mirror, shading of parts of the telescope mirror by a misaligned dome, etc) therefore corresponds to an **additive shift** in magnitude, independent on the brightness of a source.
+
+If the sources in a field would all have the same intrinsic spectrum, then any change to the passband of the instrument (i.e., using a narrower or broader filter, or a filter of a different color) would correspond to a common shift in the recorded magnitudes of all these sources.
+
+```
+
 
 ````{admonition} Questions
 * What flux ratio corresponds to a difference of one magnitude?
