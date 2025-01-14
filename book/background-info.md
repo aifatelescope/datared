@@ -10,12 +10,12 @@ A reflecting telescope uses a combination of (curved) mirrors to form an image i
 The optical design of the AIfA telescope is a **variation of a Cassegrain** telescope, illustrated below.
 
 
-```{figure} ./figures/cassegrain_layout.png
+```{figure} ./figures/aifa_telescope_layout.png
 ---
-width: 80%
-name: cassegrain_layout
+width: 90%
+name: aifa_telescope_layout
 ---
-Optical layout of a Cassegrain telescope
+Optical layout of the AIfA telescope
 ```
 
 The in-falling light first meets the concave primary mirror (M1) to be then re-reflected by the convex secondary mirror (M2). The light gets collimated in the focal plane, after passing through an opening in M1. Due to the folding of its optical path, such a Cassegrain system allows for a compact construction. More precisely, the AIfA telescope is a  "[corrected Dall-Kirkham](https://www.planewave.eu/en/technologies/cdk-optical-design)" telescope, where M1 is ellipsoidal with a diameter of 35 cm (the **aperture** of the telescope), M2 is spherical, and an additional lens group located before the focal plane, roughly in the opening of M1, corrects the design against aberrations on a wide and flat focal plane. The effective focal length of the system is 2563 mm.
@@ -47,7 +47,7 @@ The size of such a stellar image, as given by the **full width at half maximum (
 
 ```{hint}
 Both the diffraction-limited resolution of a telescope and the seeing are wavelength-dependent!
-The diffraction-limited image is sharpest for shorter wavelength. But as just discussed, atmospheric seeing is a consequence of *refraction*. Refraction of visible light in the atmosphere (that is a medium with so-called "normal dispersion") is *stronger* for short wavelengths than it is for long wavelengths. Therefore, a ground-based image taken in a red (or infrared) filter will be sharper than an image in a blue filter (assuming otherwise similar observing conditions)!
+The diffraction-limited image is sharpest for shorter wavelength. But as just discussed, atmospheric seeing is a consequence of *refraction*. Refraction of visible light in the atmosphere (that is a medium with so-called "normal dispersion") is *stronger* for short wavelengths than it is for long wavelengths. Therefore, a ground-based image taken in red (or infrared) light will be sharper than an image in the blue part of the spectrum (assuming otherwise similar observing conditions)!
 ```
 
 The best possible observing conditions are achieved near the zenith, where the length of the light path through the atmosphere is minimal. Extinction and disturbing seeing effects get worse for observations at lower elevations. These effects are often expressed in terms of the object’s **airmass** $a$, which tells you through how much atmosphere (column density) the light travels compared to vertical in-fall. For an angular distance $z$ from the zenith (zenith = in vertical direction from the ground) it can in good approximation be computed as $a = 1 / \cos(z)$ such that $a = 1$ for an object at the zenith and formally $a = \infty$ at the horizon.
@@ -58,10 +58,19 @@ The best possible observing conditions are achieved near the zenith, where the l
 
 A *camera* is an instrument attached to the telescope, such that the camera's imaging sensor (sometimes also called detector) lies in the focal plane of the telescope. The sensor in the camera will *sample* the image, by recording the intensity of the light in an array of *pixels* (short for picture elements).
 
-While the sensors used in optical astronomy can virtually *count* individual photons, they are not sensitive to their wavelength. Therefore, two obtain any kind of color information, a filter needs to be placed in the optical path before the imaging sensor. In practice, several filters are mounted into a filter wheel which is located in front of the sensor, allowing for a fast filter change.
-
 The combination of a camera with a telescope yields a particular size of the field of view, and a resulting pixel scale. The pixel scale corresponds to the angular size a pixel subtends on the sky, and is expressed in arcseconds. For example, the camera used at the 35 cm AIfA telescope has a field of 48 arcmin by 32 arcmin, and a pixel scale of 0.3 arcsec. Given how small these pixels are compared to the typical seeing, we systematically operate the camera with a "2x2 binning", meaning in this particular case that adjacent pixels are summed together in groups of 2x2 pixels, with the benefit of reduced file size. **The effective pixel size of those images is 0.607 arcsec.**
 
+## Filters
+
+While the sensors used in optical astronomy can virtually *count* individual photons, they are not sensitive to their wavelength. Therefore, two obtain any kind of color information, one has to record several images of the target using different optical filters. These filters are inserted in the optical path before the imaging sensor (see {numref}`aifa_telescope_layout`). In practice, several filters are mounted into a filter wheel which is located directly ahead of the camera, allowing for a fast filter change.
+
+The filter wheel of the AIfA telescope contains broad-band filters that are very close to the ones used in the the Sloan/SDSS photometric system (called *ugriz*), which is widely used in astronomical research:
+
+- ***g'*** with a passband of about 400 - 550 nm (blue to green), very similar to SDSS *g*,
+- ***r'*** with a passband of about 560 - 700 nm (yellow to red), very similar to SDSS *r*,
+- ***i'*** with a passband of about 700 - 840 nm (red and near infrared), very similar to SDSS *i*.
+
+In addition, the filter wheel also holds three narrowband filters: H-alpha, OIII, and SII, each with a width of 6.5 nm. 
 
 
 ## Imaging detectors (CCD or CMOS)
@@ -108,7 +117,7 @@ The bias level results in an additive offset on the image: when an empty CCD is 
 Another property of all photosensitive sensors is the *dark current*, which describes the accumulation of electrons in the pixels even if no outside photons hit the sensor, per unit of time. Dark current is due to the "thermal" random movement of electrons, which "fall" into the potential wells of the pixels. The intensity of the dark current increases with temperature. Cooling the sensor is therefore a way to mitigate dark current.
 
 ```{note}
-The "problem" with dark current is that the actual number of thermal electrons which gets added to each pixel of the sensor is subject to shot noise, further discussed below. If this amount of electrons would be completely predictable (given an exposure time, and the sensor temperature), it would be trivial to perfectly subtract it when calibrating the images. But while the dark current itself might be perfectly stable, the amount of thermal electrons it generates is random, and increases with exposure time. **It's this randomness which harms the observation of faint sources.**
+The "problem" with dark current is that the actual number of thermal electrons which gets added to each pixel of the sensor is subject to shot noise, further discussed below. If this amount of electrons would be completely predictable (given an exposure time, and the sensor temperature), it would be trivial to perfectly subtract it when calibrating the images. But while the average dark current might be perfectly stable, the amount of thermal electrons it generates in a pixel is random, and increases with exposure time. **It's this randomness which harms the observation of faint sources.**
 ```
 
 
@@ -199,7 +208,7 @@ Even if the dark current might be negligible for a cooled camera, these dark fra
 
 Flat frames $\mathbf{F}$ are taken with an exposure time $t_{\mathbf{F}}$, on an ideally uniform target. They do comprise the effects seen by $\mathbf{B}$ and $\mathbf{D}$, and in addition a view of the flat target contaminated by inhomogeneous sensitivity.
 Their purpose is to capture all multiplicative effects affecting the pixel values, such as differences in gain or quantum efficiency of the pixels, or inhomogeneous illumination of the sensor by the telescope (e.g., vignetting) or filter.
-Possible flatfield targets include the bright twilight sky, or an illuminated surface inside the dome. Obtaining "good" flat frames is fundamentally difficult, as the homogeneity of a target over the full field is never perfect. Furthermore the QE variations in sensors do depend on wavelength, so that the colour of the flat target matters. As will become clear, a 1% error in the flat field will yield a 1% error in the photometry of sources.
+Possible flatfield targets include the bright twilight sky (resulting in so-called "sky flats"), an illuminated surface inside the dome (these are called "dome flats"), or a light-emitting panel similar to a computer display ("panel flats"). Obtaining good flat frames is fundamentally difficult, as the homogeneity of a target over the full field is never perfect. Furthermore the QE variations in sensors do depend on wavelength, so that the colour (and spectrum) of the flat target matters. As will become clear, a 1% error in the flat field will yield a 1% error in the photometry of sources.
 
 
 ### Science frames
