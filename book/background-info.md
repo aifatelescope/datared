@@ -186,10 +186,10 @@ FITS (Flexible Image Transport System) is a standard in use since 1981, and ther
 ## Calibration (aka pre-reduction)
 
 The aim of image calibration (also known as image pre-reduction) is to remove all "artificial" or "instrumental" effects from the pixel values.
-Broadly speaking, these effects can be categorized as either multiplicative or additive. For example, dirt on the filter will have a multiplicative effect on the flux, as it will take away a fraction of the light of a source for certain pixels affected by this dirt. While the bias level is an example of an additive effect, that we want to subtract.
+Broadly speaking, these effects can be categorized as either multiplicative or additive. For example, dirt on the filter will have a multiplicative effect on the flux, as it will take away a fraction of the light of a source for certain pixels. On the other hand, the bias level is an example of an additive effect, that we want to subtract.
 
 Image calibration attempts to cleanly separate and correct for these effects, ideally without adding any significant additional noise to the raw images.
-Details of an optimal pre-reduction will depend on the pecularities of the telescopes and instruments, but the basic procedure described in the following is often part of it.
+Details of an optimal pre-reduction will depend on the peculiarities of the telescopes and instruments, but the basic procedure described in the following is often part of it.
 
 It makes use of three "calibration frames": **bias** frames, **dark** frames, and **flat** frames.
 
@@ -211,19 +211,28 @@ Their purpose is to capture all multiplicative effects affecting the pixel value
 Possible flatfield targets include the bright twilight sky (resulting in so-called "sky flats"), an illuminated surface inside the dome (these are called "dome flats"), or a light-emitting panel similar to a computer display ("panel flats"). Obtaining good flat frames is fundamentally difficult, as the homogeneity of a target over the full field is never perfect. Furthermore the QE variations in sensors do depend on wavelength, so that the colour (and spectrum) of the flat target matters. As will become clear, a 1% error in the flat field will yield a 1% error in the photometry of sources.
 
 
+```{note}
+
+Do not confuse the calibration frames and the "associated" effects!
+While flat frames will get used to "flatten" the pixel response across the field, they do also suffer from dark current and bias!
+
+```
+
+
 ### Science frames
 
-We call "science frames" $\mathbf{S}$ the actual raw exposures of the target, taken with an exposure time $t_{\mathbf{S}}$. These images are contaminated by all the effects described above.
+We call "science frames" $\mathbf{S}$ the actual raw exposures of the target, taken with an exposure time $t_{\mathbf{S}}$. These images are contaminated by all the effects described in the above paragraphs.
 
 ### Pre-reduction
 
-The general process of pre-reduction of $\mathbf{S}$ can now be written as follows:
+
+The general idea of the pixel-by-pixel pre-reduction is to first subtract the additive effects from $\mathbf{S}$, and then correct for the multiplicative effects through division by the flat frame. But prior to this, the latter also has to be corrected for additive effects. The overall process of the pre-reduction of $\mathbf{S}$ can be written as follows:
 
 $$
 \mathbf{S}_{\mathrm{prered}} = \frac{\mathbf{S} - \mathbf{B} - \frac{t_{\mathbf{S}}}{t_{\mathbf{D}}}(\mathbf{D} - \mathbf{B})}{\left[\mathbf{F} - \mathbf{B} - \frac{t_{\mathbf{F}}}{t_{\mathbf{D}}}(\mathbf{D} - \mathbf{B})\right]_{\mathrm{normalized}}},
 $$
 
-where "normalized" in the denominator means that we ensure that the frame has a mean value close to one, for example by dividing it by its median pixel value. This normalization is done to avoid rescaling all pixel values in our science image by some arbitrary number.
+where "normalized" in the denominator means that we ensure that the frame has a mean value close to one, for example by dividing it by its median pixel value. This normalization is done to avoid rescaling all pixel values in our science image by some arbitrary flat level.
 
 In practice, instead of single bias, dark, and flat frames, one uses a **masterbias**, **masterdark**, and **masterflat**, i.e., combinations of several (typically 10 to 20) frames. The reason is that we don't want to add any noise in the pre-reduction process. Combining frames (for example by taking for each pixel the median or average across several exposures) reduces the random noise compared to the signal common to the individual frames.
 
@@ -233,10 +242,20 @@ Depending on the quality and noise of calibration frames, and on the kind of mea
 ```
 
 
-## Artifacts
+## Artifacts and dithering
 
 * *Hot pixels* are defective pixels (both on CCD and CMOS sensors), which accumulate thermal electrons much faster than regular pixels. In result, when taking an image with a significant exposure time, these hot pixels will stand out as single bright points.
 
+One simple method to mitigate the effect of such sensor artifacts is to take several "dithered" images of a target area, that is images with slightly different pointing offsets, obtained by moving the telescope by a small amount between the exposures. This ensures that the artifacts do not contaminate the targets of interest in every exposure.
+
+
+````{admonition} Question
+Why is taking several exposures usually better than taking a single exposure with a much longer exposure time?
+```{hint}
+:class: dropdown
+Saturation of sources, tracking accuracy of the mount, dithering against artifacts, cosmic rays, ...
+```
+````
 
 ## Coordinates, WCS
 
@@ -253,26 +272,10 @@ The aim of *astrometric calibration* is to establish an accurate transformation 
 
 ## Coaddition
 
-(coaddition is currently not used in this tutorial, section still to be written)
-
-* reprojection techniques
+Once the science frames are pre-reduced and astrometrically calibrated, a possible next step is to "coadd" several exposures of a target, to obtain a deeper image revealing fainter sources. This first requires some form of reprojection of the different (dithered) images on a common pixel grid. These reprojected images can then be combined pixel-by-pixel, for example by computing an average value for each pixel across all exposures, potentially after identification and rejection of some outlier values. An alternative robust combination method is to compute the median for each pixel. While such a median-combination is easy to describe and very effective at rejecting artifacts, it is somewhat less precise than an average-combination for pixels that are not affected by any outliers. Indeed, for a large number of samples from a normal distribution, the standard error of the median will be $\sqrt{\pi/2} \approx 1.25$ times higher, i.e., 25% greater, than the standard error of the mean (the interested reader can find details [here](https://en.wikipedia.org/wiki/Median)).
 
 
-```{sidebar} Average or median?
-Assuming an ideal situation without any outliers, is it better to average-combine or median-combine images?
-
-For a large number of samples from a normal distribution, the standard error of the median will be $\sqrt{\pi/2} = 1.25$ times higher, or 25% greater, than the standard error of the mean ([see details](https://en.wikipedia.org/wiki/Median)).
-
-```
-
-````{admonition} Question
-Why is combining several exposures usually better than taking a single exposure with a long exposure time?
-```{hint}
-:class: dropdown
-Saturation, tracking, cosmic rays
-```
-````
-
+In principle, it is advantageous to avoid any unnecessary manipulations to the raw data. Depending on the science case, an alternative to image coaddition is to combine the *measurements* obtained on the individual science frames (instead of first combining the pixel values). We will mainly follow this approach in the present tutorial.
 
 
 
@@ -288,7 +291,7 @@ More specifically, we will use **forced photometry**, meaning that we perform ph
 In practice, photometry will deliver instrumental fluxes, measured in units of ADU, for each source (or aperture) on an exposure. 
 
 ```{note}
-For the sake of simplicity, we ignore here the effect that distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).
+For the sake of simplicity, we ignore here the effect that astrometric distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).
 ```
 
 ## Apparent magnitudes
