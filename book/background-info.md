@@ -40,17 +40,19 @@ As we'll see in the following, for simple ground-based telescopes, the actual re
 
 ## Seeing and airmass
 
-For ground-based astronomical observations, Earth’s atmosphere has to be considered as part of the optical system, leading to numerous effects. Most importantly, turbulence in the atmosphere leads to variations of the refractive index on short spatial and temporal scales. The "instantaneous" image of a star seen in the telescope is no longer an Airy disc, but has an irregular shape that randomly changes and moves around. When integrating an image with any exposure time longer than about a tenth of a second, this results in a blurring of the PSF. The PSF of such a long exposure can to some extent be represented by a two-dimensional Gaussian (a better approximation is given by the [Moffat profile](https://en.wikipedia.org/wiki/Moffat_distribution)).
+For ground-based astronomical observations, Earth’s atmosphere has to be considered as part of the optical system, leading to numerous effects. Our atmosphere is inhomogeneous in temperature (and hence *density*), resulting in an inhomogeneous refractive index. Turbulence in the atmosphere leads to variations of this refractive index on short spatial and temporal scales. In consequence, the "instantaneous" image of a star seen in the telescope is no longer an Airy disc, but has a very irregular shape (see [Speckle imaging](https://en.wikipedia.org/wiki/Speckle_imaging) for an example). Due to the fast temporal variation of the turbulent atmosphere, the star's image randomly changes and moves around. Integrating this image with any exposure time longer than about a tenth of a second results in a blurry blob, which is wider than the diffraction-limited Airy disk. This ground-based PSF of a long exposure can to some extent be represented by a two-dimensional Gaussian. An even better approximation is given by the [Moffat profile](https://en.wikipedia.org/wiki/Moffat_distribution).
 
-The size of such a stellar image, as given by the **full width at half maximum (FWHM)** of the Gaussian, is called the **seeing** of the image and measures the actual resolution in a particular observation. The less turbulent the atmosphere, the higher the resolution and thus the data quality that can be achieved. For Bonn, a seeing of 2 arcsec is a very rare and good value, while in excellent locations like Hawaii or the Atacama desert 0.5 arcsec are common.
-
-The best possible observing conditions are achieved near the zenith, where the length of the light path through the atmosphere is minimal. On the contrary, extinction and disturbing seeing effects get worse for observations at lower elevations. These effects are often expressed in terms of the object’s **airmass** $a$, which tells you through how much atmosphere (column density) the light travels compared to vertical in-fall. For an angular distance $z$ from the zenith (zenith = in vertical direction from the ground) it can in good approximation be computed as $a = 1 / \cos(z)$ such that $a = 1$ for an object at the zenith and formally $a = \infty$ at the horizon.
+The size of such a stellar image, as given by the **full width at half maximum (FWHM)** of the PSF profile, is called the **seeing** of the image and measures the actual resolution in a particular observation. The less turbulent the atmosphere, the higher the resolution and thus the data quality that can be achieved. For Bonn, a seeing of 2 arcsec is a very rare and good value, while in excellent locations like Hawaii or the Atacama desert 0.5 arcsec are common.
 
 
 ```{hint}
 Both the diffraction-limited resolution of a telescope and the seeing are wavelength-dependent!
-The diffraction-limited image would be sharpest for shorter wavelength. But refraction of visible light in the atmosphere (that is a medium with so-called "normal dispersion") is *stronger* for short wavelengths than it is for long wavelengths. Therefore, assuming similar atmospheric conditions, an image taken in a red (or infrared) filter will be sharper than an image in a blue filter!
+The diffraction-limited image is sharpest for shorter wavelength. But as just discussed, atmospheric seeing is a consequence of *refraction*. Refraction of visible light in the atmosphere (that is a medium with so-called "normal dispersion") is *stronger* for short wavelengths than it is for long wavelengths. Therefore, a ground-based image taken in a red (or infrared) filter will be sharper than an image in a blue filter (assuming otherwise similar observing conditions)!
 ```
+
+The best possible observing conditions are achieved near the zenith, where the length of the light path through the atmosphere is minimal. Extinction and disturbing seeing effects get worse for observations at lower elevations. These effects are often expressed in terms of the object’s **airmass** $a$, which tells you through how much atmosphere (column density) the light travels compared to vertical in-fall. For an angular distance $z$ from the zenith (zenith = in vertical direction from the ground) it can in good approximation be computed as $a = 1 / \cos(z)$ such that $a = 1$ for an object at the zenith and formally $a = \infty$ at the horizon.
+
+
 
 ## Imaging instrument: the camera
 
@@ -129,7 +131,7 @@ Illustration of some basic image properties. Top: two stars (one has twice the f
 
 At this point, we can briefly discuss an image as recorded by a camera.
 
-Recall that images of stars are not "point-like", but follow the profile of the *Point Spread Function* (PSF). For images obtained by simple ground-based telescopes, the origin of the PSF is dominated by astronomical seeing, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The images we record through those telescopes get blurred by this PSF. Mathematically, the observed image can be seen as a convolution of the actual scene with this PSF. The result of this convolution gets sampled on the pixel array of the detector.
+Recall that images of stars are not "point-like", but follow the profile of the *Point Spread Function* (PSF). For images obtained by simple ground-based telescopes, the origin of the PSF is dominated by astronomical seeing, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The images we record through those telescopes get blurred by this PSF. Mathematically, the observed image can be seen as a convolution of the actual scene with the PSF. The result of this convolution gets sampled by the pixel array of the detector.
 
 Also recall that the PSF is wavelength-dependent: ground-based images obtained through a red filter will be significantly sharper than images in a blue band.
 
@@ -142,27 +144,24 @@ Some comments about the apparent size of stars can be made:
 
 Another point illustrated in {numref}`image_basics` is the presence of a so-called "background", in otherwise empty areas of the image, which is here at a level of about 2000 ADU. For ground-based observations, the main source of background comes from Earth's atmosphere: even at night, the sky is not fully dark. Light pollution, Moon light, [airglow](https://en.wikipedia.org/wiki/Airglow) in our atmosphere, but also [zodiacal light](https://en.wikipedia.org/wiki/Zodiacal_light) all contribute to this. When observing from Bonn at new Moon, it's the light pollution which will dominate. Only when observing from a dark site (e.g., the Atacama desert in Chile), airglow can play the major role. In all these cases, the "background" is in fact mostly a "foreground".
 
+### Considerations on noise
 
-```{sidebar} 
-The standard deviation equals $\sqrt{N}$ *only* when $N$ designates the number of electrons (or equivalently photons). This relation does not hold for $N$ given in ADU (assuming that the gain is different from 1.0). A typical image will be stored in units of ADU, and care must be taken to convert pixel values into electrons when performing such calculations, using the gain.
+All photons falling on a pixel are subject to *[shot noise](https://en.wikipedia.org/wiki/Shot_noise)* (also called Poisson noise), regardless of their origin from the astronomical source or the background. The same holds for the electrons from the dark current. In consequence, for any pixel, the number of recorded electrons follows a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), such that if the expectation value of a pixel is $N$ electrons, the standard deviation of the noise in that pixel will be $\sqrt{N}$ electrons. In other words, the higher the expected value of a pixel, the noisier its value will be.
+
+```{note}
+Be aware that this standard deviation equals $\sqrt{N}$ *only* when $N$ designates the number of electrons (or equivalently photons). This relation does *not* hold if $N$ is in ADU (assuming that the gain is different from 1.0). A typical image will be stored in units of ADU, and care must be taken to convert pixel values into electrons when performing such calculations, using the gain.
 ```
 
-All accumulated electrons (from the astronomical source, the background, or the dark current) are subject to *[shot noise](https://en.wikipedia.org/wiki/Shot_noise)* (also called Poisson noise). In any pixel, the number of recorded electrons follows a [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution), such that if the expectation value of a pixel is $N$ electrons, the standard deviation of the noise in that pixel will be $\sqrt{N}$ electrons. In other words, the higher the expected value of a pixel, the noisier its value will be.
-
-
+The signal-to-noise ratio (S/N) quantifies how strong the level of a desired signal (for example, the flux of a galaxy) is, compared to its standard deviation. {numref}`image_basics` illustrates how the counts from a target can actually be significantly lower than the background level. The galaxy image peaks at about 500 ADU above the background, which is at 2000 ADU. The uncertainty on the flux of this galaxy will be dominated by the shot noise from the background, more than by the shot noise from the galaxy!
 
 
 ```{note}
-The noise in a raw image originates from the shot noise of the source, the shot noise of the background, the shot noise of thermal electrons (dark current), and the read-out noise from the electronics.
+We've discussed several sources of noise: shot noise from the sources and background, shot noise from the thermal electrons (i.e., related to the dark current), and read-out noise from the electronics.
 
 While one can easily subtract any offset or smooth model from an image, **one can never subtract the actual noise**.
 
 It is therefore important to minimize noise in the first place, for example by selecting a dark observing site and cooling the camera. 
-
 ```
-
-The signal-to-noise ratio (S/N) quantifies how strong the level of a desired signal (for example, the flux of a galaxy) is compared to its standard deviation. {numref}`image_basics` illustrates how the counts from the target can be significantly lower than the background level.
-
 
 
 
