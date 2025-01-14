@@ -392,8 +392,10 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preparation-of-the-data">Preparation of the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-field-of-view">Visualizing the field of view</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-raw-light-curves">The raw light curves</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration">Calibration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-light-curves">Plotting the light curves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-the-light-curves">Discussion of the light curves</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-the-exoplanet-transit">Discussion of the exoplanet transit</a></li>
 </ul>
             </nav>
@@ -421,6 +423,7 @@ All that we’ll need from here on is the content of the <code class="docutils l
 <span class="kn">import</span> <span class="nn">pathlib</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">astropy</span>
 <span class="kn">import</span> <span class="nn">astropy.table</span>
 <span class="kn">import</span> <span class="nn">astropy.visualization</span>
@@ -502,6 +505,59 @@ All that we’ll need from here on is the content of the <code class="docutils l
 </div>
 </div>
 </div>
+<p>At this stage, the data is in structure that is convenient for plotting and calibration: the epochs are in a list of datetime objects (<code class="docutils literal notranslate"><span class="pre">dates</span></code>), and all the corresponding flux measurements are in the <code class="docutils literal notranslate"><span class="pre">catalog</span></code>.</p>
+<p>For noisy observations, it might be interesting to “bin” the light curves, that is to sum the flux of each source in groups of n exposures. This increases the signal to noise ratio of the datapoints, at the cost of decreasing the sampling along the time axis.
+Before starting with the further analysis and calibration, we provide below a piece of code that creates a <code class="docutils literal notranslate"><span class="pre">catalog_binned</span></code> and a corresponding <code class="docutils literal notranslate"><span class="pre">dates_binned</span></code>, that you might want to use instead of <code class="docutils literal notranslate"><span class="pre">catalog</span></code> and <code class="docutils literal notranslate"><span class="pre">dates</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional cell to create a binned version of the data catalog</span>
+
+<span class="n">binsize</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># How many measurements to group in each bin</span>
+
+<span class="n">n_epochs_binnable</span> <span class="o">=</span> <span class="n">n_epochs</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_epochs</span> <span class="o">%</span> <span class="n">binsize</span><span class="p">)</span> <span class="c1"># Number of epochs we can use (largest possible integer multiple of binsize)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;With bin size </span><span class="si">{</span><span class="n">binsize</span><span class="si">}</span><span class="s2"> we can use </span><span class="si">{</span><span class="n">n_epochs_binnable</span><span class="si">}</span><span class="s2"> of the </span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2"> epochs.&quot;</span><span class="p">)</span>
+
+<span class="c1"># First, we create a list of binned dates: we take the &quot;mean&quot; of the epochs in each bin.</span>
+<span class="n">dates_reshape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dates</span><span class="p">[:</span><span class="n">n_epochs_binnable</span><span class="p">],</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">binsize</span><span class="p">))</span>
+<span class="n">dates_binned</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">bin</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="nb">bin</span> <span class="ow">in</span> <span class="n">dates_reshape</span><span class="p">]</span>
+
+<span class="c1"># Then we create a &quot;binned&quot; catalog, starting from a full copy.</span>
+<span class="n">catalog_binned</span> <span class="o">=</span> <span class="n">catalog</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Define how to process columns:</span>
+<span class="n">colnames_to_sum</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sum_4&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_6&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_8&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_10&quot;</span><span class="p">]</span>
+<span class="n">colnames_to_mean</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;fwhm_4&quot;</span><span class="p">,</span> <span class="s2">&quot;elongation_4&quot;</span><span class="p">]</span>
+<span class="n">colnames_to_median</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">colnames_to_sum</span> <span class="o">+</span> <span class="n">colnames_to_mean</span> <span class="o">+</span> <span class="n">colnames_to_median</span><span class="p">:</span>
+
+    <span class="n">original_column_shape</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_column_shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Column </span><span class="si">{</span><span class="n">colname</span><span class="si">}</span><span class="s2"> has shape </span><span class="si">{</span><span class="n">original_column_shape</span><span class="si">}</span><span class="s2"> and can&#39;t be binned.&quot;</span><span class="p">))</span>
+    
+    <span class="n">nb_sources</span> <span class="o">=</span> <span class="n">original_column_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">column_reshape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">colname</span><span class="p">][:,:</span><span class="n">n_epochs_binnable</span><span class="p">],</span> <span class="p">(</span><span class="n">nb_sources</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">binsize</span><span class="p">))</span> <span class="c1"># This is now 3D : (source index, nb of binned epochs, binsize)</span>
+
+    <span class="k">if</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">colnames_to_sum</span><span class="p">:</span>
+        <span class="n">column_binned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">column_reshape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#sum within bins</span>
+    <span class="k">elif</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">colnames_to_mean</span><span class="p">:</span>
+        <span class="n">column_binned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">column_reshape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># mean within bins</span>
+    <span class="k">elif</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">colnames_to_median</span><span class="p">:</span>
+        <span class="n">column_binned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">column_reshape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># median within bins</span>
+
+    <span class="n">catalog_binned</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">column_binned</span>
+
+<span class="c1"># For information, the column names and column shapes of the &quot;binned&quot; catalogue are:</span>
+<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">catalog_binned</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">colname</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">catalog_binned</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of epochs in binned catalog: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dates_binned</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-the-field-of-view">
+<h2>Visualizing the field of view<a class="headerlink" href="#visualizing-the-field-of-view" title="Permalink to this heading">#</a></h2>
 <p>We now display an image of the field, overplotting the “source indices” corresponding to rows of our catalog.</p>
 <p>This will allow us to identify the target and reference stars.</p>
 <div class="cell docutils container">
@@ -554,6 +610,9 @@ All that we’ll need from here on is the content of the <code class="docutils l
 </div>
 </div>
 </div>
+</section>
+<section id="the-raw-light-curves">
+<h2>The raw light curves<a class="headerlink" href="#the-raw-light-curves" title="Permalink to this heading">#</a></h2>
 <p>Let’s now visualize the raw light curves, to get a first impression.
 The following code is there as an example on how to use and manipulate the <code class="docutils literal notranslate"><span class="pre">catalog</span></code> and how to plot basic light curves, to get you started.</p>
 <div class="cell docutils container">
@@ -566,7 +625,7 @@ The following code is there as an example on how to use and manipulate the <code
 
 <span class="c1"># We can also compute summary statistics for each source. Useful ones could be for example the median instrumental magnitude,</span>
 <span class="c1"># obtained by taking the median along the &quot;date&quot;-axis of the instrumental magnitudes:</span>
-<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mean_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># this is just a 1D column: (source index)</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;median_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># this is just a 1D column: (source index)</span>
 <span class="c1"># Using &quot;nanmedian&quot; instead of &quot;median&quot; has the advantage that NaNs get ignored.</span>
 <span class="c1"># And similarly the standard deviation of each light curve:</span>
 <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;std_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># this is just a 1D column: (source index)</span>
@@ -605,55 +664,62 @@ The following code is there as an example on how to use and manipulate the <code
 <p>It’s good to play around with these raw light curves a bit.</p>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>Do you observe any trends in these light curves, common to all stars or to some of these stars? Comment on what could cause these trends.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>An interesting plot could be a scatter plot of the mean (instrumental) magnitude versus the standard deviation of each light curve (i.e., source). This could help you identify (for example) a magnitude threshold beyond which stars are saturated, and therefore can’t be used for calibration. Indeed, stars that are close to saturation will typically show an excess scatter in their light curves, compared to stars that are safely below saturation.</p>
+<p>Do you observe any trends or features in these light curves that are common to all (or at least several) stars? Comment on what could cause these flux variations.</p>
 </div>
 </section>
 <section id="calibration">
 <h2>Calibration<a class="headerlink" href="#calibration" title="Permalink to this heading">#</a></h2>
-<p>To reveal the transit itself, some empirical calibration of the flux (or magnitude) measured in each exposure is needed.</p>
+<p>To reveal the transit itself, some empirical calibration of the flux (or magnitude) measured in each exposure is needed. Assuming you work in magnitudes, the basic idea is to subtract some reference light curve from the target light curve. Recall that this corresponds to a division when working with fluxes.</p>
+<p>To get you started, a somewhat minimal strategy for the calibration could be the following:</p>
+<ol class="arabic simple">
+<li><p>Select a reference star.</p></li>
+<li><p>Compute the difference between its light curve (in instrumental magnitudes) and the median of that light curve. This isolates the observed “variability” of the reference star.</p></li>
+<li><p>Subtract the above difference from the target light curve (in instrumental magnitudes). The resulting light curve is still in instrumental magnitudes, but is now empirically corrected for the variability of the reference star.</p></li>
+<li><p>Somewhat optionally, apply a zero point to transform the instrumental magnitudes to (approximate) apparent magnitudes, using for example a literature value of the apparent magnitude of the host star, and the baseline of the transit light curve.</p></li>
+</ol>
+<p>This simple approach is probably sufficient to see the transit (depending on its depth and the reference star you selected), but it leaves plenty of room for improvement, especially given our large field of view.</p>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>In theory, what would be the properties of good reference stars to use for the calibration?</p>
+<p>Try to further develop the above strategy, in particular towards better robustness and precision, write it down in a clear formalism (i.e., equations) with well-chosen symbols, and of course apply it to the data, to discuss any improvements.</p>
 </div>
-<p>It’s good to keep in mind that some technical or instrumental effects might possibly have strong effects on the calibration, and influence the optimal selection of reference stars. So in practice, it’s mandatory to actually test the calibration, instead of relying on theoretical considerations.</p>
-<p>Before implementing a calibration, we now need to define a strategy.</p>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>What causes the flux variations between exposures and what is the best way to correct for them? Try to come up with a formalism (i.e., equations) of a simple correction strategy.</p>
+<p>In theory, what would be the properties of good reference stars to use for the calibration, and why?</p>
 </div>
+<p>It’s good to keep in mind that some technical or instrumental effects might possibly have strong effects on the calibration, and influence the optimal selection of reference stars. So in practice, it’s mandatory to actually test the calibration, instead of relying on theoretical considerations about what “should work best”.</p>
 </section>
-<section id="plotting-the-light-curves">
-<h2>Plotting the light curves<a class="headerlink" href="#plotting-the-light-curves" title="Permalink to this heading">#</a></h2>
-<p>Once we have computed a calibration, we can plot the light curve of the exoplanet system!</p>
+<section id="discussion-of-the-light-curves">
+<h2>Discussion of the light curves<a class="headerlink" href="#discussion-of-the-light-curves" title="Permalink to this heading">#</a></h2>
+<p>With a good calibration strategy at hand, you might now be able to clearly reveal the transit.</p>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>In addition to the light curve of the target star, also plot the light curves of some reference stars (after calibration), on the same axes or a separate figure. Use this to verify that your corrections are successful, and that you did not pick up variable stars or stars that have observational issues as reference sources.
+<p>In addition to the light curve of the target star, also plot the light curves of some reference stars (applying the same calibration). Use this to verify that your corrections are successful, and that you did not pick up variable stars or stars that have observational issues as reference sources.
 Do you see residual correlations between some stars?</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It could be interesting to make a scatter plot of the median apparent magnitude versus the standard deviation of each calibrated light curve (i.e., star). This could help you identify which stars might not be that useful for the calibration (e.g., pay attention to potential saturation issues for bright stars), and also it nicely summarizes the achieved photometric precision as function of magnitude.</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
 <p>If you see stars with strong residuals after the calibration, what could be the reasons?
 You can try to optimize the calibration by adapting the code to ignore particular stars.</p>
 </div>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>Can you identify the start and/or end of the transit?
-Give an estimate for the uncertainty of your estimate.</p>
-</div>
 </section>
 <section id="discussion-of-the-exoplanet-transit">
 <h2>Discussion of the exoplanet transit<a class="headerlink" href="#discussion-of-the-exoplanet-transit" title="Permalink to this heading">#</a></h2>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>What “depth” (in magnitude) do you measure on your transit. Can you convert your value to the commonly used “parts per thousand” (ppt)?</p>
+<p>Can you identify the start and/or end of the transit?
+Give an estimate for the uncertainty of your estimate.</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>Are your findings regarding the transit consistent with “literature” measurements (depth, duration, start/end time of the transit)?</p>
+<p>Can you measure a depth (in magnitude) of the transit? If yes, convert your value to the commonly used “parts per thousand” (ppt).</p>
+</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Are your findings regarding the transit consistent with measurements from the literature (depth, duration, start/end time of the transit)?</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
@@ -726,8 +792,10 @@ Give an estimate for the uncertainty of your estimate.</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preparation-of-the-data">Preparation of the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-the-field-of-view">Visualizing the field of view</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-raw-light-curves">The raw light curves</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration">Calibration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-light-curves">Plotting the light curves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-the-light-curves">Discussion of the light curves</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-the-exoplanet-transit">Discussion of the exoplanet transit</a></li>
 </ul>
   </nav></div>

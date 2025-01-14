@@ -411,6 +411,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">pathlib</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">astropy</span>
 <span class="kn">import</span> <span class="nn">astropy.table</span>
 <span class="kn">import</span> <span class="nn">astropy.visualization</span>
@@ -478,10 +479,60 @@ document.write(`
 <span class="c1"># We copy the positions from the reference catalog over to our combined catalog:</span>
 <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of epochs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">catalogs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dates</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of epochs: </span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># And just for your information, the column names of our &quot;combined&quot; catalogue are:</span>
-<span class="n">catalog</span><span class="o">.</span><span class="n">colnames</span>
+<span class="c1"># And just for information, we print the column names and column shapes of our &quot;combined&quot; catalogue.</span>
+<span class="c1"># Indeed, most of the &quot;columns&quot; are in fact 2D arrays: </span>
+<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">colname</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">catalog</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional cell to create a binned version of the data catalog</span>
+
+<span class="n">binsize</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># How many measurements to group in each bin</span>
+
+<span class="n">n_epochs_binnable</span> <span class="o">=</span> <span class="n">n_epochs</span> <span class="o">-</span> <span class="p">(</span><span class="n">n_epochs</span> <span class="o">%</span> <span class="n">binsize</span><span class="p">)</span> <span class="c1"># This is number of epochs we can use (largest possible integer multiple of binsize)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;With bin size </span><span class="si">{</span><span class="n">binsize</span><span class="si">}</span><span class="s2"> we can use </span><span class="si">{</span><span class="n">n_epochs_binnable</span><span class="si">}</span><span class="s2"> of the </span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2"> epochs.&quot;</span><span class="p">)</span>
+
+<span class="c1"># First, we create a list of binned dates: we take the &quot;mean&quot; of the epochs in each bin.</span>
+<span class="n">dates_reshape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dates</span><span class="p">[:</span><span class="n">n_epochs_binnable</span><span class="p">],</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">binsize</span><span class="p">))</span>
+<span class="n">dates_binned</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">bin</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="nb">bin</span> <span class="ow">in</span> <span class="n">dates_reshape</span><span class="p">]</span>
+
+<span class="c1"># Then we create a &quot;binned&quot; catalog, starting from a full copy.</span>
+<span class="n">catalog_binned</span> <span class="o">=</span> <span class="n">catalog</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Define how to process columns:</span>
+<span class="n">colnames_to_sum</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sum_4&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_6&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_8&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_10&quot;</span><span class="p">]</span>
+<span class="n">colnames_to_mean</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;fwhm_4&quot;</span><span class="p">,</span> <span class="s2">&quot;elongation_4&quot;</span><span class="p">]</span>
+<span class="n">colnames_to_median</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">colnames_to_sum</span> <span class="o">+</span> <span class="n">colnames_to_mean</span> <span class="o">+</span> <span class="n">colnames_to_median</span><span class="p">:</span>
+
+    <span class="n">original_column_shape</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_column_shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Column </span><span class="si">{</span><span class="n">colname</span><span class="si">}</span><span class="s2"> has shape </span><span class="si">{</span><span class="n">original_column_shape</span><span class="si">}</span><span class="s2"> and can&#39;t be binned.&quot;</span><span class="p">))</span>
+    
+    <span class="n">nb_sources</span> <span class="o">=</span> <span class="n">original_column_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">column_reshape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">colname</span><span class="p">][:,:</span><span class="n">n_epochs_binnable</span><span class="p">],</span> <span class="p">(</span><span class="n">nb_sources</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">binsize</span><span class="p">))</span> <span class="c1"># This is now 3D : (source index, nb of binned epochs, binsize)</span>
+
+    <span class="k">if</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">colnames_to_sum</span><span class="p">:</span>
+        <span class="n">column_binned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">column_reshape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#sum within bins</span>
+    <span class="k">elif</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">colnames_to_mean</span><span class="p">:</span>
+        <span class="n">column_binned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">column_reshape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># mean within bins</span>
+    <span class="k">elif</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">colnames_to_median</span><span class="p">:</span>
+        <span class="n">column_binned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">column_reshape</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># median within bins</span>
+
+    <span class="n">catalog_binned</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">column_binned</span>
+
+<span class="c1"># For information, the column names and column shapes of the &quot;binned&quot; catalogue are:</span>
+<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">catalog_binned</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">colname</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">catalog_binned</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of epochs in binned catalog: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dates_binned</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -582,43 +633,112 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For the calibration (and to produce a nice figure afterwards) some &quot;settings&quot;:</span>
 
-<span class="n">target_index</span> <span class="o">=</span> <span class="mi">12</span> <span class="c1"># Which index in the field image from above corresponds to the target star (the one that shows the transit)?</span>
-<span class="n">n_bright_stars_calib</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1"># How many of the brightest stars to use for calibration</span>
-<span class="n">n_bright_stars_show</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># How many of the brightest stars should be plotted </span>
-<span class="n">title_str</span> <span class="o">=</span> <span class="s2">&quot;My target (Moon 50% @10°)&quot;</span>
+<span class="n">target_index</span> <span class="o">=</span> <span class="mi">611</span> <span class="c1"># Which index in the field image from above corresponds to the target star (the one that shows the transit)?</span>
+<span class="n">mean_instr_mag_limit</span> <span class="o">=</span> <span class="o">-</span><span class="mf">15.0</span>
+<span class="n">std_instr_mag_limit</span> <span class="o">=</span> <span class="mf">0.015</span>
+<span class="n">nbr_images_baseline</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1"># how many images first baseline (to set magnitude)</span>
+<span class="n">n_bright_stars_calib</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1"># How many of the brightest stars to use for calibration</span>
+<span class="n">n_bright_stars_show</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1"># How many of the brightest stars should be plotted </span>
+<span class="n">title_str</span> <span class="o">=</span> <span class="s2">&quot;HAT-P-23 b, Moon 34% @ 119°, depth 10.5 ppt&quot;</span>
+
+<span class="n">flux_colname</span> <span class="o">=</span> <span class="s2">&quot;sum_6&quot;</span>
+
+
 
 <span class="c1"># Some values from the literature:</span>
+<span class="n">target_mag</span> <span class="o">=</span> <span class="mf">11.9</span> <span class="c1"># What magnitude does this star have?</span>
+<span class="n">transit_depth_ppt</span> <span class="o">=</span> <span class="mf">10.5</span> <span class="c1"># How deep is the transit (in parts per thousands &quot;ppt&quot;) </span>
+<span class="n">ingress_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s2">&quot;2024-08-27T20:31&quot;</span><span class="p">)</span> <span class="c1"># Both in UTC</span>
+<span class="n">egress_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s2">&quot;2024-08-27T22:42&quot;</span><span class="p">)</span>
 
-<span class="n">target_mag</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="c1"># What magnitude does this star have?</span>
-<span class="n">transit_depth_ppt</span> <span class="o">=</span> <span class="mf">12.0</span> <span class="c1"># How deep is the transit (in parts per thousands &quot;ppt&quot;) </span>
-<span class="n">ingress_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s2">&quot;2024-04-21T22:32&quot;</span><span class="p">)</span> <span class="c1"># Both in UTC</span>
-<span class="n">egress_datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="s2">&quot;2024-04-22T00:18&quot;</span><span class="p">)</span>
+
+<span class="n">transit_depth_mag</span> <span class="o">=</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">transit_depth_ppt</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">))</span>
+
 
 
 <span class="c1"># We compute the instrumental magnitude, for the desired aperture size (Maybe you did this already, but it doesn&#39;t harm)</span>
-<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sum_10&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="c1"># a &quot;2D&quot; column (index, date)</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">flux_colname</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="c1"># a &quot;2D&quot; column (index, date)</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;median_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># one value per source</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;std_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># this is just a 1Dcolumn: (source index)</span>
 
-<span class="n">zero_point</span> <span class="o">=</span> <span class="n">target_mag</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">target_index</span><span class="p">][</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zero-point: </span><span class="si">{</span><span class="n">zero_point</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">zero_point</span>
-
-<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># one value per source</span>
-
-<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">])</span>
-<span class="n">indices_calib</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">n_bright_stars_calib</span><span class="p">]</span>
-<span class="n">indices_show</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">n_bright_stars_show</span><span class="p">]</span>
-
-<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;delta_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 2D - 1D -&gt; 2D (index, date)</span>
+<span class="n">target_center_pos</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">],</span> <span class="n">target_center_pos</span><span class="p">)</span>
 
 
-<span class="n">same_calib_for_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;delta_mag&quot;</span><span class="p">][</span><span class="n">indices_calib</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;median_instr_mag&quot;</span><span class="p">])</span>
+
+<span class="n">flux_sort_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;flux_sort_indices&quot;</span><span class="p">]</span> <span class="k">if</span> 
+                     <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mean_instr_mag&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">mean_instr_mag_limit</span> <span class="ow">and</span> 
+                     <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;std_instr_mag&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">std_instr_mag_limit</span> <span class="ow">and</span>
+                     <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="ow">and</span>
+                     <span class="n">i</span> <span class="o">!=</span> <span class="n">target_index</span>
+                     <span class="c1">#np.abs(catalog[&quot;med_diff&quot;][i] - -0.01764350479282406) &lt; 0.005</span>
+                    <span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of stars remaining:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux_sort_indices</span><span class="p">))</span>
+<span class="n">indices_calib</span> <span class="o">=</span> <span class="n">flux_sort_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n_bright_stars_calib</span><span class="p">]</span>
+<span class="n">indices_show</span> <span class="o">=</span> <span class="n">flux_sort_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n_bright_stars_show</span><span class="p">]</span>
+
+<span class="c1">#catalog[&quot;flux_sort_indices&quot;] = np.argsort(catalog[&quot;median_instr_mag&quot;])</span>
+<span class="c1">#indices_calib = catalog[&quot;flux_sort_indices&quot;][0:n_bright_stars_calib]</span>
+<span class="c1">#indices_show = catalog[&quot;flux_sort_indices&quot;][0:n_bright_stars_show]</span>
+
+<span class="c1">#indices_calib = [118, 112, 103, 136, 141]</span>
+<span class="c1">#indices_show = [118, 112, 103, 136, 141]</span>
+
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;delta_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;median_instr_mag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 2D - 1D -&gt; 2D (index, date)</span>
+
+<span class="n">same_calib_for_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;delta_instr_mag&quot;</span><span class="p">][</span><span class="n">indices_calib</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="c1"># Normalize this:</span>
 <span class="n">same_calib_for_all</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">)</span>
 <span class="c1"># And make it a colum of the catalog</span>
-<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">catalog</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;rel_calib&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">catalog</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
 
-<span class="n">transit_depth_mag</span> <span class="o">=</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">transit_depth_ppt</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">))</span>
-             
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;rel_calib&quot;</span><span class="p">]</span>
+
+
+<span class="n">zero_point</span> <span class="o">=</span> <span class="n">target_mag</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib_instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">target_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nbr_images_baseline</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib_instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">target_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nbr_images_baseline</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zero-point: </span><span class="si">{</span><span class="n">zero_point</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib_instr_mag&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">zero_point</span>
+
+
+
+
+
+
+
+<span class="c1">### Same for the binned catalog</span>
+
+
+<span class="n">nbr_images_baseline</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">catalog_binned</span><span class="p">[</span><span class="n">flux_colname</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="c1"># a &quot;2D&quot; column (index, date)</span>
+<span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;median_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># one value per source</span>
+
+<span class="c1">#catalog_binned[&quot;flux_sort_indices&quot;] = np.argsort(catalog_binned[&quot;median_instr_mag&quot;])</span>
+<span class="c1">#indices_calib = catalog_binned[&quot;flux_sort_indices&quot;][0:n_bright_stars_calib]</span>
+<span class="c1">#indices_show = catalog_binned[&quot;flux_sort_indices&quot;][0:n_bright_stars_show]</span>
+
+<span class="c1">#indices_calib = [118, 112, 103, 136, 141]</span>
+<span class="c1">#indices_show = [118, 112, 103, 136, 141]</span>
+
+<span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;delta_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;median_instr_mag&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 2D - 1D -&gt; 2D (index, date)</span>
+
+<span class="n">same_calib_for_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;delta_instr_mag&quot;</span><span class="p">][</span><span class="n">indices_calib</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Normalize this:</span>
+<span class="n">same_calib_for_all</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">)</span>
+<span class="c1"># And make it a colum of the catalog</span>
+<span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;rel_calib&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">same_calib_for_all</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">catalog_binned</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;calib_instr_mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;instr_mag&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;rel_calib&quot;</span><span class="p">]</span>
+
+
+<span class="n">zero_point</span> <span class="o">=</span> <span class="n">target_mag</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;calib_instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">target_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nbr_images_baseline</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;calib_instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">target_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nbr_images_baseline</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zero-point: </span><span class="si">{</span><span class="n">zero_point</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;calib_instr_mag&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">zero_point</span>
 </pre></div>
 </div>
 </div>
@@ -626,7 +746,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>                    
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="c1">#figsize=(6, 6))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">ingress_datetime</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">egress_datetime</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -635,16 +755,33 @@ document.write(`
 
 <span class="c1"># Plot some field stars in grey:</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices_show</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="n">target_index</span><span class="p">:</span>
+        <span class="k">continue</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-    <span class="n">dates</span><span class="p">,</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;medianmag&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.015</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> 
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">dates</span><span class="p">,</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;median_instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;median_instr_mag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">target_index</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.012</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">),</span> 
+    <span class="c1">#dates, catalog[&quot;mag&quot;][index] - catalog[&quot;calib&quot;][target_index], </span>
+    <span class="n">lw</span><span class="o">=</span><span class="mf">0.3</span>
     <span class="p">)</span>
 
 <span class="c1"># Plot the target in red:</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-    <span class="n">dates</span><span class="p">,</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span> <span class="o">-</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;calib&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">],</span> 
-    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span>
+    <span class="n">dates</span><span class="p">,</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">],</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.1</span>
     <span class="p">)</span>
+
+<span class="c1"># compute error bars</span>
+
+<span class="n">gain</span> <span class="o">=</span>  <span class="mf">0.376</span> <span class="c1"># e/ADU</span>
+<span class="n">flux</span> <span class="o">=</span> <span class="n">catalog_binned</span><span class="p">[</span><span class="n">flux_colname</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span>
+<span class="c1">#flux = catalog[flux_colname][target_index]</span>
+<span class="n">flux_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">flux</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">gain</span><span class="p">))</span>
+<span class="n">mag_err</span> <span class="o">=</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">flux_err</span><span class="o">/</span><span class="n">flux</span><span class="p">))</span>
+
+
+<span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">dates_binned</span><span class="p">,</span> <span class="n">catalog_binned</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">mag_err</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1">#ax.errorbar(dates, catalog[&quot;mag&quot;][target_index], yerr=mag_err, ls=&quot;None&quot;, marker=&quot;o&quot;, color=&quot;red&quot;, markersize=2)</span>
+
+
 
 <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
 
@@ -658,10 +795,13 @@ document.write(`
 <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">dates</span><span class="o">.</span><span class="n">ConciseDateFormatter</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">get_major_locator</span><span class="p">()))</span>
 <span class="c1">#plt.colorbar(label=f&quot;Separation to target center in {cat[&#39;separation&#39;].unit}&quot;)</span>
 <span class="c1">#plt.xlabel(&quot;Date&quot;)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;i Magnitude&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;r Magnitude&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;UTC&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">autofmt_xdate</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title_str</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="c1">#plt.show()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;2024-08-27_HAT-P-23_b.pdf&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

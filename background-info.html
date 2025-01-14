@@ -397,6 +397,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resolution">Resolution</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seeing-and-airmass">Seeing and airmass</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-instrument-the-camera">Imaging instrument: the camera</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">Filters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-detectors-ccd-or-cmos">Imaging detectors (CCD or CMOS)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantum-efficiency">Quantum efficiency</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#full-well-capacity">Full-well capacity</a></li>
@@ -407,7 +408,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read-out-noise">Read-out noise</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-background-and-noise">Images, background, and noise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-background-and-noise">Images, background, and noise</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations-on-noise">Considerations on noise</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits-files">FITS files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration-aka-pre-reduction">Calibration (aka pre-reduction)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bias-frames">Bias frames</a></li>
@@ -417,7 +421,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-reduction">Pre-reduction</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artifacts">Artifacts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artifacts-and-dithering">Artifacts and dithering</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinates-wcs">Coordinates, WCS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coaddition">Coaddition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#photometry">Photometry</a></li>
@@ -440,10 +444,10 @@ document.write(`
 <h2>Telescope optics<a class="headerlink" href="#telescope-optics" title="Permalink to this heading">#</a></h2>
 <p>A reflecting telescope uses a combination of (curved) mirrors to form an image in its so-called focal plane, also known as the image plane.
 The optical design of the AIfA telescope is a <strong>variation of a Cassegrain</strong> telescope, illustrated below.</p>
-<figure class="align-default" id="cassegrain-layout">
-<a class="reference internal image-reference" href="_images/cassegrain_layout.png"><img alt="_images/cassegrain_layout.png" src="_images/cassegrain_layout.png" style="width: 80%;" /></a>
+<figure class="align-default" id="aifa-telescope-layout">
+<a class="reference internal image-reference" href="_images/aifa_telescope_layout.png"><img alt="_images/aifa_telescope_layout.png" src="_images/aifa_telescope_layout.png" style="width: 90%;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Optical layout of a Cassegrain telescope</span><a class="headerlink" href="#cassegrain-layout" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Optical layout of the AIfA telescope</span><a class="headerlink" href="#aifa-telescope-layout" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The in-falling light first meets the concave primary mirror (M1) to be then re-reflected by the convex secondary mirror (M2). The light gets collimated in the focal plane, after passing through an opening in M1. Due to the folding of its optical path, such a Cassegrain system allows for a compact construction. More precisely, the AIfA telescope is a  “<a class="reference external" href="https://www.planewave.eu/en/technologies/cdk-optical-design">corrected Dall-Kirkham</a>” telescope, where M1 is ellipsoidal with a diameter of 35 cm (the <strong>aperture</strong> of the telescope), M2 is spherical, and an additional lens group located before the focal plane, roughly in the opening of M1, corrects the design against aberrations on a wide and flat focal plane. The effective focal length of the system is 2563 mm.</p>
@@ -465,20 +469,30 @@ In the idealised (so-called <em>diffraction-limited</em>) case, the PSF of a cir
 </section>
 <section id="seeing-and-airmass">
 <h2>Seeing and airmass<a class="headerlink" href="#seeing-and-airmass" title="Permalink to this heading">#</a></h2>
-<p>For ground-based astronomical observations, Earth’s atmosphere has to be considered as part of the optical system, leading to numerous effects. Most importantly, turbulence in the atmosphere leads to variations of the refractive index on short spatial and temporal scales. The “instantaneous” image of a star seen in the telescope is no longer an Airy disc, but has an irregular shape that randomly changes and moves around. When integrating an image with any exposure time longer than about a tenth of a second, this results in a blurring of the PSF. The PSF of such a long exposure can to some extent be represented by a two-dimensional Gaussian (a better approximation is given by the <a class="reference external" href="https://en.wikipedia.org/wiki/Moffat_distribution">Moffat profile</a>).</p>
-<p>The size of such a stellar image, as given by the <strong>full width at half maximum (FWHM)</strong> of the Gaussian, is called the <strong>seeing</strong> of the image and measures the actual resolution in a particular observation. The less turbulent the atmosphere, the higher the resolution and thus the data quality that can be achieved. For Bonn, a seeing of 2 arcsec is a very rare and good value, while in excellent locations like Hawaii or the Atacama desert 0.5 arcsec are common.</p>
-<p>The best possible observing conditions are achieved near the zenith, where the length of the light path through the atmosphere is minimal. On the contrary, extinction and disturbing seeing effects get worse for observations at lower elevations. These effects are often expressed in terms of the object’s <strong>airmass</strong> <span class="math notranslate nohighlight">\(a\)</span>, which tells you through how much atmosphere (column density) the light travels compared to vertical in-fall. For an angular distance <span class="math notranslate nohighlight">\(z\)</span> from the zenith (zenith = in vertical direction from the ground) it can in good approximation be computed as <span class="math notranslate nohighlight">\(a = 1 / \cos(z)\)</span> such that <span class="math notranslate nohighlight">\(a = 1\)</span> for an object at the zenith and formally <span class="math notranslate nohighlight">\(a = \infty\)</span> at the horizon.</p>
+<p>For ground-based astronomical observations, Earth’s atmosphere has to be considered as part of the optical system, leading to numerous effects. Our atmosphere is inhomogeneous in temperature (and hence <em>density</em>), resulting in an inhomogeneous refractive index. Turbulence in the atmosphere leads to variations of this refractive index on short spatial and temporal scales. In consequence, the “instantaneous” image of a star seen in the telescope is no longer an Airy disc, but has a very irregular shape (see <a class="reference external" href="https://en.wikipedia.org/wiki/Speckle_imaging">Speckle imaging</a> for an example). Due to the fast temporal variation of the turbulent atmosphere, the star’s image randomly changes and moves around. Integrating this image with any exposure time longer than about a tenth of a second results in a blurry blob, which is wider than the diffraction-limited Airy disk. This ground-based PSF of a long exposure can to some extent be represented by a two-dimensional Gaussian. An even better approximation is given by the <a class="reference external" href="https://en.wikipedia.org/wiki/Moffat_distribution">Moffat profile</a>.</p>
+<p>The size of such a stellar image, as given by the <strong>full width at half maximum (FWHM)</strong> of the PSF profile, is called the <strong>seeing</strong> of the image and measures the actual resolution in a particular observation. The less turbulent the atmosphere, the higher the resolution and thus the data quality that can be achieved. For Bonn, a seeing of 2 arcsec is a very rare and good value, while in excellent locations like Hawaii or the Atacama desert 0.5 arcsec are common.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Both the diffraction-limited resolution of a telescope and the seeing are wavelength-dependent!
-The diffraction-limited image would be sharpest for shorter wavelength. But refraction of visible light in the atmosphere (that is a medium with so-called “normal dispersion”) is <em>stronger</em> for short wavelengths than it is for long wavelengths. Therefore, assuming similar atmospheric conditions, an image taken in a red (or infrared) filter will be sharper than an image in a blue filter!</p>
+The diffraction-limited image is sharpest for shorter wavelength. But as just discussed, atmospheric seeing is a consequence of <em>refraction</em>. Refraction of visible light in the atmosphere (that is a medium with so-called “normal dispersion”) is <em>stronger</em> for short wavelengths than it is for long wavelengths. Therefore, a ground-based image taken in red (or infrared) light will be sharper than an image in the blue part of the spectrum (assuming otherwise similar observing conditions)!</p>
 </div>
+<p>The best possible observing conditions are achieved near the zenith, where the length of the light path through the atmosphere is minimal. Extinction and disturbing seeing effects get worse for observations at lower elevations. These effects are often expressed in terms of the object’s <strong>airmass</strong> <span class="math notranslate nohighlight">\(a\)</span>, which tells you through how much atmosphere (column density) the light travels compared to vertical in-fall. For an angular distance <span class="math notranslate nohighlight">\(z\)</span> from the zenith (zenith = in vertical direction from the ground) it can in good approximation be computed as <span class="math notranslate nohighlight">\(a = 1 / \cos(z)\)</span> such that <span class="math notranslate nohighlight">\(a = 1\)</span> for an object at the zenith and formally <span class="math notranslate nohighlight">\(a = \infty\)</span> at the horizon.</p>
 </section>
 <section id="imaging-instrument-the-camera">
 <h2>Imaging instrument: the camera<a class="headerlink" href="#imaging-instrument-the-camera" title="Permalink to this heading">#</a></h2>
 <p>A <em>camera</em> is an instrument attached to the telescope, such that the camera’s imaging sensor (sometimes also called detector) lies in the focal plane of the telescope. The sensor in the camera will <em>sample</em> the image, by recording the intensity of the light in an array of <em>pixels</em> (short for picture elements).</p>
-<p>While the sensors used in optical astronomy can virtually <em>count</em> individual photons, they are not sensitive to their wavelength. Therefore, two obtain any kind of color information, a filter needs to be placed in the optical path before the imaging sensor. In practice, several filters are mounted into a filter wheel which is located in front of the sensor, allowing for a fast filter change.</p>
 <p>The combination of a camera with a telescope yields a particular size of the field of view, and a resulting pixel scale. The pixel scale corresponds to the angular size a pixel subtends on the sky, and is expressed in arcseconds. For example, the camera used at the 35 cm AIfA telescope has a field of 48 arcmin by 32 arcmin, and a pixel scale of 0.3 arcsec. Given how small these pixels are compared to the typical seeing, we systematically operate the camera with a “2x2 binning”, meaning in this particular case that adjacent pixels are summed together in groups of 2x2 pixels, with the benefit of reduced file size. <strong>The effective pixel size of those images is 0.607 arcsec.</strong></p>
+</section>
+<section id="filters">
+<h2>Filters<a class="headerlink" href="#filters" title="Permalink to this heading">#</a></h2>
+<p>While the sensors used in optical astronomy can virtually <em>count</em> individual photons, they are not sensitive to their wavelength. Therefore, two obtain any kind of color information, one has to record several images of the target using different optical filters. These filters are inserted in the optical path before the imaging sensor (see <a class="reference internal" href="#aifa-telescope-layout"><span class="std std-numref">Fig. 1</span></a>). In practice, several filters are mounted into a filter wheel which is located directly ahead of the camera, allowing for a fast filter change.</p>
+<p>The filter wheel of the AIfA telescope contains broad-band filters that are very close to the ones used in the the Sloan/SDSS photometric system (called <em>ugriz</em>), which is widely used in astronomical research:</p>
+<ul class="simple">
+<li><p><em><strong>g’</strong></em> with a passband of about 400 - 550 nm (blue to green), very similar to SDSS <em>g</em>,</p></li>
+<li><p><em><strong>r’</strong></em> with a passband of about 560 - 700 nm (yellow to red), very similar to SDSS <em>r</em>,</p></li>
+<li><p><em><strong>i’</strong></em> with a passband of about 700 - 840 nm (red and near infrared), very similar to SDSS <em>i</em>.</p></li>
+</ul>
+<p>In addition, the filter wheel also holds three narrowband filters: H-alpha, OIII, and SII, each with a width of 6.5 nm.</p>
 </section>
 <section id="imaging-detectors-ccd-or-cmos">
 <h2>Imaging detectors (CCD or CMOS)<a class="headerlink" href="#imaging-detectors-ccd-or-cmos" title="Permalink to this heading">#</a></h2>
@@ -518,7 +532,7 @@ This bias is needed to keep any fluctuations (noise) in the conversion range of 
 <p>Another property of all photosensitive sensors is the <em>dark current</em>, which describes the accumulation of electrons in the pixels even if no outside photons hit the sensor, per unit of time. Dark current is due to the “thermal” random movement of electrons, which “fall” into the potential wells of the pixels. The intensity of the dark current increases with temperature. Cooling the sensor is therefore a way to mitigate dark current.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The “problem” with dark current is that the actual number of thermal electrons which gets added to each pixel of the sensor is subject to shot noise, further discussed below. If this amount of electrons would be completely predictable (given an exposure time, and the sensor temperature), it would be trivial to perfectly subtract it when calibrating the images. But while the dark current itself might be perfectly stable, the amount of thermal electrons it generates is random, and increases with exposure time. <strong>It’s this randomness which harms the observation of faint sources.</strong></p>
+<p>The “problem” with dark current is that the actual number of thermal electrons which gets added to each pixel of the sensor is subject to shot noise, further discussed below. If this amount of electrons would be completely predictable (given an exposure time, and the sensor temperature), it would be trivial to perfectly subtract it when calibrating the images. But while the average dark current might be perfectly stable, the amount of thermal electrons it generates in a pixel is random, and increases with exposure time. <strong>It’s this randomness which harms the observation of faint sources.</strong></p>
 </div>
 </section>
 <section id="read-out-noise">
@@ -536,7 +550,7 @@ In the context of the observations described in this tutorial, the read-out nois
 </figcaption>
 </figure>
 <p>At this point, we can briefly discuss an image as recorded by a camera.</p>
-<p>Recall that images of stars are not “point-like”, but follow the profile of the <em>Point Spread Function</em> (PSF). For images obtained by simple ground-based telescopes, the origin of the PSF is dominated by astronomical seeing, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The images we record through those telescopes get blurred by this PSF. Mathematically, the observed image can be seen as a convolution of the actual scene with this PSF. The result of this convolution gets sampled on the pixel array of the detector.</p>
+<p>Recall that images of stars are not “point-like”, but follow the profile of the <em>Point Spread Function</em> (PSF). For images obtained by simple ground-based telescopes, the origin of the PSF is dominated by astronomical seeing, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The images we record through those telescopes get blurred by this PSF. Mathematically, the observed image can be seen as a convolution of the actual scene with the PSF. The result of this convolution gets sampled by the pixel array of the detector.</p>
 <p>Also recall that the PSF is wavelength-dependent: ground-based images obtained through a red filter will be significantly sharper than images in a blue band.</p>
 <p>Some comments about the apparent size of stars can be made:</p>
 <ul class="simple">
@@ -544,17 +558,21 @@ In the context of the observations described in this tutorial, the read-out nois
 <li><p>Brighter stars will have wider <em>isophotes</em>. An isophote is a closed curve around a star at a given brightness level. When displaying an image (i.e., when attributing a grey level to each pixel value), brighter stars will therefore appear “larger”, even if the FWHM is the same for all stars (see <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 2</span></a> above).</p></li>
 </ul>
 <p>Another point illustrated in <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 2</span></a> is the presence of a so-called “background”, in otherwise empty areas of the image, which is here at a level of about 2000 ADU. For ground-based observations, the main source of background comes from Earth’s atmosphere: even at night, the sky is not fully dark. Light pollution, Moon light, <a class="reference external" href="https://en.wikipedia.org/wiki/Airglow">airglow</a> in our atmosphere, but also <a class="reference external" href="https://en.wikipedia.org/wiki/Zodiacal_light">zodiacal light</a> all contribute to this. When observing from Bonn at new Moon, it’s the light pollution which will dominate. Only when observing from a dark site (e.g., the Atacama desert in Chile), airglow can play the major role. In all these cases, the “background” is in fact mostly a “foreground”.</p>
-<aside class="sidebar">
-<p>The standard deviation equals <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> <em>only</em> when <span class="math notranslate nohighlight">\(N\)</span> designates the number of electrons (or equivalently photons). This relation does not hold for <span class="math notranslate nohighlight">\(N\)</span> given in ADU (assuming that the gain is different from 1.0). A typical image will be stored in units of ADU, and care must be taken to convert pixel values into electrons when performing such calculations, using the gain.</p>
-</aside>
-<p>All accumulated electrons (from the astronomical source, the background, or the dark current) are subject to <em><a class="reference external" href="https://en.wikipedia.org/wiki/Shot_noise">shot noise</a></em> (also called Poisson noise). In any pixel, the number of recorded electrons follows a <a class="reference external" href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a>, such that if the expectation value of a pixel is <span class="math notranslate nohighlight">\(N\)</span> electrons, the standard deviation of the noise in that pixel will be <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> electrons. In other words, the higher the expected value of a pixel, the noisier its value will be.</p>
+<section id="considerations-on-noise">
+<h3>Considerations on noise<a class="headerlink" href="#considerations-on-noise" title="Permalink to this heading">#</a></h3>
+<p>All photons falling on a pixel are subject to <em><a class="reference external" href="https://en.wikipedia.org/wiki/Shot_noise">shot noise</a></em> (also called Poisson noise), regardless of their origin from the astronomical source or the background. The same holds for the electrons from the dark current. In consequence, for any pixel, the number of recorded electrons follows a <a class="reference external" href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a>, such that if the expectation value of a pixel is <span class="math notranslate nohighlight">\(N\)</span> electrons, the standard deviation of the noise in that pixel will be <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> electrons. In other words, the higher the expected value of a pixel, the noisier its value will be.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The noise in a raw image originates from the shot noise of the source, the shot noise of the background, the shot noise of thermal electrons (dark current), and the read-out noise from the electronics.</p>
+<p>Be aware that this standard deviation equals <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> <em>only</em> when <span class="math notranslate nohighlight">\(N\)</span> designates the number of electrons (or equivalently photons). This relation does <em>not</em> hold if <span class="math notranslate nohighlight">\(N\)</span> is in ADU (assuming that the gain is different from 1.0). A typical image will be stored in units of ADU, and care must be taken to convert pixel values into electrons when performing such calculations, using the gain.</p>
+</div>
+<p>The signal-to-noise ratio (S/N) quantifies how strong the level of a desired signal (for example, the flux of a galaxy) is, compared to its standard deviation. <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 2</span></a> illustrates how the counts from a target can actually be significantly lower than the background level. The galaxy image peaks at about 500 ADU above the background, which is at 2000 ADU. The uncertainty on the flux of this galaxy will be dominated by the shot noise from the background, more than by the shot noise from the galaxy!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We’ve discussed several sources of noise: shot noise from the sources and background, shot noise from the thermal electrons (i.e., related to the dark current), and read-out noise from the electronics.</p>
 <p>While one can easily subtract any offset or smooth model from an image, <strong>one can never subtract the actual noise</strong>.</p>
 <p>It is therefore important to minimize noise in the first place, for example by selecting a dark observing site and cooling the camera.</p>
 </div>
-<p>The signal-to-noise ratio (S/N) quantifies how strong the level of a desired signal (for example, the flux of a galaxy) is compared to its standard deviation. <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 2</span></a> illustrates how the counts from the target can be significantly lower than the background level.</p>
+</section>
 </section>
 <section id="fits-files">
 <h2>FITS files<a class="headerlink" href="#fits-files" title="Permalink to this heading">#</a></h2>
@@ -564,9 +582,9 @@ In the context of the observations described in this tutorial, the read-out nois
 <section id="calibration-aka-pre-reduction">
 <h2>Calibration (aka pre-reduction)<a class="headerlink" href="#calibration-aka-pre-reduction" title="Permalink to this heading">#</a></h2>
 <p>The aim of image calibration (also known as image pre-reduction) is to remove all “artificial” or “instrumental” effects from the pixel values.
-Broadly speaking, these effects can be categorized as either multiplicative or additive. For example, dirt on the filter will have a multiplicative effect on the flux, as it will take away a fraction of the light of a source for certain pixels affected by this dirt. While the bias level is an example of an additive effect, that we want to subtract.</p>
+Broadly speaking, these effects can be categorized as either multiplicative or additive. For example, dirt on the filter will have a multiplicative effect on the flux, as it will take away a fraction of the light of a source for certain pixels. On the other hand, the bias level is an example of an additive effect, that we want to subtract.</p>
 <p>Image calibration attempts to cleanly separate and correct for these effects, ideally without adding any significant additional noise to the raw images.
-Details of an optimal pre-reduction will depend on the pecularities of the telescopes and instruments, but the basic procedure described in the following is often part of it.</p>
+Details of an optimal pre-reduction will depend on the peculiarities of the telescopes and instruments, but the basic procedure described in the following is often part of it.</p>
 <p>It makes use of three “calibration frames”: <strong>bias</strong> frames, <strong>dark</strong> frames, and <strong>flat</strong> frames.</p>
 <section id="bias-frames">
 <h3>Bias frames<a class="headerlink" href="#bias-frames" title="Permalink to this heading">#</a></h3>
@@ -581,20 +599,25 @@ Details of an optimal pre-reduction will depend on the pecularities of the teles
 <h3>Flat frames<a class="headerlink" href="#flat-frames" title="Permalink to this heading">#</a></h3>
 <p>Flat frames <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> are taken with an exposure time <span class="math notranslate nohighlight">\(t_{\mathbf{F}}\)</span>, on an ideally uniform target. They do comprise the effects seen by <span class="math notranslate nohighlight">\(\mathbf{B}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{D}\)</span>, and in addition a view of the flat target contaminated by inhomogeneous sensitivity.
 Their purpose is to capture all multiplicative effects affecting the pixel values, such as differences in gain or quantum efficiency of the pixels, or inhomogeneous illumination of the sensor by the telescope (e.g., vignetting) or filter.
-Possible flatfield targets include the bright twilight sky, or an illuminated surface inside the dome. Obtaining “good” flat frames is fundamentally difficult, as the homogeneity of a target over the full field is never perfect. Furthermore the QE variations in sensors do depend on wavelength, so that the colour of the flat target matters. As will become clear, a 1% error in the flat field will yield a 1% error in the photometry of sources.</p>
+Possible flatfield targets include the bright twilight sky (resulting in so-called “sky flats”), an illuminated surface inside the dome (these are called “dome flats”), or a light-emitting panel similar to a computer display (“panel flats”). Obtaining good flat frames is fundamentally difficult, as the homogeneity of a target over the full field is never perfect. Furthermore the QE variations in sensors do depend on wavelength, so that the colour (and spectrum) of the flat target matters. As will become clear, a 1% error in the flat field will yield a 1% error in the photometry of sources.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not confuse the calibration frames and the “associated” effects!
+While flat frames will get used to “flatten” the pixel response across the field, they do also suffer from dark current and bias!</p>
+</div>
 </section>
 <section id="science-frames">
 <h3>Science frames<a class="headerlink" href="#science-frames" title="Permalink to this heading">#</a></h3>
-<p>We call “science frames” <span class="math notranslate nohighlight">\(\mathbf{S}\)</span> the actual raw exposures of the target, taken with an exposure time <span class="math notranslate nohighlight">\(t_{\mathbf{S}}\)</span>. These images are contaminated by all the effects described above.</p>
+<p>We call “science frames” <span class="math notranslate nohighlight">\(\mathbf{S}\)</span> the actual raw exposures of the target, taken with an exposure time <span class="math notranslate nohighlight">\(t_{\mathbf{S}}\)</span>. These images are contaminated by all the effects described in the above paragraphs.</p>
 </section>
 <section id="pre-reduction">
 <h3>Pre-reduction<a class="headerlink" href="#pre-reduction" title="Permalink to this heading">#</a></h3>
-<p>The general process of pre-reduction of <span class="math notranslate nohighlight">\(\mathbf{S}\)</span> can now be written as follows:</p>
+<p>The general idea of the pixel-by-pixel pre-reduction is to first subtract the additive effects from <span class="math notranslate nohighlight">\(\mathbf{S}\)</span>, and then correct for the multiplicative effects through division by the flat frame. But prior to this, the latter also has to be corrected for additive effects. The overall process of the pre-reduction of <span class="math notranslate nohighlight">\(\mathbf{S}\)</span> can be written as follows:</p>
 <div class="math notranslate nohighlight">
 \[
 \mathbf{S}_{\mathrm{prered}} = \frac{\mathbf{S} - \mathbf{B} - \frac{t_{\mathbf{S}}}{t_{\mathbf{D}}}(\mathbf{D} - \mathbf{B})}{\left[\mathbf{F} - \mathbf{B} - \frac{t_{\mathbf{F}}}{t_{\mathbf{D}}}(\mathbf{D} - \mathbf{B})\right]_{\mathrm{normalized}}},
 \]</div>
-<p>where “normalized” in the denominator means that we ensure that the frame has a mean value close to one, for example by dividing it by its median pixel value. This normalization is done to avoid rescaling all pixel values in our science image by some arbitrary number.</p>
+<p>where “normalized” in the denominator means that we ensure that the frame has a mean value close to one, for example by dividing it by its median pixel value. This normalization is done to avoid rescaling all pixel values in our science image by some arbitrary flat level.</p>
 <p>In practice, instead of single bias, dark, and flat frames, one uses a <strong>masterbias</strong>, <strong>masterdark</strong>, and <strong>masterflat</strong>, i.e., combinations of several (typically 10 to 20) frames. The reason is that we don’t want to add any noise in the pre-reduction process. Combining frames (for example by taking for each pixel the median or average across several exposures) reduces the random noise compared to the signal common to the individual frames.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -602,11 +625,20 @@ Possible flatfield targets include the bright twilight sky, or an illuminated su
 </div>
 </section>
 </section>
-<section id="artifacts">
-<h2>Artifacts<a class="headerlink" href="#artifacts" title="Permalink to this heading">#</a></h2>
+<section id="artifacts-and-dithering">
+<h2>Artifacts and dithering<a class="headerlink" href="#artifacts-and-dithering" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p><em>Hot pixels</em> are defective pixels (both on CCD and CMOS sensors), which accumulate thermal electrons much faster than regular pixels. In result, when taking an image with a significant exposure time, these hot pixels will stand out as single bright points.</p></li>
 </ul>
+<p>One simple method to mitigate the effect of such sensor artifacts is to take several “dithered” images of a target area, that is images with slightly different pointing offsets, obtained by moving the telescope by a small amount between the exposures. This ensures that the artifacts do not contaminate the targets of interest in every exposure.</p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Why is taking several exposures usually better than taking a single exposure with a much longer exposure time?</p>
+<div class="dropdown admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Saturation of sources, tracking accuracy of the mount, dithering against artifacts, cosmic rays, …</p>
+</div>
+</div>
 </section>
 <section id="coordinates-wcs">
 <h2>Coordinates, WCS<a class="headerlink" href="#coordinates-wcs" title="Permalink to this heading">#</a></h2>
@@ -618,43 +650,36 @@ The most common WCS for identifying and cataloguing sources is the equatorial sy
 </section>
 <section id="coaddition">
 <h2>Coaddition<a class="headerlink" href="#coaddition" title="Permalink to this heading">#</a></h2>
-<p>(coaddition is currently not used in this tutorial, section still to be written)</p>
-<ul class="simple">
-<li><p>reprojection techniques</p></li>
-</ul>
-<aside class="sidebar">
-<p class="sidebar-title">Average or median?</p>
-<p>Assuming an ideal situation without any outliers, is it better to average-combine or median-combine images?</p>
-<p>For a large number of samples from a normal distribution, the standard error of the median will be <span class="math notranslate nohighlight">\(\sqrt{\pi/2} = 1.25\)</span> times higher, or 25% greater, than the standard error of the mean (<a class="reference external" href="https://en.wikipedia.org/wiki/Median">see details</a>).</p>
-</aside>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>Why is combining several exposures usually better than taking a single exposure with a long exposure time?</p>
-<div class="dropdown admonition hint">
-<p class="admonition-title">Hint</p>
-<p>Saturation, tracking, cosmic rays</p>
-</div>
-</div>
+<p>Once the science frames are pre-reduced and astrometrically calibrated, a possible next step is to “coadd” several exposures of a target, to obtain a deeper image revealing fainter sources. This first requires some form of reprojection of the different (dithered) images on a common pixel grid. These reprojected images can then be combined pixel-by-pixel, for example by computing an average value for each pixel across all exposures, potentially after identification and rejection of some outlier values. An alternative robust combination method is to compute the median for each pixel. While such a median-combination is easy to describe and very effective at rejecting artifacts, it is somewhat less precise than an average-combination for pixels that are not affected by any outliers. Indeed, for a large number of samples from a normal distribution, the standard error of the median will be <span class="math notranslate nohighlight">\(\sqrt{\pi/2} \approx 1.25\)</span> times higher, i.e., 25% greater, than the standard error of the mean (the interested reader can find details <a class="reference external" href="https://en.wikipedia.org/wiki/Median">here</a>).</p>
+<p>In principle, it is advantageous to avoid any unnecessary manipulations to the raw data. Depending on the science case, an alternative to image coaddition is to combine the <em>measurements</em> obtained on the individual science frames (instead of first combining the pixel values). We will mainly follow this approach in the present tutorial.</p>
 </section>
 <section id="photometry">
 <h2>Photometry<a class="headerlink" href="#photometry" title="Permalink to this heading">#</a></h2>
 <p>The brightness measurement of objects on an image is called <em>photometry</em>. There are two main approaches to photometry on CCD images: digital aperture photometry, and PSF fitting.</p>
 <p>In this tutorial, we make use of digital aperture photometry, which corresponds to summing the pixel values within some aperture defined around a source (including fractional pixels, who contribute only a fraction of their value).</p>
 <p>More specifically, we will use <strong>forced photometry</strong>, meaning that we perform photometry by placing apertures at specific pre-defined locations of an image, without first “detecting” sources in that particular image. These locations are defined in sky coordinates in a reference catalog that we build from a reference image. This makes the subsequent analysis particularly easy, as we get consistent photometric catalogs for each exposure.</p>
+<p>In practice, photometry will deliver instrumental fluxes, measured in units of ADU, for each source (or aperture) on an exposure.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For the sake of simplicity, we ignore here the effect that distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).</p>
+<p>For the sake of simplicity, we ignore here the effect that astrometric distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).</p>
 </div>
 </section>
 <section id="apparent-magnitudes">
 <h2>Apparent magnitudes<a class="headerlink" href="#apparent-magnitudes" title="Permalink to this heading">#</a></h2>
-<p>The apparent brightness of a source in optical astronomy is denoted by its magnitude. Magnitudes are a logarithmic scale of the flux that we observe from a source. For a source of flux <span class="math notranslate nohighlight">\(F\)</span>, the magnitude is given by</p>
+<p>The apparent brightness of a source in optical astronomy, as seen in some defined passband, is denoted by an <strong>apparent magnitude</strong> in that passband. Magnitudes are a logarithmic scale of the flux that we observe from a source.</p>
+<p>For an instrumental flux <span class="math notranslate nohighlight">\(F\)</span> (e.g., in ADU) obtained via photometry, one can compute an “instrumental magnitude” often defined as</p>
+<div class="math notranslate nohighlight">
+\[
+m_{\mathrm{instr}} = -2.5 \log_{10}(F[ADU]).
+\]</div>
+<p>Clearly, this <span class="math notranslate nohighlight">\(m_{\mathrm{instr}}\)</span> is dependent on the instrument (and the telescope), but also on the exposure time, the aperture size, the atmospheric transparency, etc. In other words, the instrumental magnitude is a completely <em>uncalibrated</em> apparent magnitude, which nevertheless can be used to compare for example fluxes measured with the same observational setup.</p>
+<p>More generally, for a source of flux <span class="math notranslate nohighlight">\(F\)</span> (in any appropriate unit), the magnitude is given by</p>
 <div class="math notranslate nohighlight">
 \[
 m = -2.5 \log_{10}(F) + C,
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(C\)</span> is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration can vary. While it is relatively easy to compare fluxes, connecting your observations to a referential zero point can be a challenging task. In practice, this relies on the observation of standard stars whose magnitudes are known from a reference catalogue.</p>
-<p>As long as the calibration done consistently, <span class="math notranslate nohighlight">\(C\)</span> cancels out when forming a difference in magnitudes between two sources:</p>
+<p>where <span class="math notranslate nohighlight">\(C\)</span> is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration can vary, and connecting your observations to a referential zero point can be a challenging task. In practice, this relies on the observation of standard sources whose magnitudes are known from a reference catalogue. Note that for many applications (such as the analysis of exoplanet transit light curves), an accurate magnitude calibration is not required, as we care only about <em>relative</em> photometry (i.e., differences in magnitudes).</p>
+<p>Indeed, <span class="math notranslate nohighlight">\(C\)</span> cancels out when forming a difference in magnitudes between two sources:</p>
 <div class="math notranslate nohighlight">
 \[
 m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
@@ -663,6 +688,11 @@ m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Fainter sources have higher magnitudes!</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The magnitude scale is logarithmic. Any multiplicative effect on flux (such as extinction by interstellar dust, absorption by clouds, dirt on the telescope mirror, shading of parts of the telescope mirror by a misaligned dome, etc) therefore corresponds to an <strong>additive shift</strong> in magnitude, independent on the brightness of a source.</p>
+<p>If the sources in a field would all have the same intrinsic spectrum, then any change to the passband of the instrument (i.e., using a narrower or broader filter, or a filter of a different color) would correspond to a common shift in the recorded magnitudes of all these sources.</p>
 </div>
 <div class="admonition-questions admonition">
 <p class="admonition-title">Questions</p>
@@ -742,6 +772,7 @@ m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resolution">Resolution</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seeing-and-airmass">Seeing and airmass</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-instrument-the-camera">Imaging instrument: the camera</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">Filters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-detectors-ccd-or-cmos">Imaging detectors (CCD or CMOS)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantum-efficiency">Quantum efficiency</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#full-well-capacity">Full-well capacity</a></li>
@@ -752,7 +783,10 @@ m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read-out-noise">Read-out noise</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-background-and-noise">Images, background, and noise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-background-and-noise">Images, background, and noise</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations-on-noise">Considerations on noise</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits-files">FITS files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration-aka-pre-reduction">Calibration (aka pre-reduction)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bias-frames">Bias frames</a></li>
@@ -762,7 +796,7 @@ m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-reduction">Pre-reduction</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artifacts">Artifacts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artifacts-and-dithering">Artifacts and dithering</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinates-wcs">Coordinates, WCS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coaddition">Coaddition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#photometry">Photometry</a></li>
