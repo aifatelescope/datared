@@ -445,15 +445,10 @@ The procedure could also be applied to coadded images.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Locating the pre-reduced science images:</span>
-<span class="n">object_to_process</span> <span class="o">=</span> <span class="s2">&quot;HD92670&quot;</span>
-
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting the correct path to the pre-reduced science frames to work on:</span>
 <span class="c1">#science_files_dir = dataredconfig.work_dir / &quot;LIGHT_PRERED&quot; # In case astrometric calibration was already performed before the pre-reduction</span>
 <span class="n">science_files_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;ASTROMETRY&quot;</span>
-
 <span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">science_files_dir</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
-
-<span class="n">science_files</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">object_to_process</span><span class="p">)</span>
 
 <span class="c1"># Where to write the catalogs:</span>
 <span class="n">photometry_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;PHOTOMETRY&quot;</span>
@@ -461,6 +456,20 @@ The procedure could also be applied to coadded images.</p>
 
 <span class="c1"># Overview of all available files:</span>
 <span class="n">science_files</span><span class="o">.</span><span class="n">summary</span>
+<span class="c1"># You may want to try this instead, for a better display:</span>
+<span class="c1">#science_files.summary.show_in_notebook()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optional: selecting the science frames to run on : </span>
+<span class="n">object_to_process</span> <span class="o">=</span> <span class="s2">&quot;HD92670&quot;</span>
+
+<span class="n">science_files</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">object_to_process</span><span class="p">)</span>
+
+<span class="c1">#science_files.summary</span>
 </pre></div>
 </div>
 </div>

@@ -412,7 +412,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations-on-noise">Considerations on noise</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits-files">FITS files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits-files">FITS files</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-software-for-reading-fits">Interactive software for reading FITS</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration-aka-pre-reduction">Calibration (aka pre-reduction)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bias-frames">Bias frames</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dark-frames">Dark frames</a></li>
@@ -578,6 +581,10 @@ In the context of the observations described in this tutorial, the read-out nois
 <h2>FITS files<a class="headerlink" href="#fits-files" title="Permalink to this heading">#</a></h2>
 <p>In optical astronomy, images are commonly stored in the FITS file format. We briefly introduce some nomenclature related to these FITS files, which are extensively used in the tutorial.</p>
 <p>FITS (Flexible Image Transport System) is a standard in use since 1981, and therefore the format of choice for any long-term storage. FITS is flexible: a single file may contain several images, but also higher-dimensional arrays, data tables, or mixtures of these. Each of these entities is typically stored in a “header-data unit” (HDU). As the name implies, a HDU is composed of a “header” (holding metadata, such as the date of observation and the filter) and the actual data (such as the image). In this tutorial, we will only deal with FITS files containing a single HDU.</p>
+<section id="interactive-software-for-reading-fits">
+<h3>Interactive software for reading FITS<a class="headerlink" href="#interactive-software-for-reading-fits" title="Permalink to this heading">#</a></h3>
+<p>In the later tutorial, we will open and manipulate images stored in FITS format from within Python scripts or notebooks. While this offers exactly what we need for data analysis, it’s good to know that you can also open FITS files using programs with graphical user interfaces. For completeness, we mention here two free and multi-platform applications that are commonly used in the optical astronomy community. To visualize and inspect FITS <em>images</em>, you could use <a class="reference external" href="https://ds9.si.edu">SAOImageDS9</a>, often called DS9 for short. It is available on AIfA computers as <code class="docutils literal notranslate"><span class="pre">ds9</span></code>. And if you come across a FITS file containing <em>data tables</em> (such as a catalog of sources detected in an image), you could open and visualize its contents (and create plots) using <a class="reference external" href="http://www.starlink.ac.uk/topcat/">TOPCAT</a>. Both applications offer many advanced possibilities, see their respective websites for detailed descriptions and tutorials.</p>
+</section>
 </section>
 <section id="calibration-aka-pre-reduction">
 <h2>Calibration (aka pre-reduction)<a class="headerlink" href="#calibration-aka-pre-reduction" title="Permalink to this heading">#</a></h2>
@@ -787,7 +794,10 @@ m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations-on-noise">Considerations on noise</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits-files">FITS files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits-files">FITS files</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-software-for-reading-fits">Interactive software for reading FITS</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibration-aka-pre-reduction">Calibration (aka pre-reduction)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bias-frames">Bias frames</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dark-frames">Dark frames</a></li>
