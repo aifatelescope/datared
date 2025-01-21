@@ -62,7 +62,7 @@ The combination of a camera with a telescope yields a particular size of the fie
 
 ## Filters
 
-While the sensors used in optical astronomy can virtually *count* individual photons, they are not sensitive to their wavelength. Therefore, two obtain any kind of color information, one has to record several images of the target using different optical filters. These filters are inserted in the optical path before the imaging sensor (see {numref}`aifa_telescope_layout`). In practice, several filters are mounted into a filter wheel which is located directly ahead of the camera, allowing for a fast filter change.
+While the sensors used in optical astronomy can virtually *count* individual photons, they are not sensitive to their wavelength. Therefore, to obtain any kind of color information, one has to record several images of the target using different optical filters. These filters are inserted in the optical path before the imaging sensor (see {numref}`aifa_telescope_layout`). In practice, several filters are mounted into a filter wheel which is located directly ahead of the camera, allowing for a fast filter change.
 
 The filter wheel of the AIfA telescope contains broad-band filters that are very close to the ones used in the the Sloan/SDSS photometric system (called *ugriz*), which is widely used in astronomical research:
 
