@@ -96,14 +96,14 @@ We now describe some nomenclature as well as important aspects of these sensors.
 
 ### Quantum efficiency
 
-The quantum efficiency (QE) is the ratio of electrons to the number of photons hitting the pixel. QEs of top grade sensors are far above 90% over a significant wavelength range. For many basic considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably.
+The quantum efficiency (QE) is the ratio of electrons to the number of photons hitting the pixel. QEs of top grade sensors as used in professional observatories are far above 90% over a significant wavelength range. For many basic considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably. We will do so in the present tutorial.
 
 ```{figure} ./figures/QHY600_QE_curve.jpg
 ---
 width: 100%
 name: qe_curve
 ---
-Quantum efficiency curve of the camera used at the AIfA telescope. The sensor is a Sony IMX455. Image credit: [QHYCCD](https://www.qhyccd.com/astronomical-camera-qhy600/) (manufacturer of the camera).
+Quantum efficiency curve of the QHYCCD 600M PH camera used at the AIfA telescope. The sensor is a Sony IMX455. Image credit: [QHYCCD](https://www.qhyccd.com/astronomical-camera-qhy600/) (manufacturer of the camera).
 ```
 
 
