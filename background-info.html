@@ -408,7 +408,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read-out-noise">Read-out noise</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-background-and-noise">Images, background, and noise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-background-and-noise">Images, background, and noise</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations-on-noise">Considerations on noise</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits-files">FITS files</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-software-for-reading-fits">Interactive software for reading FITS</a></li>
 </ul>
@@ -558,8 +561,9 @@ In the context of the observations described in this tutorial, the read-out nois
 <figure class="align-default" id="image-basics">
 <a class="reference internal image-reference" href="_images/image_basics.png"><img alt="_images/image_basics.png" src="_images/image_basics.png" style="width: 100%;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Illustration of some basic image properties. Top: simulated image of two stars (one has twice the flux of the other), and one galaxy. Bottom: horizontal section across this same image, with pixel value on the y-axis. Note how the brighter star seems “larger” than the dimmer star, while their FWHM is the same (see text).</span><a class="headerlink" href="#image-basics" title="Permalink to this image">#</a></p>
-<div class="legend">
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Illustration of some basic image properties. Top: simulated image of two stars (one has twice the flux of the other), and one galaxy. Bottom: horizontal section across this same image, with pixel value on the y-axis. Note how the brighter star seems “larger” than the dimmer star (see text).</span><a class="headerlink" href="#image-basics" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <p>At this point, we can briefly discuss an image as recorded by a camera.</p>
 <p>Recall that images of stars are not “point-like”, but follow the profile of the <em>Point Spread Function</em> (PSF). For images obtained by simple ground-based telescopes, the origin of the PSF is dominated by astronomical seeing, that is by refraction in bubbles of air with varying refractive index, which are rapidly moving through the line of sight due to atmospheric turbulence. The images we record through those telescopes get blurred by this PSF. Mathematically, the observed image can be seen as a convolution of the actual scene with the PSF. The result of this convolution gets sampled by the pixel array of the detector.</p>
 <p>Also recall that the PSF is wavelength-dependent: ground-based images obtained through a red filter will be significantly sharper than images in a blue band.</p>
@@ -569,15 +573,13 @@ In the context of the observations described in this tutorial, the read-out nois
 <li><p>Brighter stars will have wider <em>isophotes</em>. An isophote is a closed curve around a star at a given brightness level. When displaying an image (i.e., when attributing a grey level to each pixel value), brighter stars will therefore appear “larger”, even if the FWHM is the same for all stars (see <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 4</span></a> above).</p></li>
 </ul>
 <p>Another point illustrated in <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 4</span></a> is the presence of a so-called “background”, in otherwise empty areas of the image, which is here at a level of about 2000 ADU. For ground-based observations, the main source of background comes from Earth’s atmosphere: even at night, the sky is not fully dark. Light pollution, Moon light, <a class="reference external" href="https://en.wikipedia.org/wiki/Airglow">airglow</a> in our atmosphere, but also <a class="reference external" href="https://en.wikipedia.org/wiki/Zodiacal_light">zodiacal light</a> all contribute to this. When observing from Bonn at new Moon, it’s the light pollution which will dominate. Only when observing from a dark site (e.g., the Atacama desert in Chile), airglow can play the major role. In all these cases, the “background” is in fact mostly a “foreground”.</p>
-<h3 class="rubric" id="considerations-on-noise">Considerations on noise</h3>
+<section id="considerations-on-noise">
+<h3>Considerations on noise<a class="headerlink" href="#considerations-on-noise" title="Permalink to this heading">#</a></h3>
 <p>All photons falling on a pixel are subject to <em><a class="reference external" href="https://en.wikipedia.org/wiki/Shot_noise">shot noise</a></em> (also called Poisson noise), regardless of their origin from the astronomical source or the background. The same holds for the electrons from the dark current. In consequence, for any pixel, the number of recorded electrons follows a <a class="reference external" href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a>, such that if the expectation value of a pixel is <span class="math notranslate nohighlight">\(N\)</span> electrons, the standard deviation of the noise in that pixel will be <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> electrons. In other words, the higher the expected value of a pixel, the noisier its value will be.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Be aware that this standard deviation equals <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> <em>only</em> when <span class="math notranslate nohighlight">\(N\)</span> designates the number of electrons (or equivalently photons). This relation does <em>not</em> hold if <span class="math notranslate nohighlight">\(N\)</span> is in ADU (assuming that the gain is different from 1.0). A typical image will be stored in units of ADU, and care must be taken to convert pixel values into electrons when performing such calculations, using the gain.</p>
 </div>
-</div>
-</figcaption>
-</figure>
 <p>The signal-to-noise ratio (S/N) quantifies how strong the level of a desired signal (for example, the flux of a galaxy) is, compared to its standard deviation. <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 4</span></a> illustrates how the counts from a target can actually be significantly lower than the background level. The galaxy image peaks at about 500 ADU above the background, which is at 2000 ADU. The uncertainty on the flux of this galaxy will be dominated by the shot noise from the background, more than by the shot noise from the galaxy!</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -585,6 +587,7 @@ In the context of the observations described in this tutorial, the read-out nois
 <p>While one can easily subtract any offset or smooth model from an image, <strong>one can never subtract the actual noise</strong>.</p>
 <p>It is therefore important to minimize noise in the first place, for example by selecting a dark observing site and cooling the camera.</p>
 </div>
+</section>
 </section>
 <section id="fits-files">
 <h2>FITS files<a class="headerlink" href="#fits-files" title="Permalink to this heading">#</a></h2>
@@ -799,7 +802,10 @@ m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read-out-noise">Read-out noise</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-background-and-noise">Images, background, and noise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#images-background-and-noise">Images, background, and noise</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#considerations-on-noise">Considerations on noise</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fits-files">FITS files</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-software-for-reading-fits">Interactive software for reading FITS</a></li>
 </ul>
