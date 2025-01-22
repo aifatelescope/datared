@@ -448,7 +448,7 @@ document.write(`
 <p>A reflecting telescope uses a combination of (curved) mirrors to form an image in its so-called focal plane, also known as the image plane.
 The optical design of the AIfA telescope is a <strong>variation of a Cassegrain</strong> telescope, illustrated below.</p>
 <figure class="align-default" id="aifa-telescope-layout">
-<a class="reference internal image-reference" href="_images/aifa_telescope_layout.png"><img alt="_images/aifa_telescope_layout.png" src="_images/aifa_telescope_layout.png" style="width: 90%;" /></a>
+<a class="reference internal image-reference" href="_images/aifa_telescope_layout.png"><img alt="_images/aifa_telescope_layout.png" src="_images/aifa_telescope_layout.png" style="width: 100%;" /></a>
 <figcaption>
 <p><span class="caption-number">Fig. 1 </span><span class="caption-text">Optical layout of the AIfA telescope</span><a class="headerlink" href="#aifa-telescope-layout" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -495,6 +495,12 @@ The diffraction-limited image is sharpest for shorter wavelength. But as just di
 <li><p><em><strong>r’</strong></em> with a passband of about 560 - 700 nm (yellow to red), very similar to SDSS <em>r</em>,</p></li>
 <li><p><em><strong>i’</strong></em> with a passband of about 700 - 840 nm (red and near infrared), very similar to SDSS <em>i</em>.</p></li>
 </ul>
+<figure class="align-default" id="sdss-filters">
+<a class="reference internal image-reference" href="_images/baader_planetarium_sdss_filters.jpg"><img alt="_images/baader_planetarium_sdss_filters.jpg" src="_images/baader_planetarium_sdss_filters.jpg" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Transmission curves of the photometric filters used at the AIfA telescope. Image credit: <a class="reference external" href="https://www.baader-planetarium.com/de/filter/photometrische-filter.html">Baader Planetarium</a> (manufacturer of our filters).</span><a class="headerlink" href="#sdss-filters" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <p>In addition, the filter wheel also holds three narrowband filters: H-alpha, OIII, and SII, each with a width of 6.5 nm.</p>
 </section>
 <section id="imaging-detectors-ccd-or-cmos">
@@ -508,6 +514,12 @@ In the scope of this tutorial, we will pass over the rather minor differences in
 <section id="quantum-efficiency">
 <h3>Quantum efficiency<a class="headerlink" href="#quantum-efficiency" title="Permalink to this heading">#</a></h3>
 <p>The quantum efficiency (QE) is the ratio of electrons to the number of photons hitting the pixel. QEs of top grade sensors are far above 90% over a significant wavelength range. For many basic considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably.</p>
+<figure class="align-default" id="qe-curve">
+<a class="reference internal image-reference" href="_images/QHY600_QE_curve.jpg"><img alt="_images/QHY600_QE_curve.jpg" src="_images/QHY600_QE_curve.jpg" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Quantum efficiency curve of the camera used at the AIfA telescope. The sensor is a Sony IMX455. Image credit: <a class="reference external" href="https://www.qhyccd.com/astronomical-camera-qhy600/">QHYCCD</a> (manufacturer of the camera).</span><a class="headerlink" href="#qe-curve" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 </section>
 <section id="full-well-capacity">
 <h3>Full-well capacity<a class="headerlink" href="#full-well-capacity" title="Permalink to this heading">#</a></h3>
@@ -547,9 +559,9 @@ In the context of the observations described in this tutorial, the read-out nois
 <section id="images-background-and-noise">
 <h2>Images, background, and noise<a class="headerlink" href="#images-background-and-noise" title="Permalink to this heading">#</a></h2>
 <figure class="align-default" id="image-basics">
-<a class="reference internal image-reference" href="_images/image_basics.png"><img alt="_images/image_basics.png" src="_images/image_basics.png" style="width: 75%;" /></a>
+<a class="reference internal image-reference" href="_images/image_basics.png"><img alt="_images/image_basics.png" src="_images/image_basics.png" style="width: 100%;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Illustration of some basic image properties. Top: two stars (one has twice the flux of the other, but their FWHM is the same), and one galaxy. Bottom: horizontal section across the image, with pixel value on the y-axis.</span><a class="headerlink" href="#image-basics" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Illustration of some basic image properties. Top: simulated image of two stars (one has twice the flux of the other), and one galaxy. Bottom: horizontal section across this same image, with pixel value on the y-axis. Note how the brighter star seems “larger”, while their FWHM is the same (see text).</span><a class="headerlink" href="#image-basics" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>At this point, we can briefly discuss an image as recorded by a camera.</p>
@@ -557,10 +569,10 @@ In the context of the observations described in this tutorial, the read-out nois
 <p>Also recall that the PSF is wavelength-dependent: ground-based images obtained through a red filter will be significantly sharper than images in a blue band.</p>
 <p>Some comments about the apparent size of stars can be made:</p>
 <ul class="simple">
-<li><p>If two stars have a similar spectrum (or if you use a relatively narrow filter), then their profiles on the image have <em>the same width</em>, for example as measured by the <em>Full Width at Half Maximum</em> (<strong>FWHM</strong>, see <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 2</span></a> above) of the stars. Obviously the same holds for the standard-deviation of a 2D-Gaussian fitted to these stars, or any other measure.</p></li>
-<li><p>Brighter stars will have wider <em>isophotes</em>. An isophote is a closed curve around a star at a given brightness level. When displaying an image (i.e., when attributing a grey level to each pixel value), brighter stars will therefore appear “larger”, even if the FWHM is the same for all stars (see <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 2</span></a> above).</p></li>
+<li><p>If two stars have a similar spectrum (or if you use a relatively narrow filter), then their profiles on the image have <em>the same width</em>, for example as measured by the <em>Full Width at Half Maximum</em> (<strong>FWHM</strong>, see <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 4</span></a> above) of the stars. Obviously the same holds for the standard-deviation of a 2D-Gaussian fitted to these stars, or any other measure.</p></li>
+<li><p>Brighter stars will have wider <em>isophotes</em>. An isophote is a closed curve around a star at a given brightness level. When displaying an image (i.e., when attributing a grey level to each pixel value), brighter stars will therefore appear “larger”, even if the FWHM is the same for all stars (see <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 4</span></a> above).</p></li>
 </ul>
-<p>Another point illustrated in <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 2</span></a> is the presence of a so-called “background”, in otherwise empty areas of the image, which is here at a level of about 2000 ADU. For ground-based observations, the main source of background comes from Earth’s atmosphere: even at night, the sky is not fully dark. Light pollution, Moon light, <a class="reference external" href="https://en.wikipedia.org/wiki/Airglow">airglow</a> in our atmosphere, but also <a class="reference external" href="https://en.wikipedia.org/wiki/Zodiacal_light">zodiacal light</a> all contribute to this. When observing from Bonn at new Moon, it’s the light pollution which will dominate. Only when observing from a dark site (e.g., the Atacama desert in Chile), airglow can play the major role. In all these cases, the “background” is in fact mostly a “foreground”.</p>
+<p>Another point illustrated in <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 4</span></a> is the presence of a so-called “background”, in otherwise empty areas of the image, which is here at a level of about 2000 ADU. For ground-based observations, the main source of background comes from Earth’s atmosphere: even at night, the sky is not fully dark. Light pollution, Moon light, <a class="reference external" href="https://en.wikipedia.org/wiki/Airglow">airglow</a> in our atmosphere, but also <a class="reference external" href="https://en.wikipedia.org/wiki/Zodiacal_light">zodiacal light</a> all contribute to this. When observing from Bonn at new Moon, it’s the light pollution which will dominate. Only when observing from a dark site (e.g., the Atacama desert in Chile), airglow can play the major role. In all these cases, the “background” is in fact mostly a “foreground”.</p>
 <section id="considerations-on-noise">
 <h3>Considerations on noise<a class="headerlink" href="#considerations-on-noise" title="Permalink to this heading">#</a></h3>
 <p>All photons falling on a pixel are subject to <em><a class="reference external" href="https://en.wikipedia.org/wiki/Shot_noise">shot noise</a></em> (also called Poisson noise), regardless of their origin from the astronomical source or the background. The same holds for the electrons from the dark current. In consequence, for any pixel, the number of recorded electrons follows a <a class="reference external" href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a>, such that if the expectation value of a pixel is <span class="math notranslate nohighlight">\(N\)</span> electrons, the standard deviation of the noise in that pixel will be <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> electrons. In other words, the higher the expected value of a pixel, the noisier its value will be.</p>
@@ -568,7 +580,7 @@ In the context of the observations described in this tutorial, the read-out nois
 <p class="admonition-title">Note</p>
 <p>Be aware that this standard deviation equals <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> <em>only</em> when <span class="math notranslate nohighlight">\(N\)</span> designates the number of electrons (or equivalently photons). This relation does <em>not</em> hold if <span class="math notranslate nohighlight">\(N\)</span> is in ADU (assuming that the gain is different from 1.0). A typical image will be stored in units of ADU, and care must be taken to convert pixel values into electrons when performing such calculations, using the gain.</p>
 </div>
-<p>The signal-to-noise ratio (S/N) quantifies how strong the level of a desired signal (for example, the flux of a galaxy) is, compared to its standard deviation. <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 2</span></a> illustrates how the counts from a target can actually be significantly lower than the background level. The galaxy image peaks at about 500 ADU above the background, which is at 2000 ADU. The uncertainty on the flux of this galaxy will be dominated by the shot noise from the background, more than by the shot noise from the galaxy!</p>
+<p>The signal-to-noise ratio (S/N) quantifies how strong the level of a desired signal (for example, the flux of a galaxy) is, compared to its standard deviation. <a class="reference internal" href="#image-basics"><span class="std std-numref">Fig. 4</span></a> illustrates how the counts from a target can actually be significantly lower than the background level. The galaxy image peaks at about 500 ADU above the background, which is at 2000 ADU. The uncertainty on the flux of this galaxy will be dominated by the shot noise from the background, more than by the shot noise from the galaxy!</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We’ve discussed several sources of noise: shot noise from the sources and background, shot noise from the thermal electrons (i.e., related to the dark current), and read-out noise from the electronics.</p>
