@@ -154,8 +154,7 @@ In the context of the observations described in this tutorial, the read-out nois
 width: 100%
 name: image_basics
 ---
-Illustration of some basic image properties. Top: simulated image of two stars (one has twice the flux of the other), and one galaxy. Bottom: horizontal section across this same image, with pixel value on the y-axis. Note how the brighter star seems "larger", while their FWHM is the same (see text).
-```
+Illustration of some basic image properties. Top: simulated image of two stars (one has twice the flux of the other), and one galaxy. Bottom: horizontal section across this same image, with pixel value on the y-axis. Note how the brighter star seems "larger" than the dimmer star, while their FWHM is the same (see text).
 
 At this point, we can briefly discuss an image as recorded by a camera.
 
