@@ -12,7 +12,7 @@ The optical design of the AIfA telescope is a **variation of a Cassegrain** tele
 
 ```{figure} ./figures/aifa_telescope_layout.png
 ---
-width: 90%
+width: 100%
 name: aifa_telescope_layout
 ---
 Optical layout of the AIfA telescope
@@ -70,6 +70,16 @@ The filter wheel of the AIfA telescope contains broad-band filters that are very
 - ***r'*** with a passband of about 560 - 700 nm (yellow to red), very similar to SDSS *r*,
 - ***i'*** with a passband of about 700 - 840 nm (red and near infrared), very similar to SDSS *i*.
 
+
+```{figure} ./figures/baader_planetarium_sdss_filters.jpg
+---
+width: 100%
+name: sdss_filters
+---
+Transmission curves of the photometric filters used at the AIfA telescope. Image credit: [Baader Planetarium](https://www.baader-planetarium.com/de/filter/photometrische-filter.html) (manufacturer of our filters).
+```
+
+
 In addition, the filter wheel also holds three narrowband filters: H-alpha, OIII, and SII, each with a width of 6.5 nm. 
 
 
@@ -87,6 +97,15 @@ We now describe some nomenclature as well as important aspects of these sensors.
 ### Quantum efficiency
 
 The quantum efficiency (QE) is the ratio of electrons to the number of photons hitting the pixel. QEs of top grade sensors are far above 90% over a significant wavelength range. For many basic considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably.
+
+```{figure} ./figures/QHY600_QE_curve.jpg
+---
+width: 100%
+name: qe_curve
+---
+Quantum efficiency curve of the camera used at the AIfA telescope. The sensor is a Sony IMX455. Image credit: [QHYCCD](https://www.qhyccd.com/astronomical-camera-qhy600/) (manufacturer of the camera).
+```
+
 
 ### Full-well capacity
 
@@ -132,10 +151,10 @@ In the context of the observations described in this tutorial, the read-out nois
 
 ```{figure} ./figures/image_basics.png
 ---
-width: 75%
+width: 100%
 name: image_basics
 ---
-Illustration of some basic image properties. Top: two stars (one has twice the flux of the other, but their FWHM is the same), and one galaxy. Bottom: horizontal section across the image, with pixel value on the y-axis.
+Illustration of some basic image properties. Top: simulated image of two stars (one has twice the flux of the other), and one galaxy. Bottom: horizontal section across this same image, with pixel value on the y-axis. Note how the brighter star seems "larger", while their FWHM is the same (see text).
 ```
 
 At this point, we can briefly discuss an image as recorded by a camera.
