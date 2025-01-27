@@ -24,7 +24,7 @@ conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4
 
 ## Using Python with notebooks: JupyterLab
 
-The above also installs JupyterLab, a tool to interactively work with notebooks from within your browser. If you want work with notebooks, such as the ones provided later in this tutorial, you can launch JupyterLab with the following command.
+The above also installs [JupyterLab](https://docs.jupyter.org), a tool to interactively work with notebooks from within your browser. If you want work with notebooks, such as the ones provided later in this tutorial, you can launch JupyterLab with the following command.
 
 ```none
 cd /where/your/notebooks/are/
