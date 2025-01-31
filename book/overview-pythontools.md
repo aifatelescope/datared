@@ -6,6 +6,7 @@ Here is an overview of what we will do on the following pages, that can be seen 
 
  * [](./data.md): download the data, and write a small configuration module
  * [](./pre-red.ipynb): analyse the calibration frames, create masterbias, masterdark, and masterflats, and apply the corresponding calibration to the science frames
+ * [](./astrometry.ipynb): builds an accurate WCS for your science images (could be skipped in case your images already have a good WCS, including a distortion model)
  * [](./photometry.ipynb): perform forced aperture photometry on the individual science frames (i.e., estimate the flux with apertures at the same sky coordinates in each science frame).
 
 At this stage, you'll have one photometric catalog per science frame. Depending on your lab course, you can then proceed with one of the following: 
@@ -15,8 +16,7 @@ At this stage, you'll have one photometric catalog per science frame. Depending 
 
 
 You might also be interested in:
- * [](./astrometry.ipynb): builds an accurate WCS for your science images. In case your images don't come with a (good) WCS, use this before performing photometry or stacking. A good moment to run this is right after [](./pre-red.ipynb).
- * [](./stack.ipynb): (optional!) reproject science frames on a common pixel grid, coadd them, and create a colour composite or a nice graylevel image.
+  * [](./stack.ipynb): (optional!) reproject science frames on a common pixel grid, coadd them, and create a colour composite or a nice graylevel image. This can be run at any time after the [](./astrometry.ipynb).
 
 
 ```{note}
