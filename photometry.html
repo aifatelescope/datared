@@ -407,11 +407,14 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="photometry">
 <h1>Photometry<a class="headerlink" href="#photometry" title="Permalink to this heading">#</a></h1>
-<p>On this page we’ll detect sources and perform photometry (along other measurements) for each pre-reduced image.
-The procedure could also be applied to coadded images.</p>
+<p>On this page we’ll detect sources and perform simple aperture photometry (along other measurements) for each pre-reduced image.
+The same procedure could of course also be applied to coadded images.</p>
 <p>As before, you could copy or write the code shown below in a script, or alternatively directly download this page as a <a class="reference download internal" download="" href="_downloads/b3818530518c2677d23c7773e04ac78d/photometry.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code></a> file.</p>
 <p>To run the code, you’ll need the module <code class="docutils literal notranslate"><span class="pre">dataredconfig.py</span></code>, as explained <a class="reference internal" href="data.html"><span class="std std-doc">here</span></a>.</p>
-<p>Potential improvements: PSF homogeneization, or go for PSF-fitting, should be beneficial for crowded clusters…</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The photometry presented here is sufficient for our purposes, but remains extremely simple. Notably, it ignores the effect of variable seeing (in time and/or accross filters). The next steps to improve upon the minimal approach shown here would be to perform a PSF homogeneization or to use PSF-fitting.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dataredconfig</span>
