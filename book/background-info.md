@@ -12,7 +12,7 @@ The optical design of the AIfA telescope is a **variation of a Cassegrain** tele
 
 ```{figure} ./figures/aifa_telescope_layout.png
 ---
-width: 90%
+width: 100%
 name: aifa_telescope_layout
 ---
 Optical layout of the AIfA telescope
@@ -62,13 +62,23 @@ The combination of a camera with a telescope yields a particular size of the fie
 
 ## Filters
 
-While the sensors used in optical astronomy can virtually *count* individual photons, they are not sensitive to their wavelength. Therefore, two obtain any kind of color information, one has to record several images of the target using different optical filters. These filters are inserted in the optical path before the imaging sensor (see {numref}`aifa_telescope_layout`). In practice, several filters are mounted into a filter wheel which is located directly ahead of the camera, allowing for a fast filter change.
+While the sensors used in optical astronomy can virtually *count* individual photons, they are not sensitive to their wavelength. Therefore, to obtain any kind of color information, one has to record several images of the target using different optical filters. These filters are inserted in the optical path before the imaging sensor (see {numref}`aifa_telescope_layout`). In practice, several filters are mounted into a filter wheel which is located directly ahead of the camera, allowing for a fast filter change.
 
 The filter wheel of the AIfA telescope contains broad-band filters that are very close to the ones used in the the Sloan/SDSS photometric system (called *ugriz*), which is widely used in astronomical research:
 
 - ***g'*** with a passband of about 400 - 550 nm (blue to green), very similar to SDSS *g*,
 - ***r'*** with a passband of about 560 - 700 nm (yellow to red), very similar to SDSS *r*,
 - ***i'*** with a passband of about 700 - 840 nm (red and near infrared), very similar to SDSS *i*.
+
+
+```{figure} ./figures/baader_planetarium_sdss_filters.jpg
+---
+width: 100%
+name: sdss_filters
+---
+Transmission curves of the photometric filters used at the AIfA telescope. Image credit: [Baader Planetarium](https://www.baader-planetarium.com/de/filter/photometrische-filter.html) (manufacturer of our filters).
+```
+
 
 In addition, the filter wheel also holds three narrowband filters: H-alpha, OIII, and SII, each with a width of 6.5 nm. 
 
@@ -86,7 +96,16 @@ We now describe some nomenclature as well as important aspects of these sensors.
 
 ### Quantum efficiency
 
-The quantum efficiency (QE) is the ratio of electrons to the number of photons hitting the pixel. QEs of top grade sensors are far above 90% over a significant wavelength range. For many basic considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably.
+The quantum efficiency (QE) is the ratio of electrons to the number of photons hitting the pixel. QEs of top grade sensors used in professional observatories are far above 90% over a significant wavelength range. For many basic considerations we can therefore assume that one photon leads to one electron, and use the words photons and electrons interchangeably. We will do so in the present tutorial.
+
+```{figure} ./figures/QHY600_QE_curve.jpg
+---
+width: 100%
+name: qe_curve
+---
+Quantum efficiency curve of the QHYCCD 600M PH camera used at the AIfA telescope. The sensor is a Sony IMX455. Image credit: [QHYCCD](https://www.qhyccd.com/astronomical-camera-qhy600/) (manufacturer of the camera).
+```
+
 
 ### Full-well capacity
 
@@ -132,11 +151,12 @@ In the context of the observations described in this tutorial, the read-out nois
 
 ```{figure} ./figures/image_basics.png
 ---
-width: 75%
+width: 100%
 name: image_basics
 ---
-Illustration of some basic image properties. Top: two stars (one has twice the flux of the other, but their FWHM is the same), and one galaxy. Bottom: horizontal section across the image, with pixel value on the y-axis.
+Illustration of some basic image properties. Top: simulated image of two stars (one has twice the flux of the other), and one galaxy. Bottom: horizontal section across this same image, with pixel value on the y-axis. Note how the brighter star seems "larger" than the dimmer star (see text).
 ```
+
 
 At this point, we can briefly discuss an image as recorded by a camera.
 
@@ -180,7 +200,9 @@ In optical astronomy, images are commonly stored in the FITS file format. We bri
 
 FITS (Flexible Image Transport System) is a standard in use since 1981, and therefore the format of choice for any long-term storage. FITS is flexible: a single file may contain several images, but also higher-dimensional arrays, data tables, or mixtures of these. Each of these entities is typically stored in a "header-data unit" (HDU). As the name implies, a HDU is composed of a "header" (holding metadata, such as the date of observation and the filter) and the actual data (such as the image). In this tutorial, we will only deal with FITS files containing a single HDU.
 
+### Interactive software for reading FITS
 
+In the later tutorial, we will open and manipulate images stored in FITS format from within Python scripts or notebooks. While this offers exactly what we need for data analysis, it's good to know that you can also open FITS files using programs with graphical user interfaces. For completeness, we mention here two free and multi-platform applications that are commonly used in the optical astronomy community. To visualize and inspect FITS *images*, you could use [SAOImageDS9](https://ds9.si.edu), often called DS9 for short. It is available on AIfA computers as `ds9`. And if you come across a FITS file containing *data tables* (such as a catalog of sources detected in an image), you could open and visualize its contents (and create plots) using [TOPCAT](http://www.starlink.ac.uk/topcat/), available at the AIfA as `topcat`. Both applications offer many advanced possibilities, see their respective websites for detailed descriptions and tutorials.
 
 
 ## Calibration (aka pre-reduction)

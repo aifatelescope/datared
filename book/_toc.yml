@@ -13,12 +13,12 @@ parts:
   - caption: Basic reduction
     chapters:
     - file: pre-red
+    - file: astrometry
     - file: photometry
     - file: CMD
     - file: lightcurve
   - caption: Further pages
     chapters:
-    - file: astrometry
     - file: stack
     - file: camera-charact
     - file: more

@@ -22,9 +22,9 @@ conda activate datared
 conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7
 ```
 
-## Optional: jupyterlab
+## Using Python with notebooks: JupyterLab
 
-The above also installs JupyterLab. If you want to work with notebooks, you can 
+The above also installs [JupyterLab](https://docs.jupyter.org), a tool to interactively work with notebooks from within your browser. If you want work with notebooks, such as the ones provided later in this tutorial, you can launch JupyterLab with the following command.
 
 ```none
 cd /where/your/notebooks/are/
@@ -32,11 +32,9 @@ cd /where/your/notebooks/are/
 jupyter lab
 ```
 
-to launch JupyterLab.
 
 
-
-## Optional: astrometry.net
+## Astrometric calibration: astrometry.net
 
 A reliable tool to perform astrometric calibration of an image is the software `astrometry.net`. It will blindly "plate solve" the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-compliant WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see https://astrometry.net, and http://data.astrometry.net for how to get the index files.
 
