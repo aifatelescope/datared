@@ -19,7 +19,7 @@ Then, open a terminal, and run the following commands.
 ```none
 conda create -n datared python=3.12.8
 conda activate datared
-conda install -c conda-forge numpy=2.2.2 scipy=1.15.1 astropy=7.0.1 ccdproc=2.4.3 photutils=2.1.0 matplotlib=3.10.0 astrometry=0.97 astroquery=0.4.9 ipympl=0.9.6 ipykernel=6.29.5 jupyterlab=4.3.5
+conda install -c conda-forge numpy=2.2.2 scipy=1.15.1 astropy=7.0.1 ccdproc=2.4.3 photutils=2.1.0 matplotlib=3.10.0 astroquery=0.4.9 ipympl=0.9.6 ipykernel=6.29.5 jupyterlab=4.3.5
 ```
 
 ## Using Python with notebooks: JupyterLab
