@@ -11,15 +11,15 @@ The software tools that we'll use for the data reduction are easy to install, on
 First, download and install Miniforge, from here: https://conda-forge.org/download/ . This will allow you to set up a small isolated environment containing everything needed for the data reduction.
 
 Then, open a terminal, and run the following commands.
-* The first line creates a new environment, called "datared", and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).
+* The first line creates a new environment, called "datared", and installs Python version 3.12.
 * The second line activates this environment (it makes the software available). You'll have to activate it in every terminal window you want to work in.
 * The third line takes a little longer, and will ask you to confirm the installation. It's a good idea to install all those packages in "one shot" as done here, to better manage dependencies.
 
 
 ```none
-conda create -n datared python=3.11.8
+conda create -n datared python=3.12.8
 conda activate datared
-conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7
+conda install -c conda-forge numpy=2.2.2 scipy=1.15.1 astropy=7.0.1 ccdproc=2.4.3 photutils=2.1.0 matplotlib=3.10.0 astrometry=0.97 astroquery=0.4.9 ipympl=0.9.6 ipykernel=6.29.5 jupyterlab=4.3.5
 ```
 
 ## Using Python with notebooks: JupyterLab
@@ -42,7 +42,7 @@ On Linux and macOS, you can easily install `astrometry.net` with conda, using th
 
 ```none
 conda activate datared
-conda install -c conda-forge astrometry=0.95
+conda install -c conda-forge astrometry=0.97
 ```
 
 You'll then have to download some index files.
@@ -72,7 +72,3 @@ curl https://portal.nersc.gov/project/cosmo/temp/dstn/index-5200/LITE/index-5206
 
 We do not provide instructions to install `astrometry.net` on Windows (but this might well be possible, we just don't support it as the current conda package does not work on Windows).
 
-
-## Further comments
-
-python=3.12 currently leads to an issue with ccdproc / astroscrappy.
