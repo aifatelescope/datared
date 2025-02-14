@@ -423,10 +423,10 @@ document.write(`
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">import</span> <span class="nn">ccdproc</span>
-<span class="kn">import</span> <span class="nn">photutils</span>
+<span class="kn">import</span> <span class="nn">photutils.background</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;, astropy&quot;</span><span class="p">,</span> <span class="n">astropy</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;, matplotlib&quot;</span><span class="p">,</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;, ccdproc&quot;</span><span class="p">,</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;, photutils&quot;</span><span class="p">,</span> <span class="n">photutils</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="c1"># Developed with (April 2024): numpy 1.26.4 , astropy 6.0.1 , matplotlib 3.8.3 , ccdproc 2.4.1 , photutils 1.11.0</span>
+<span class="c1"># Developed with (Feb 2025): numpy 2.2.2 , astropy 7.0.1 , matplotlib 3.10.0 , ccdproc 2.4.3 , photutils 2.1.0</span>
 </pre></div>
 </div>
 </div>
@@ -435,7 +435,8 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We&#39;ll ignore some astropy warnings that get raised as our FITS headers (from NINA) are not 100% standards compliant.</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">astropy</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">FITSFixedWarning</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">astropy.utils.exceptions</span> <span class="kn">import</span> <span class="n">AstropyWarning</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">AstropyWarning</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -684,7 +685,7 @@ We also create a smoothed version of the masterbias, to highlight a bit some (po
 <span class="n">masterbias</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;masterbias.fits&quot;</span><span class="p">)</span>
 <span class="n">masterdark</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;masterdark.fits&quot;</span><span class="p">)</span>
 <span class="c1"># For the flats, we build a dictionnary that holds the masterflat for each filter name:</span>
-<span class="n">available_flat_filters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">]</span>
+<span class="n">available_flat_filters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">]</span>
 <span class="n">masterflats</span> <span class="o">=</span> <span class="p">{</span><span class="n">filtername</span><span class="p">:</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;masterflat_</span><span class="si">{</span><span class="n">filtername</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">filtername</span> <span class="ow">in</span> <span class="n">available_flat_filters</span><span class="p">}</span>
 
 <span class="n">n_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">science_files</span><span class="o">.</span><span class="n">summary</span><span class="p">)</span>

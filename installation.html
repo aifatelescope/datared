@@ -393,7 +393,6 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-python-with-notebooks-jupyterlab">Using Python with notebooks: JupyterLab</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#astrometric-calibration-astrometry-net">Astrometric calibration: astrometry.net</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-comments">Further comments</a></li>
 </ul>
             </nav>
         </div>
@@ -416,13 +415,13 @@ Just make sure to execute <code class="docutils literal notranslate"><span class
 <p>First, download and install Miniforge, from here: <a class="reference external" href="https://conda-forge.org/download/">https://conda-forge.org/download/</a> . This will allow you to set up a small isolated environment containing everything needed for the data reduction.</p>
 <p>Then, open a terminal, and run the following commands.</p>
 <ul class="simple">
-<li><p>The first line creates a new environment, called “datared”, and installs Python version 3.11 (this particular version is currently needed for compatibility between all those packages).</p></li>
+<li><p>The first line creates a new environment, called “datared”, and installs Python version 3.12.</p></li>
 <li><p>The second line activates this environment (it makes the software available). You’ll have to activate it in every terminal window you want to work in.</p></li>
 <li><p>The third line takes a little longer, and will ask you to confirm the installation. It’s a good idea to install all those packages in “one shot” as done here, to better manage dependencies.</p></li>
 </ul>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create -n datared python=3.11.8
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create -n datared python=3.12.8
 conda activate datared
-conda install -c conda-forge numpy=1.26.4 scipy=1.13.0 astropy=6.0.1 ccdproc=2.4.2 photutils=1.12.0 matplotlib=3.8.4 astroquery=0.4.7 ipympl=0.9.4 ipykernel=6.29.4 jupyterlab=4.1.7
+conda install -c conda-forge numpy=2.2.2 scipy=1.15.1 astropy=7.0.1 ccdproc=2.4.3 photutils=2.1.0 matplotlib=3.10.0 astroquery=0.4.9 ipympl=0.9.6 ipykernel=6.29.5 jupyterlab=4.3.5
 </pre></div>
 </div>
 <section id="using-python-with-notebooks-jupyterlab">
@@ -439,7 +438,7 @@ jupyter lab
 <p>A reliable tool to perform astrometric calibration of an image is the software <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code>. It will blindly “plate solve” the image (i.e., identify stars in your image and find out what part of the sky our image covers) and compute a good and standards-compliant WCS solution for it (i.e., give you a mathematical transform between pixel coordinates and sky coordinates, taking into account optical distortions of the telescope). For details, see <a class="reference external" href="https://astrometry.net">https://astrometry.net</a>, and <a class="reference external" href="http://data.astrometry.net">http://data.astrometry.net</a> for how to get the index files.</p>
 <p>On Linux and macOS, you can easily install <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> with conda, using the environment created above:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda activate datared
-conda install -c conda-forge astrometry=0.95
+conda install -c conda-forge astrometry=0.97
 </pre></div>
 </div>
 <p>You’ll then have to download some index files.
@@ -465,10 +464,6 @@ Below are the ones useful for our telescope (48 arcmin x 32 arcmin field), from 
 </pre></div>
 </div>
 <p>We do not provide instructions to install <code class="docutils literal notranslate"><span class="pre">astrometry.net</span></code> on Windows (but this might well be possible, we just don’t support it as the current conda package does not work on Windows).</p>
-</section>
-<section id="further-comments">
-<h2>Further comments<a class="headerlink" href="#further-comments" title="Permalink to this heading">#</a></h2>
-<p>python=3.12 currently leads to an issue with ccdproc / astroscrappy.</p>
 </section>
 </section>
 
@@ -537,7 +532,6 @@ Below are the ones useful for our telescope (48 arcmin x 32 arcmin field), from 
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-python-with-notebooks-jupyterlab">Using Python with notebooks: JupyterLab</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#astrometric-calibration-astrometry-net">Astrometric calibration: astrometry.net</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-comments">Further comments</a></li>
 </ul>
   </nav></div>
 

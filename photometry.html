@@ -393,7 +393,11 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-and-subtracting-the-background">Estimating and subtracting the background</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-detection-and-measurement">Source detection and measurement</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forced-aperture-photometry">Forced aperture photometry</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forced-aperture-photometry">Forced aperture photometry</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chimney-plot">Chimney Plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performing-the-measurements-on-all-images">Performing the measurements on all images</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -430,7 +434,10 @@ The same procedure could of course also be applied to coadded images.</p>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="kn">import</span> <span class="nn">ccdproc</span>
-<span class="kn">import</span> <span class="nn">photutils</span>
+<span class="kn">import</span> <span class="nn">photutils.background</span>
+<span class="kn">import</span> <span class="nn">photutils.aperture</span>
+<span class="kn">import</span> <span class="nn">photutils.segmentation</span>
+<span class="kn">import</span> <span class="nn">photutils.psf</span>
 
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 </pre></div>
@@ -609,7 +616,7 @@ Of course, depending on the data to be processed, you might want to adjust (hard
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ref_image_noback</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ref_image_noback</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
-    <span class="n">norm</span><span class="o">=</span><span class="n">astropy</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_image_noback</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="n">min_cut</span><span class="o">=-</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">=</span><span class="mi">2000</span><span class="p">))</span>
+    <span class="n">norm</span><span class="o">=</span><span class="n">astropy</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">simple_norm</span><span class="p">(</span><span class="n">ref_image_noback</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">stretch</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">20</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2000</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
     <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;xcentroid_win&quot;</span><span class="p">],</span>
     <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;ycentroid_win&quot;</span><span class="p">],</span>
@@ -660,58 +667,85 @@ This means that we use the sky coordinates of the sources detected in the refere
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We group all steps of the photometric measurement into one function:</span>
 
-<span class="k">def</span> <span class="nf">measure_photometry</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">sky_positions</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">measure_photometry</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">sky_positions</span><span class="p">,</span> <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Function for forced aperture photometry given the provided sky_positions.</span>
-<span class="sd">    This is somehow similar to running Source Extractor in &quot;dual image mode&quot;.</span>
+<span class="sd">    This function first estimates and subtracts the background from the image,</span>
+<span class="sd">    and performs aperture photometry both on the background-subtracted image and on the background alone.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">    image: a CCDData object</span>
 <span class="sd">    sky_positions: a list or column of aperture positions, in sky coordinates (i.e. as SkyCoord objects)</span>
+<span class="sd">    run_fit: if True, a simple 2D Gaussian fit is also run, providing FWHM and flux measurements. Take significantly more time.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    An Astropy Table with measurements for several aperture radii at the given positions.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        
-    <span class="c1"># Estimate and subtract the background:</span>
+    <span class="c1"># Estimating and subtracting the background:</span>
+    <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>    
     <span class="n">background</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">estimate_background</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
     <span class="n">image_noback</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;adu&quot;</span><span class="p">))</span>
-
     <span class="n">tend</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Background subtraction took </span><span class="si">{</span><span class="n">tend</span><span class="o">-</span><span class="n">tstart</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> sec&quot;</span><span class="p">)</span>
     
+    
+    <span class="c1"># Aperture photometry</span>
     <span class="n">aperture_radii</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="c1"># In arcsec</span>
-
     <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="c1"># We first generate a separate catalog for each aperture radius, and combine these afterwards</span>
+    <span class="c1"># We generate a separate catalog for each aperture radius, and combine these afterwards</span>
     <span class="n">aperture_catalogs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">aperture_radii</span><span class="p">:</span>
 
         <span class="n">apertures</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">aperture</span><span class="o">.</span><span class="n">SkyCircularAperture</span><span class="p">(</span><span class="n">sky_positions</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">arcsec</span><span class="p">)</span>
+
+        <span class="c1"># Photometry on the background-subtracted image:</span>
         <span class="n">aperture_measurements</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">aperture</span><span class="o">.</span><span class="n">ApertureStats</span><span class="p">(</span><span class="n">image_noback</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">aperture</span><span class="o">=</span><span class="n">apertures</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">image_noback</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
+        <span class="c1"># Same photometry on the background image:</span>
+        <span class="n">background_aperture_measurements</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">aperture</span><span class="o">.</span><span class="n">ApertureStats</span><span class="p">(</span><span class="n">background</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">aperture</span><span class="o">=</span><span class="n">apertures</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">image_noback</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
         
-        <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
-            <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;fwhm&quot;</span><span class="p">,</span> <span class="s2">&quot;elongation&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">])</span>
-            <span class="c1"># For some reason these fwhm and elongation sometimes lead to excessive runtime for large apertures (getting stuck...), to be investigated</span>
-            <span class="c1"># In case of trouble, replace the line above by the following, to measure only the flux:</span>
-            <span class="c1">#aperture_catalog = aperture_measurements.to_table(columns=[&quot;sum&quot;])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">])</span>
+        <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">])</span>
+        <span class="n">background_aperture_catalog</span> <span class="o">=</span> <span class="n">background_aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Note: ApertureStats also provides &quot;fwhm&quot; and &quot;elongation&quot;, among other stats.</span>
+        <span class="c1"># While these measurements are fast and can be useful, they are computed from unweighted moments,</span>
+        <span class="c1"># and will therefore be strongly influenced by the aperture size and the noise.</span>
+        <span class="c1"># Just for reference, this is how to get them:</span>
+        <span class="c1">#aperture_catalog = aperture_measurements.to_table(columns=[&quot;fwhm&quot;, &quot;elongation&quot;, &quot;sum&quot;])        </span>
 
         <span class="c1"># Rename columns by adding the aperture radius, to get for example &quot;sum_4&quot; instead of sum</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">aperture_catalog</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
             <span class="n">aperture_catalog</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">new_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">background_aperture_catalog</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+            <span class="n">background_aperture_catalog</span><span class="o">.</span><span class="n">rename_column</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">new_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;back_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+         
         <span class="n">aperture_catalogs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aperture_catalog</span><span class="p">)</span>
+        <span class="n">aperture_catalogs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">background_aperture_catalog</span><span class="p">)</span>
     
     <span class="c1"># And now merge these catalogs into a single one:</span>
     <span class="n">merged_catalog</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">aperture_catalogs</span><span class="p">,</span>
         <span class="n">join_type</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="n">metadata_conflicts</span><span class="o">=</span><span class="s2">&quot;silent&quot;</span>
         <span class="p">)</span>
-    
     <span class="n">tend</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Photometry took </span><span class="si">{</span><span class="n">tend</span><span class="o">-</span><span class="n">tstart</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> sec&quot;</span><span class="p">)</span>
+
+
+    <span class="c1"># Optional simple 2D Gaussian fit for FWHM-measurement of sources:</span>
+    <span class="k">if</span> <span class="n">run_simple_fit</span><span class="p">:</span>
+        <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> 
+        <span class="c1"># Compute pixel-coordinate positions of the positions:</span>
+        <span class="n">image_pixel_positions</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">wcs</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">skycoord_to_pixel</span><span class="p">(</span><span class="n">sky_positions</span><span class="p">,</span> <span class="n">ref_image</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
+        <span class="n">xypos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image_pixel_positions</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="c1"># Rearranging the data</span>
+        <span class="c1"># Perform the fitting:</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+            <span class="n">fit_catalog</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">psf</span><span class="o">.</span><span class="n">fit_2dgaussian</span><span class="p">(</span><span class="n">image_noback</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">xypos</span><span class="o">=</span><span class="n">xypos</span><span class="p">,</span> <span class="n">fit_shape</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">fwhm</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">fix_fwhm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">results</span>
+        <span class="c1"># Copy over some relevant columns into our final catalog:</span>
+        <span class="n">merged_catalog</span><span class="p">[</span><span class="s2">&quot;fwhm_fit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_catalog</span><span class="p">[</span><span class="s2">&quot;fwhm_fit&quot;</span><span class="p">]</span> <span class="c1"># The FWHM obtained form the fit, in pixels</span>
+        <span class="n">merged_catalog</span><span class="p">[</span><span class="s2">&quot;flux_fit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_catalog</span><span class="p">[</span><span class="s2">&quot;flux_fit&quot;</span><span class="p">]</span> <span class="c1"># The flux from the fit, in ADU</span>
+        <span class="n">merged_catalog</span><span class="p">[</span><span class="s2">&quot;q_fit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_catalog</span><span class="p">[</span><span class="s2">&quot;qfit&quot;</span><span class="p">]</span> <span class="c1"># A quality-of-fit metric, see doc of photutils.psf for details.</span>
+        <span class="n">tend</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;2D Gaussian fitting took </span><span class="si">{</span><span class="n">tend</span><span class="o">-</span><span class="n">tstart</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> sec&quot;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">merged_catalog</span>
 </pre></div>
 </div>
@@ -722,39 +756,51 @@ This means that we use the sky coordinates of the sources detected in the refere
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># As a test, we run this on the ref_image.</span>
 <span class="c1"># For this we read the ref image again, as the one in memory already has the background subtracted.</span>
 <span class="n">ref_image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ref_image_filepath</span><span class="p">)</span>
-<span class="n">ref_photo_cat</span> <span class="o">=</span> <span class="n">measure_photometry</span><span class="p">(</span><span class="n">ref_image</span><span class="p">,</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">])</span>
+<span class="n">ref_photo_cat</span> <span class="o">=</span> <span class="n">measure_photometry</span><span class="p">(</span><span class="n">ref_image</span><span class="p">,</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">],</span> <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ref_photo_cat</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<section id="chimney-plot">
+<h3>Chimney Plot<a class="headerlink" href="#chimney-plot" title="Permalink to this heading">#</a></h3>
+<p>As an illustration of how this photometric catalog can be used, we create a basic and very common scatter plot: the so-called “chimney plot”, named after its shape. The plot shows instrumental magnitude against FWHM (or some other size measurement) of all detected sources.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Potentially, your image contains both unresolved sources (stars) and resolved sources (e.g., galaxies). This plot should show you a clear “stellar locus” (i.e., where the stars are), and directly tell you the seeing of this particular image. Can you measure it? A potential fine “smoke plume” coming from your chimney is related to the saturation of the brightest stars.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># At this stage one could inspect the aperture photometry catalog, and make for instance a magnitude versus size plot to see the stellar locus.</span>
-<span class="c1"># We&#39;ll skip this here, as our current size measurements (if done at all) are not that great -- to be improved.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Just as an example, let&#39;s use the flux within the apertures of 6 arcseconds: </span>
+<span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;mag_6&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;sum_6&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
-<span class="c1">#ref_photo_cat[&quot;mag_8&quot;] = -2.5 * np.log10(ref_photo_cat[&quot;sum_8&quot;].value)</span>
-
-<span class="c1">#plt.figure()</span>
-<span class="c1">#plt.scatter(</span>
-<span class="c1">#    ref_photo_cat[&quot;fwhm_8&quot;].value, </span>
-<span class="c1">#    ref_photo_cat[&quot;mag_8&quot;], </span>
-<span class="c1">#    c=ref_photo_cat[&quot;elongation_8&quot;].value,</span>
-<span class="c1">#    vmin=1.0, vmax=1.5,</span>
-<span class="c1">#    cmap=&quot;jet&quot;,</span>
-<span class="c1">#    s=15</span>
-<span class="c1">#)</span>
-<span class="c1">#plt.gca().invert_yaxis()</span>
-<span class="c1">#plt.colorbar(label=&quot;Elongation&quot;)</span>
-<span class="c1">#plt.xlabel(&quot;FWHM [pix]&quot;)</span>
-<span class="c1">#plt.ylabel(&quot;Instrumental magnitude&quot;)</span>
-<span class="c1">#plt.tight_layout()</span>
-<span class="c1">#plt.show()</span>
+<span class="c1"># We create a scatter plot of FWHM versus mag, and color the datapoints according to the q_fit parameter (see legend).</span>
+<span class="c1"># High values of q_fit indicate that the source was not well fitted by the simple 2D-Gaussian.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;fwhm_fit&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> 
+    <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;mag_6&quot;</span><span class="p">],</span> 
+    <span class="n">c</span><span class="o">=</span><span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;q_fit&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span> <span class="c1"># Bright is at the top!</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fit quality metric: sum(abs(fit residuals)) / (fitted flux)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;FWHM [pix]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Instrumental magnitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Finally, we apply this measurement function to all images of the object</p>
+</section>
+<section id="performing-the-measurements-on-all-images">
+<h3>Performing the measurements on all images<a class="headerlink" href="#performing-the-measurements-on-all-images" title="Permalink to this heading">#</a></h3>
+<p>Finally, we apply this measurement function to all images of the object.</p>
+<p>If you don’t need the Gaussian fitting, you can run this faster by setting <code class="docutils literal notranslate"><span class="pre">run_simple_fit=False</span></code> below, in the call of <code class="docutils literal notranslate"><span class="pre">measure_photometry()</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We read again the ref catalog from file:</span>
@@ -781,12 +827,13 @@ This means that we use the sky coordinates of the sources detected in the refere
         <span class="p">]}</span>
     
     <span class="c1"># Now run the measurements:</span>
-    <span class="n">catalog</span> <span class="o">=</span> <span class="n">measure_photometry</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">])</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">measure_photometry</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">],</span> <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Add the information from the FITS header</span>
     <span class="n">catalog</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">meta_from_image</span><span class="p">)</span>
 
-    <span class="c1"># Copy a few columns from the reference catalog</span>
+    <span class="c1"># Could copy a few columns from the reference catalog</span>
+    <span class="c1"># But no need to do this here: we keep the reference catalog, and will use it later. </span>
     <span class="c1">#catalog[&quot;sky_centroid_win&quot;] = ref_catalog[&quot;sky_centroid_win&quot;]</span>
 
     <span class="c1"># And write all this as a FITS table</span>
@@ -796,6 +843,7 @@ This means that we use the sky coordinates of the sources detected in the refere
 </div>
 </div>
 </div>
+</section>
 </section>
 </section>
 
@@ -864,7 +912,11 @@ This means that we use the sky coordinates of the sources detected in the refere
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-and-subtracting-the-background">Estimating and subtracting the background</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-detection-and-measurement">Source detection and measurement</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forced-aperture-photometry">Forced aperture photometry</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forced-aperture-photometry">Forced aperture photometry</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chimney-plot">Chimney Plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performing-the-measurements-on-all-images">Performing the measurements on all images</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
