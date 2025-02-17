@@ -368,7 +368,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -384,6 +386,19 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gathering-and-structuring-the-data">Gathering and structuring the data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-quick-cmd-in-instrumental-magnitudes">A quick CMD in instrumental magnitudes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitude-calibration">Magnitude calibration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-the-cmd">Discussion of the CMD</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -399,8 +414,13 @@ document.write(`
 <p class="admonition-title">Warning</p>
 <p>This page is still under construction. It will be ready in time for the S263 data reduction sessions.</p>
 </div>
-<p>We read the photometric catalogs of the science frames, and draw a colour magnitude diagram.</p>
+<p>In this notebook, we read the photometric catalogs of the science frames, and draw a colour magnitude diagram.</p>
 <p>You can download this page as a <a class="reference download internal" download="" href="_downloads/3319c70f21bb1195f87f5ce830ad416d/CMD.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code></a> file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In case you have been working on an AIfA lab room computer until this point, you might be interested in moving to a personal laptop (for example) for these last steps.
+All that we’ll need from here on is the content of the <code class="docutils literal notranslate"><span class="pre">PHOTOMETRY</span></code> directory (including the reference catalog). This is a relatively small amount of data (compared to the raw or pre-reduced images), so you could consider to copy just these files to your own computer. The CPU requirements for these last steps will also be negligible.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dataredconfig</span>
@@ -418,7 +438,9 @@ document.write(`
 </div>
 </div>
 </div>
-<p>First we read the relevant catalogs as a list of tables.</p>
+<section id="gathering-and-structuring-the-data">
+<h2>Gathering and structuring the data<a class="headerlink" href="#gathering-and-structuring-the-data" title="Permalink to this heading">#</a></h2>
+<p>We start by reading the relevant catalogs as a list of tables.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Where the photometry catalogs are:</span>
@@ -438,6 +460,8 @@ document.write(`
         <span class="k">if</span> <span class="n">catalog</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;OBJECT&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">object_to_process</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">catalog_filepath</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">catalog</span><span class="o">.</span><span class="n">meta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">catalogs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Collected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">catalogs</span><span class="p">)</span><span class="si">}</span><span class="s2"> catalogs.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -466,12 +490,16 @@ document.write(`
         <span class="n">table_names</span><span class="o">=</span><span class="n">filter_names</span><span class="p">,</span> <span class="n">uniq_col_name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{col_name}</span><span class="s1">_</span><span class="si">{table_name}</span><span class="s1">&#39;</span>
         <span class="p">)</span>
 
-<span class="c1"># The column names are now:</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span>
+<span class="c1"># The columns are now the following:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Columns of cat:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="n">cat</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">colname</span><span class="si">}</span><span class="s2">: shape </span><span class="si">{</span><span class="n">cat</span><span class="p">[</span><span class="n">colname</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Note how the filter name is now appended to the column names.
+These columns have two dimension: the first index identifies the source (i.e., star), and the second index runs over the different exposures.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We add a column with the separation between each star and the cluster center.</span>
@@ -482,36 +510,57 @@ document.write(`
     
 <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sky_pos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">]</span>
 <span class="n">target_center_pos</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;RA&quot;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">cat</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;DEC&quot;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">)</span>
-<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sky_pos&quot;</span><span class="p">],</span> <span class="n">target_center_pos</span><span class="p">)</span>
+<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_center_pos</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sky_pos&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 </div>
+<section id="a-quick-cmd-in-instrumental-magnitudes">
+<h3>A quick CMD in instrumental magnitudes<a class="headerlink" href="#a-quick-cmd-in-instrumental-magnitudes" title="Permalink to this heading">#</a></h3>
+<p>As an example, we compute a median instrumental magnitude in each filter (where the median is taken over the different exposures).
+This can certainly be improved, feel invited to experiment.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Quick CMD, with a colorbar indicating the separation between each star and the cluster center</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We take the median accross &quot;axis=1&quot;, that is the second index.</span>
+<span class="c1"># The first index (axis=0) identifies the different stars.</span>
+<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_g&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_g&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_r&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_r&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_i&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_i&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_g&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_r&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_i&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">],</span>
-    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">],</span>
+    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_g&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_i&quot;</span><span class="p">],</span>
+    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_r&quot;</span><span class="p">],</span>
     <span class="n">s</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="c1"># color represents separation between star and cluster center</span>
 <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Separation to target center in </span><span class="si">{</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;separation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;g - i&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Instrumental mag g - i&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Instrumental mag r&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">object_to_process</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="magnitude-calibration">
+<h2>Magnitude calibration<a class="headerlink" href="#magnitude-calibration" title="Permalink to this heading">#</a></h2>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Example of a question.</p>
+</div>
+</section>
+<section id="discussion-of-the-cmd">
+<h2>Discussion of the CMD<a class="headerlink" href="#discussion-of-the-cmd" title="Permalink to this heading">#</a></h2>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>Can you estimate the age and distance of your cluster, by comparing its calibrated CMD to the isochrones.</p>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -568,6 +617,25 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gathering-and-structuring-the-data">Gathering and structuring the data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-quick-cmd-in-instrumental-magnitudes">A quick CMD in instrumental magnitudes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitude-calibration">Magnitude calibration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-of-the-cmd">Discussion of the CMD</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
