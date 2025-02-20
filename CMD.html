@@ -58,6 +58,8 @@
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'CMD';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -751,9 +753,9 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">isochrones</span></code> is a nested list (i.e., a list of lists) of astropy Tables containing the isochrones. The first index of this <code class="docutils literal notranslate"><span class="pre">isochrones</span></code> corresponds to the metallicity, the second index to the age. The contained astropy tables have 4 columns, named <code class="docutils literal notranslate"><span class="pre">g</span></code> <code class="docutils literal notranslate"><span class="pre">r</span></code> <code class="docutils literal notranslate"><span class="pre">i</span></code> and <code class="docutils literal notranslate"><span class="pre">initial_mass</span></code>, where the photometry is given in absolute magnitudes, and the initial mass is given in solar masses.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">logages</span></code> is a 1D numpy array containing the log10 of the available ages (in years) of the isochrones, corresponding to the first index of <code class="docutils literal notranslate"><span class="pre">isochrones</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">metallicities</span></code> is a 1D numpy array with the different available metallicities ([Fe/H]) of the isochrones, corresponding to the second index of <code class="docutils literal notranslate"><span class="pre">isochrones</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metallicities</span></code> is a 1D numpy array with the different available metallicities ([Fe/H]) of the isochrones, corresponding to the second index of <code class="docutils literal notranslate"><span class="pre">isochrones</span></code>. Recall that the metallicity of stars, i.e., the abundance of elements other than hydrogen and helium, has a significant influence on stellar evolution, and that we can assume that all stars of a cluster share the same metallicity. Metallicity is often described by the logarithm of the iron-to-hydrogen ratio relative to that of the Sun, and denoted [Fe/H]. For example, [Fe/H] = 0 means that the star has the same metallicity as the Sun, while [Fe/H] = 1.0 means that the star has 10 times the metallicity of the Sun.</p></li>
 </ul>
-<p>The following plot demonstrates how to use these structures.</p>
+<p>The following plot demonstrates how to use the objects read from the isochrone file.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Demonstrating the use of the isochrones with a simple non-interactive plot</span>
@@ -786,6 +788,8 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 <section id="extinction-and-distance">
 <h3>Extinction and distance<a class="headerlink" href="#extinction-and-distance" title="Permalink to this heading">#</a></h3>
 <p>To compare these isochrones to our calibrated data, we need two more ingredients: extinction, and distance.</p>
+<p>Extinction is the radiation loss due to scattering and absorption by the interstellar medium (gas and dust). For a given line of sight, the amount of extinction depends on wavelength: blue light is scattered and absorbed more than red light, causing <em>reddening</em> of the light of stars. This dependency on wavelength is called a <em>reddening law</em>. Its shape depends on the properties of the interstellar medium, and is <em>not</em> the same for every cluster or part of the sky. The relation that we’ll use below is an empirical “average” solution, certainly only approximate, but it illustrates the idea.</p>
+<p>Note that extinction is multiplicative in flux, and in practice it can therefore be expressed as a magnitude offset <span class="math notranslate nohighlight">\(A\)</span> for each band (assuming some spectrum for the starlight). These magnitude offsets in the different bands are proportional to each other. For a given reddening law, they can be expressed as multiples of the extinction in some reference band. In the example below, this reference is the visible band V, and the reference extinction is denoted <span class="math notranslate nohighlight">\(A_{\mathrm{V}}\)</span>. We will use it as a free parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extinction_law</span><span class="p">(</span><span class="n">A_V</span><span class="p">):</span>
@@ -950,16 +954,16 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>By comparing the calibrated CMD to the synthetic isochrones, give an estimate of the age and distance of your cluster, and potentially also of the metallicity and extinction.</p>
+<p>By comparing the calibrated CMD to the synthetic isochrones, give an estimate of the age and distance of your cluster, and potentially also of the metallicity and extinction. Potentially, you can discuss how some features of your CMD help in constraining these parameters.</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>Discuss the difficulty to get uncertainty estimates for these quantities. You may want to create CMDs with several isochrones to illustrate your points.
-If you would have to quantify uncertainties, how would you approach this?</p>
+<p>Discuss the difficulty to get estimates (and uncertainty estimates) for these quantities. You could create CMDs with several isochrones to illustrate your points.
+If you would have to quantify uncertainties, how could you approach this?</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>Provide a comparison with values from the litterature (at least for distance and age).</p>
+<p>Provide a comparison with values from the literature (at least for distance and age).</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
