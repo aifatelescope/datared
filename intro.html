@@ -61,7 +61,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Requirements and installation" href="installation.html" />
+    <link rel="next" title="Introduction to optical observations" href="background-info.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -174,10 +174,10 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Setup and theory</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction and setup</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="background-info.html">Introduction to optical observations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Requirements and installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="overview-pythontools.html">Structure and Python tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data.html">Setting up the data</a></li>
 </ul>
@@ -186,15 +186,17 @@
 <li class="toctree-l1"><a class="reference internal" href="pre-red.html">Image pre-reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="astrometry.html">Astrometric calibration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="photometry.html">Photometry</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Analysis</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour Magnitude Diagram</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Light curve</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Further pages</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Further content</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="stack.html">Reprojecting, stacking and colour-combination</a></li>
 <li class="toctree-l1"><a class="reference internal" href="camera-charact.html">Camera characterization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="more.html">References and links</a></li>
-<li class="toctree-l1"><a class="reference internal" href="demo.html">Test page</a></li>
 </ul>
 
     </div>
@@ -407,9 +409,9 @@ document.write(`
 <h1>AIfA telescope data reduction tutorial<a class="headerlink" href="#aifa-telescope-data-reduction-tutorial" title="Permalink to this heading">#</a></h1>
 <section id="foreword">
 <h2>Foreword<a class="headerlink" href="#foreword" title="Permalink to this heading">#</a></h2>
-<p>The aim of this tutorial is to show you a way to “reduce” data acquired with the AIfA telescope, that is to turn the raw data into a scientific result.</p>
+<p>The aim of this tutorial is to show you a way to “reduce” and analyse imaging data acquired with the 35-cm optical AIfA telescope, that is to turn the raw data into a scientific result. We’ll do so using professional Python packages that are easy to install. Note that while the present tutorial is fine-tuned for the AIfA telescope, it should be well possible to follow it when dealing with data from other instruments, with only minor adaptations.</p>
 <a class="reference internal image-reference" href="_images/results_teaser.png"><img alt="Example results obtained with the reduction described in this tutorial" class="align-center" src="_images/results_teaser.png" style="width: 100%;" /></a>
-<p>Data reduction can often be broadly split into two separate parts, which may comprise some of these steps:</p>
+<p>Image reduction can often be broadly split into two separate parts, which may comprise some of these steps:</p>
 <ol class="arabic simple">
 <li><p><strong>Pre-reduction of the images</strong></p></li>
 </ol>
@@ -456,6 +458,8 @@ document.write(`
 </div>
 <div class="toctree-wrapper compound">
 </div>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -489,11 +493,11 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="installation.html"
+       href="background-info.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Requirements and installation</p>
+        <p class="prev-next-title">Introduction to optical observations</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -528,7 +532,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By the AIfA telescope team / M. Tewes
+By the AIfA telescope team / Malte Tewes
 </p>
 
   </div>
