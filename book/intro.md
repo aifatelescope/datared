@@ -3,7 +3,7 @@
 ## Foreword
 
 
-The aim of this tutorial is to show you a way to "reduce" data acquired with the AIfA telescope, that is to turn the raw data into a scientific result.
+The aim of this tutorial is to show you a way to "reduce" and analyse imaging data acquired with the 35-cm optical AIfA telescope, that is to turn the raw data into a scientific result. We'll do so using professional Python packages that are easy to install. Note that while the present tutorial is fine-tuned for the AIfA telescope, it should be well possible to follow it when dealing with data from other instruments, with only minor adaptations.
 
 
 ```{image} ./figures/results_teaser.png
@@ -13,7 +13,7 @@ The aim of this tutorial is to show you a way to "reduce" data acquired with the
 ```
 
 
-Data reduction can often be broadly split into two separate parts, which may comprise some of these steps: 
+Image reduction can often be broadly split into two separate parts, which may comprise some of these steps: 
 
 1) **Pre-reduction of the images**
  * Remove instrumental signatures using calibration frames

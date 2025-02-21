@@ -4,10 +4,10 @@
 format: jb-book
 root: intro
 parts:
-  - caption: Setup and theory
+  - caption: Introduction and setup
     chapters:
-    - file: installation
     - file: background-info
+    - file: installation
     - file: overview-pythontools
     - file: data
   - caption: Basic reduction
@@ -15,11 +15,12 @@ parts:
     - file: pre-red
     - file: astrometry
     - file: photometry
+  - caption: Analysis
+    chapters:
     - file: CMD
     - file: lightcurve
-  - caption: Further pages
+  - caption: Further content
     chapters:
     - file: stack
     - file: camera-charact
     - file: more
-    - file: demo

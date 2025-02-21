@@ -3,7 +3,7 @@
 Just a placeholder page for now, to keep some links.
 
 
-## Sources:
+## Resources:
 
 * https://www.astropy.org/ccd-reduction-and-photometry-guide/
   * An excellent resource to learn a bit more about the python packages we are using here

@@ -2,8 +2,8 @@
 # Learn more at https://jupyterbook.org/customize/config.html
 
 title: AIfA telescope data reduction tutorial
-author: "the AIfA telescope team / M. Tewes"
-copyright: "2024"
+author: "the AIfA telescope team / Malte Tewes"
+copyright: "2025"
 logo: ./figures/logo.png
 
 # Force re-execution of notebooks on each build.
