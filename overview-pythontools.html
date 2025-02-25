@@ -396,7 +396,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-this-tutorial">Structure of this tutorial</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-tools">Python tools</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ccdproc"><code class="docutils literal notranslate"><span class="pre">ccdproc</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#photutils"><code class="docutils literal notranslate"><span class="pre">photutils</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#astropy"><code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -437,30 +438,29 @@ document.write(`
 </section>
 <section id="python-tools">
 <h2>Python tools<a class="headerlink" href="#python-tools" title="Permalink to this heading">#</a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This section remains to be written, just skip it for now. We provide plenty of examples, so that the following pages are self-explanatory even without this section.</p>
-</div>
-<p>Before starting to work with the data, let’s get a quick overview of the most important specialized Python tools and objects that we will use in this tutorial. This is meant as a minimal reference, providing links to further documentation. Clearly you won’t need to dive into this further documentation right now. The following pages are largely self-explanatory and provide plenty of examples.</p>
+<p>Before starting to work with the data, let’s get a quick overview of the most important specialized Python tools and objects that we will use in this tutorial. This is meant as a minimal reference, providing links to further documentation. Clearly you won’t need to dive into this further documentation right now! The pages of the tutorial are largely self-explanatory and provide plenty of examples.</p>
 <section id="ccdproc">
 <h3><code class="docutils literal notranslate"><span class="pre">ccdproc</span></code><a class="headerlink" href="#ccdproc" title="Permalink to this heading">#</a></h3>
 <p>In principle, images are just 2D arrays, and we could therefore use plain <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays to manipulate them.
 Instead, we will use the <code class="docutils literal notranslate"><span class="pre">ccdproc</span></code> package (<a class="reference external" href="https://ccdproc.readthedocs.io">https://ccdproc.readthedocs.io</a>), which provides the framework for our pre-reduction. As you will see, <code class="docutils literal notranslate"><span class="pre">ccdproc</span></code> makes it particularly easy to <strong>work with metadata</strong> of the images (exposure times, dates, filters, coordinates… everything that is stored in the header of FITS files), and futhermore it offers efficient functions to <strong>combine</strong> images. Indeed, it is not completely trivial to median-combine (for example) a large number of frames which would not fit altogether into the computer’s memory. Furthermore, <code class="docutils literal notranslate"><span class="pre">ccdproc</span></code> can also take care of propagating uncertainties and masks.</p>
-<p><code class="docutils literal notranslate"><span class="pre">ccdproc.ImageFileCollection</span></code> <a class="reference external" href="https://ccdproc.readthedocs.io/en/latest/image_management.html">Official tutorial</a></p>
-<p><code class="docutils literal notranslate"><span class="pre">ccdproc.CCDData</span></code></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-<span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span>
-
-<span class="n">photutils</span><span class="o">.</span><span class="n">aperture</span>
-
-<span class="n">SkyCoord</span>
-
-</pre></div>
-</div>
-<p>`astropy.table.Table``</p>
+<p>The two most important classes that we’ll use are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ccdproc.ImageFileCollection</span></code> to summarize, filter, and iterate over a collection of FITS images (see the <a class="reference external" href="https://ccdproc.readthedocs.io/en/latest/image_management.html">official tutorial</a>), and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ccdproc.CCDData</span></code> to represent an image (see the <a class="reference external" href="https://ccdproc.readthedocs.io/en/latest/ccddata.html">official tutorial</a>), regardless if the image was acquired by a CCD or a CMOS. At the core of <code class="docutils literal notranslate"><span class="pre">CCDData</span></code>, an image is a 2D numpy array, but this class offers many additional and convenient features, for example to propagate metadata and uncertainties.</p></li>
+</ul>
 </section>
-<section id="id1">
-<h3><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<section id="photutils">
+<h3><code class="docutils literal notranslate"><span class="pre">photutils</span></code><a class="headerlink" href="#photutils" title="Permalink to this heading">#</a></h3>
+<p>For background estimation, source detection, and photometry, we will use the <code class="docutils literal notranslate"><span class="pre">photutils</span></code> package (<a class="reference external" href="https://photutils.readthedocs.io">https://photutils.readthedocs.io</a>).</p>
+</section>
+<section id="astropy">
+<h3><code class="docutils literal notranslate"><span class="pre">astropy</span></code><a class="headerlink" href="#astropy" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">astropy</span></code> package (<a class="reference external" href="https://docs.astropy.org">https://docs.astropy.org</a>) is the backbone library used by <code class="docutils literal notranslate"><span class="pre">ccdproc</span></code> and <code class="docutils literal notranslate"><span class="pre">photutils</span></code> as well as for many other astronomical computations.
+The classes from <code class="docutils literal notranslate"><span class="pre">astropy</span></code> that we’ll encounter most are the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.table.Table</span></code> provides a container for catalogues, such as tables of properties for many sources detected in an image (see <a class="reference external" href="https://docs.astropy.org/en/stable/table/index.html">documentation</a>). Notably, these tables can hold multi-dimensional columns. We will make use of this feature.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">astropy.coordinates.SkyCoord</span></code> to represent celestial coordinates (see <a class="reference external" href="https://docs.astropy.org/en/stable/coordinates/">user guide</a>). This class is encountered for example when we transform between pixel and sky coordinates, and to compute angular separations between sources.</p></li>
+</ul>
 </section>
 </section>
 </section>
@@ -531,7 +531,8 @@ Instead, we will use the <code class="docutils literal notranslate"><span class=
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-this-tutorial">Structure of this tutorial</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-tools">Python tools</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ccdproc"><code class="docutils literal notranslate"><span class="pre">ccdproc</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#photutils"><code class="docutils literal notranslate"><span class="pre">photutils</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#astropy"><code class="docutils literal notranslate"><span class="pre">astropy</span></code></a></li>
 </ul>
 </li>
 </ul>
