@@ -189,8 +189,8 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Analysis</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour Magnitude Diagram</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Light curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour-magnitude diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Exoplanet transit light curve</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Further content</span></p>
 <ul class="nav bd-sidenav">
@@ -411,7 +411,7 @@ document.write(`
 <h2>Foreword<a class="headerlink" href="#foreword" title="Permalink to this heading">#</a></h2>
 <p>The aim of this tutorial is to show you a way to “reduce” and analyse imaging data acquired with the 35-cm optical AIfA telescope, that is to turn the raw data into a scientific result. We’ll do so using professional Python packages that are easy to install. Note that while the present tutorial is fine-tuned for the AIfA telescope, it should be well possible to follow it when dealing with data from other instruments, with only minor adaptations.</p>
 <a class="reference internal image-reference" href="_images/results_teaser.png"><img alt="Example results obtained with the reduction described in this tutorial" class="align-center" src="_images/results_teaser.png" style="width: 100%;" /></a>
-<p>Image reduction can often be broadly split into two separate parts, which may comprise some of these steps:</p>
+<p>Image reduction can often be broadly split into two separate parts, which <em>may</em> comprise some of these steps:</p>
 <ol class="arabic simple">
 <li><p><strong>Pre-reduction of the images</strong></p></li>
 </ol>
@@ -427,8 +427,13 @@ document.write(`
 <li><p><strong>Extracting the information of interest</strong></p></li>
 </ol>
 <ul class="simple">
-<li><p>For example: object detection and photometry, creating a light curve, extraction of a spectrum, production of a color image…</p></li>
+<li><p>Object detection and photometry</p></li>
+<li><p>Photometric calibration against a reference catalogue</p></li>
+<li><p>Creation of a light curve</p></li>
+<li><p>Production of a color image</p></li>
+<li><p>etc …</p></li>
 </ul>
+<p>The present tutorial goes even a bit further than the reduction itself, as it also covers the analysis of the data (e.g., the comparison between an observed color-magnitude diagram and isochrones).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The name “reduction” is somewhat misleading. It won’t give you back disk space, on the contrary!</p>

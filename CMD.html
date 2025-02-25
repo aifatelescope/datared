@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Colour Magnitude Diagram &#8212; AIfA telescope data reduction tutorial</title>
+    <title>Colour-magnitude diagram &#8212; AIfA telescope data reduction tutorial</title>
   
   
   
@@ -63,7 +63,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'CMD';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Light curve" href="lightcurve.html" />
+    <link rel="next" title="Exoplanet transit light curve" href="lightcurve.html" />
     <link rel="prev" title="Photometry" href="photometry.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -192,8 +192,8 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Analysis</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Colour Magnitude Diagram</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Light curve</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Colour-magnitude diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Exoplanet transit light curve</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Further content</span></p>
 <ul class="nav bd-sidenav">
@@ -385,7 +385,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Colour Magnitude Diagram</h1>
+    <h1>Colour-magnitude diagram</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -423,11 +423,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="colour-magnitude-diagram">
-<h1>Colour Magnitude Diagram<a class="headerlink" href="#colour-magnitude-diagram" title="Permalink to this heading">#</a></h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This page is still under construction. It will be ready in time for the S263 data reduction sessions.</p>
-</div>
+<h1>Colour-magnitude diagram<a class="headerlink" href="#colour-magnitude-diagram" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, we will:</p>
 <ul class="simple">
 <li><p>read the photometric catalogs of the science frames and group them in a convenient structure,</p></li>
@@ -495,7 +491,7 @@ All that we’ll need from here on is the content of the <code class="docutils l
 </div>
 </div>
 </div>
-<p>Now we “merge” all these separate tables into a particular structure that will be very useful.</p>
+<p>Now we “merge” all these separate tables into a particular structure that will make the analysis easier:</p>
 <ul class="simple">
 <li><p>Measurements done with the same filter are stacked in “depth”, i.e., grouped in 2D-columns.</p></li>
 <li><p>Finally all filters are stacked “horizontally”, i.e., as separate columns in one single table.</p></li>
@@ -546,15 +542,15 @@ These columns have two dimension: the first index identifies the source (i.e., s
 <section id="a-quick-cmd-in-instrumental-magnitudes">
 <h3>A quick CMD in instrumental magnitudes<a class="headerlink" href="#a-quick-cmd-in-instrumental-magnitudes" title="Permalink to this heading">#</a></h3>
 <p>As an example about how the catalog can now be used, we compute a median instrumental magnitude in each filter (where the median is taken over the different exposures) and plot a simple uncalibrated CMD.
-This magnitude computation can certainly be improved, feel invited to experiment.</p>
+This quick magnitude computation is clearly not optimal, in particular if the atmospheric conditions changed during the observation! But it should be sufficient to get a first idea of the CMD. We’ll come back to magnitude calibration later.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We take the median accross &quot;axis=1&quot;, that is the second index</span>
 <span class="c1"># (the first index (axis=0) identifies the different stars).</span>
-<span class="c1"># Note that the aperture radius of 4 arcsec is just an example!</span>
-<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_g&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_g&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_r&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_r&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_i&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_i&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Note that the aperture radius of 4 arcsec is just used here as an example, other radii might perform better!</span>
+<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;quick_instr_mag_g&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_g&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;quick_instr_mag_r&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_r&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cat</span><span class="p">[</span><span class="s2">&quot;quick_instr_mag_i&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s2">&quot;sum_4_i&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -564,8 +560,8 @@ This magnitude computation can certainly be improved, feel invited to experiment
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plotting a first CMD</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_g&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_i&quot;</span><span class="p">],</span>
-    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_r&quot;</span><span class="p">],</span>
+    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;quick_instr_mag_g&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;quick_instr_mag_i&quot;</span><span class="p">],</span>
+    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;quick_instr_mag_r&quot;</span><span class="p">],</span>
     <span class="n">s</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="c1"># color represents separation between star and cluster center</span>
 <span class="p">)</span>
@@ -579,10 +575,6 @@ This magnitude computation can certainly be improved, feel invited to experiment
 </div>
 </div>
 </div>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>What photometric aperture radius gives the cleanest results? You might want to make a dedicated plot to compare different apertures, and also potentially reconsider your choice later.</p>
-</div>
 </section>
 </section>
 <section id="magnitude-calibration">
@@ -592,7 +584,21 @@ This magnitude computation can certainly be improved, feel invited to experiment
 <li><p>convert our instrumental magnitudes into apparent magnitudes (that is, “standardise” our observations)</p></li>
 <li><p>correct the absolute magnitudes of the stellar models by some appropriate distance and extinction, so that they can be compared to apparent magnitudes.</p></li>
 </ul>
-<p>In this section we start by calibrating our magnitude measurements. We do this by matching some of the measured stars with a reference catalogue.</p>
+<p>In this section we will start by calibrating our magnitude measurements. We do this by matching some of the measured stars with a reference catalogue.</p>
+<p>As a preparatory task, we compute instrumental magnitudes for each flux measurement, so that we can process each exposure individually.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Computing instrumental magnitudes for all apertures and exposures:</span>
+<span class="n">filter_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">]</span>
+<span class="n">photometry_prefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sum_4&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_6&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_8&quot;</span><span class="p">,</span> <span class="s2">&quot;sum_10&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_fit&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">filter_name</span> <span class="ow">in</span> <span class="n">filter_names</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">photometry_prefix</span> <span class="ow">in</span> <span class="n">photometry_prefixes</span><span class="p">:</span>
+        <span class="n">cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="n">photometry_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">photometry_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="c1"># Recall that these are 2D-columns with indices (source, exposure)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <section id="matching-to-a-reference-catalogue">
 <h3>Matching to a reference catalogue<a class="headerlink" href="#matching-to-a-reference-catalogue" title="Permalink to this heading">#</a></h3>
 <p>We will make use the catalogue ATLAS-REFCAT2. This is an all-sky reference catalog compiling together several large surveys. In particular, among many other data, it contains <em>real</em> photometry in the SDSS filters g, r, and i for stars brighter than the 14th magnitude. Details about the catalogue can be found at <a class="reference external" href="https://archive.stsci.edu/hlsp/atlas-refcat2">https://archive.stsci.edu/hlsp/atlas-refcat2</a> .</p>
@@ -641,10 +647,11 @@ This magnitude computation can certainly be improved, feel invited to experiment
 <span class="c1"># seps: on-sky separation between the closest match for each cat_coords and the cat_coords. Shape matches cat_coords.</span>
 
 <span class="c1"># And assembling a combined matched catalogue:</span>
-<span class="n">sep_constraint</span> <span class="o">=</span> <span class="n">seps</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">arcsec</span>
+<span class="n">sep_constraint</span> <span class="o">=</span> <span class="n">seps</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">u</span><span class="o">.</span><span class="n">arcsec</span> <span class="c1"># criteria for a successful identification</span>
 <span class="n">cat_matches</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="n">sep_constraint</span><span class="p">]</span>
 <span class="n">ref_cat_matches</span> <span class="o">=</span> <span class="n">ref_cat</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">sep_constraint</span><span class="p">]]</span>
 
+<span class="c1"># joining these two into one single matched catalogue:</span>
 <span class="n">matched_cat</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">cat_matches</span><span class="p">,</span> <span class="n">ref_cat_matches</span><span class="p">],</span> <span class="n">join_type</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="n">metadata_conflicts</span><span class="o">=</span><span class="s2">&quot;silent&quot;</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Column names of matched catalogue:&quot;</span><span class="p">)</span>
@@ -670,15 +677,18 @@ This magnitude computation can certainly be improved, feel invited to experiment
 </section>
 <section id="computing-the-magnitude-zero-points">
 <h3>Computing the magnitude zero points<a class="headerlink" href="#computing-the-magnitude-zero-points" title="Permalink to this heading">#</a></h3>
-<p>Using the matched catalogue,  we can visualize the difference between our own instrumental magnitudes and the apparent magnitudes from the reference catalogue.</p>
+<p>Using the matched catalogue, we can visualize the difference between our own instrumental magnitudes and the apparent magnitudes from the reference catalogue.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;rmag&quot;</span><span class="p">],</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_g&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;gmag&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;rmag&quot;</span><span class="p">],</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_r&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;rmag&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;rmag&quot;</span><span class="p">],</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;instr_mag_i&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;imag&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">exp_to_show</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Showing data from the first exposure in each filter</span>
+<span class="n">photom_prefix_to_show</span> <span class="o">=</span> <span class="s2">&quot;sum_4&quot;</span> <span class="c1"># Showing data for the 4-arcsec aperture</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;rmag&quot;</span><span class="p">],</span> <span class="n">matched_cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="n">photom_prefix_to_show</span><span class="si">}</span><span class="s2">_g&quot;</span><span class="p">][:,</span><span class="n">exp_to_show</span><span class="p">]</span> <span class="o">-</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;gmag&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;rmag&quot;</span><span class="p">],</span> <span class="n">matched_cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="n">photom_prefix_to_show</span><span class="si">}</span><span class="s2">_r&quot;</span><span class="p">][:,</span><span class="n">exp_to_show</span><span class="p">]</span> <span class="o">-</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;rmag&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;rmag&quot;</span><span class="p">],</span> <span class="n">matched_cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="n">photom_prefix_to_show</span><span class="si">}</span><span class="s2">_i&quot;</span><span class="p">][:,</span><span class="n">exp_to_show</span><span class="p">]</span> <span class="o">-</span> <span class="n">matched_cat</span><span class="p">[</span><span class="s2">&quot;imag&quot;</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Apparent magnitude from reference catalogue&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Instrumental mag - apparent mag&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="n">photom_prefix_to_show</span><span class="si">}</span><span class="s2"> - apparent mag&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -686,34 +696,44 @@ This magnitude computation can certainly be improved, feel invited to experiment
 </div>
 </div>
 </div>
+<p>And now we compute and apply a zero point correction for each filter, exposure, and aperture size.
+The zero points are computed using the matched catalogue, but then we apply them to our full catalogue, by adding new columns with calibrated apparent magnitudes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Computing the magnitude zeropoints as the median of the magnitude differences plotted above:</span>
-<span class="n">zeropoints</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="nb">filter</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">]:</span>
-    <span class="n">zeropoints</span><span class="p">[</span><span class="nb">filter</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">matched_cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="nb">filter</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">matched_cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">filter</span><span class="si">}</span><span class="s2">mag&quot;</span><span class="p">]))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">zeropoints</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">filter_name</span> <span class="ow">in</span> <span class="n">filter_names</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">photometry_prefix</span> <span class="ow">in</span> <span class="n">photometry_prefixes</span><span class="p">:</span>
+        
+        <span class="c1"># We compute the zero point using the catalogue matched_cat.</span>
+        <span class="c1"># The zero point is computed as the median (across all sources) of the mag differences plotted above.</span>
+        <span class="c1"># For this we&#39;ll need to manually &quot;broadcast&quot; the reference magnitude columns, as they are 1D (i.e., they don&#39;t contain several &quot;exposures&quot;).</span>
+
+        <span class="n">instr_mags</span> <span class="o">=</span> <span class="n">matched_cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="n">photometry_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="c1"># This is 2D</span>
+        <span class="n">ref_mags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">matched_cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">mag&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">instr_mags</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="c1"># This is now also 2D, same shape as instr_mags</span>
+        <span class="c1">#ref_mags = np.repeat(np.atleast_2d(matched_cat[f&quot;{filter_name}mag&quot;]), instr_mags.shape[1], axis=0).transpose() # Equivalent code, not much nicer</span>
+
+        <span class="n">zeropoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">instr_mags</span> <span class="o">-</span> <span class="n">ref_mags</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># Median taken accross the first index, i.e. the sources</span>
+        <span class="c1"># This contains one zero point per exposure</span>
+
+        <span class="c1"># And now we directly apply those zero points in the catalogue &quot;cat&quot;, creating a new column:</span>
+        <span class="n">cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mag_</span><span class="si">{</span><span class="n">photometry_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="n">photometry_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">zeropoints</span>
+
+        <span class="c1"># To get one single magnitude per star, we compute the median (across exposures) of the calibrated magnitudes:</span>
+        <span class="n">cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;median_mag_</span><span class="si">{</span><span class="n">photometry_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mag_</span><span class="si">{</span><span class="n">photometry_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">filter_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Note that this last step can certainly be improved and extended, one could compute several statistics at this stage.</span>
+        <span class="c1"># The above is just meant to provide a simple and robust first solution to plot a CMD.</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Applying these zeropoints to compute the apparent magnitudes in our own full catalogue:</span>
-<span class="k">for</span> <span class="nb">filter</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">]:</span>
-    <span class="n">cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mag_</span><span class="si">{</span><span class="nb">filter</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;instr_mag_</span><span class="si">{</span><span class="nb">filter</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">zeropoints</span><span class="p">[</span><span class="nb">filter</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p>Let’s repeat the CMD plot with these new calibrated apparent magnitudes:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The calibrated observational CMD</span>
-<span class="c1"># Same as above, but now with calibrated apparent magnitudes.</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;mag_g&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;mag_i&quot;</span><span class="p">],</span>
-    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;mag_r&quot;</span><span class="p">],</span>
+    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;median_mag_sum_4_g&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;median_mag_sum_4_i&quot;</span><span class="p">],</span>
+    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;median_mag_sum_4_r&quot;</span><span class="p">],</span>
     <span class="n">s</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="c1"># color represents separation between star and cluster center</span>
 <span class="p">)</span>
@@ -880,8 +900,8 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 
 <span class="c1"># Plotting the observed data </span>
 <span class="n">cbar</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;mag_r&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;mag_i&quot;</span><span class="p">],</span>
-    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;mag_r&quot;</span><span class="p">],</span>
+    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;median_mag_sum_4_r&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;median_mag_sum_4_i&quot;</span><span class="p">],</span>
+    <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;median_mag_sum_4_r&quot;</span><span class="p">],</span>
     <span class="n">s</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">cat</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="c1"># color represents separation between star and cluster center</span>
 <span class="p">)</span>
@@ -982,11 +1002,15 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 <h2>Discussion of the CMD<a class="headerlink" href="#discussion-of-the-cmd" title="Permalink to this heading">#</a></h2>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>What features do you see in the observed CMD? Describe your data.</p>
+<p>What photometric aperture radius gives the most accurate CMD? Apart from judging the appearance of the CMD itself, feel invited to make and discuss dedicated plots (e.g., similar to the one done just before the zero point computations above). Especially if the observing conditions were variable, it might be interesting to analyse if and how individual exposures differ, instead of just considering their median.</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>Optionally, you could compute uncertainty estimates for your magnitude measurements and visualize those on the CMD. If you chose do so, describe how you computed them, and what sources of uncertainty you considered.</p>
+<p>Optionally, and somewhat related to the previous question, you could compute uncertainty estimates for your magnitude measurements, and visualize those on the CMD. There are several different approaches to compute these. If you chose to do so, make sure to describe precisely how you computed these error bars, and discuss what sources of uncertainty they represent.</p>
+</div>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>What features do you see in the observed CMD? Describe your data.</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
@@ -994,7 +1018,7 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
-<p>Discuss the difficulty to get estimates (and uncertainty estimates) for these quantities. You could create CMDs with several isochrones to illustrate your points.
+<p>Discuss the difficulty to get estimates (and uncertainty estimates) for these parameters. You could create CMDs with several isochrones to illustrate your points.
 If you would have to quantify uncertainties, how could you approach this?</p>
 </div>
 <div class="admonition-question admonition">
@@ -1052,7 +1076,7 @@ If you would have to quantify uncertainties, how could you approach this?</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Light curve</p>
+        <p class="prev-next-title">Exoplanet transit light curve</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

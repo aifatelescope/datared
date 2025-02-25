@@ -13,7 +13,7 @@ The aim of this tutorial is to show you a way to "reduce" and analyse imaging da
 ```
 
 
-Image reduction can often be broadly split into two separate parts, which may comprise some of these steps: 
+Image reduction can often be broadly split into two separate parts, which *may* comprise some of these steps: 
 
 1) **Pre-reduction of the images**
  * Remove instrumental signatures using calibration frames
@@ -25,7 +25,13 @@ Image reduction can often be broadly split into two separate parts, which may co
 
 
 2) **Extracting the information of interest**
- * For example: object detection and photometry, creating a light curve, extraction of a spectrum, production of a color image...
+ * Object detection and photometry
+ * Photometric calibration against a reference catalogue
+ * Creation of a light curve
+ * Production of a color image
+ * etc ...
+
+The present tutorial goes even a bit further than the reduction itself, as it also covers the analysis of the data (e.g., the comparison between an observed color-magnitude diagram and isochrones).
 
 ```{note}
 The name "reduction" is somewhat misleading. It won't give you back disk space, on the contrary!

@@ -192,8 +192,8 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Analysis</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour Magnitude Diagram</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Light curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CMD.html">Colour-magnitude diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightcurve.html">Exoplanet transit light curve</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Further content</span></p>
 <ul class="current nav bd-sidenav">
@@ -424,7 +424,7 @@ document.write(`
 \[
 g = \frac{\text{Number of electrons in a pixel}}{\text{Number of ADUs of this pixel}} = \frac{e}{a}.
 \]</div>
-<p>The main idea of this characterization is that the number of electrons per pixel are drawn from a <a class="reference external" href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a>. This distribution has the property that its variance equals its expectation value. In other words, if we would repeat an idealized observation of <span class="math notranslate nohighlight">\(e\)</span> in a given pixel a large number of times, illuminating this pixel with a constant source, the standard deviation <span class="math notranslate nohighlight">\(\sigma_e\)</span> of these <span class="math notranslate nohighlight">\(e_i\)</span> would be the square root of their average <span class="math notranslate nohighlight">\(\langle e \rangle\)</span>:</p>
+<p>The main idea of the present characterization is that the number of electrons per pixel is drawn from a <a class="reference external" href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a>. This distribution has the property that its variance equals its expectation value. In other words, if we would repeat an idealized observation of <span class="math notranslate nohighlight">\(e\)</span> in a given pixel a large number of times, illuminating this pixel with a constant source, the standard deviation <span class="math notranslate nohighlight">\(\sigma_e\)</span> of these <span class="math notranslate nohighlight">\(e_i\)</span> would be the square root of their average <span class="math notranslate nohighlight">\(\langle e \rangle\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[
 \sigma_e = \sqrt{\langle e \rangle} \quad  \Longleftrightarrow \quad \sigma^2_e = \langle e \rangle
