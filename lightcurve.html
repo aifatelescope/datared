@@ -566,7 +566,7 @@ Before starting with the further analysis and calibration, we provide below a pi
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We load one of the images, it does not have to be a specific one.</span>
-<span class="n">light_prered_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;LIGHT_PRERED&quot;</span>
+<span class="n">light_prered_dir</span> <span class="o">=</span> <span class="n">dataredconfig</span><span class="o">.</span><span class="n">work_dir</span> <span class="o">/</span> <span class="s2">&quot;ASTROMETRY&quot;</span>
 <span class="n">science_files</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">ImageFileCollection</span><span class="p">(</span><span class="n">light_prered_dir</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">dataredconfig</span><span class="o">.</span><span class="n">ifc_header_keywords</span><span class="p">)</span>
 <span class="n">science_files</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">object_to_process</span><span class="p">)</span>
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">science_files</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
