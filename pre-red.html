@@ -606,6 +606,16 @@ We also create a smoothed version of the masterbias, to highlight a bit some (po
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We check the level of these flats.</span>
+<span class="c1"># The level should ideally stay around 40&#39;000 ADU, and in any case far from saturation!</span>
+<span class="k">for</span> <span class="n">ccd</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">flat_files</span><span class="o">.</span><span class="n">ccds</span><span class="p">(</span><span class="n">ccd_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="s1">&#39;adu&#39;</span><span class="p">},</span> <span class="n">return_fname</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: filter </span><span class="si">{</span><span class="n">ccd</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;filter&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">, exptime </span><span class="si">{</span><span class="n">ccd</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s2">&quot;exptime&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2"> s, median level </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">ccd</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ADU&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scaling function for the flats: they get &quot;normalized&quot; (i.e., divided) by their median:</span>
 <span class="k">def</span> <span class="nf">inv_median</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>

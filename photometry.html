@@ -441,6 +441,8 @@ The same procedure could of course also be applied to coadded images.</p>
 <span class="kn">import</span> <span class="nn">photutils.segmentation</span>
 <span class="kn">import</span> <span class="nn">photutils.psf</span>
 
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">gaussian_filter</span>
+
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 </pre></div>
 </div>
@@ -501,45 +503,59 @@ But we start by picking one reference image, used to detect sources and to check
 </div>
 <section id="estimating-and-subtracting-the-background">
 <h2>Estimating and subtracting the background<a class="headerlink" href="#estimating-and-subtracting-the-background" title="Permalink to this heading">#</a></h2>
-<p>Some of the following tasks will be run on several images, and we therefore define them as very simple functions.
-Of course, depending on the data to be processed, you might want to adjust (hard-coded) parameters in these functions. They are only provided as examples.</p>
+<p>The background estimation is run individually on every image (as the background might well change, e.g., due to clouds, light pollution, or stray light. We therefore start by defining a function for background estimation.
+Depending on the data to be processed, you might have to adjust the parameters of this function, to tune the “flexibility” of the background model to your science objective. The given default values are often ok, but certaintly not optimal for every situation.</p>
+<p>The typical compromise in background estimation is driven by the following. If the background model is too flexible, the background subtraction will take away some light from larger objects (such as galaxies, but also the central regions of star clusters). And if it is to rigid, the model won’t be able to properly fit the structure that the background might have.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">estimate_background</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to estimate the background (in form of an image),</span>
-<span class="sd">    and the root-mean-square deviation (RMS) of the background.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">estimate_background</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">box_size</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">filter_size</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to estimate the background and its RMS (root-mean-square deviation).</span>
+<span class="sd">    This is a simplifying wrapper around photutils, to expose and explain a bit the two key parameters box_size and filter_size.</span>
 <span class="sd">    </span>
+<span class="sd">    In short, the background is calculated by interpolating some sigma-clipped statistics evaluated on a relatively coarse grid.</span>
+
 <span class="sd">    Parameters:</span>
 <span class="sd">    image: a CCDData object</span>
+<span class="sd">    box_size: defines how fine the coarse grid is, in pixels.</span>
+<span class="sd">        The background gets estimated in each box of size box_size.</span>
+<span class="sd">        Ideally this is larger than the largest obects, but smaller than the background structure.</span>
+<span class="sd">    filter_size: an odd integer: window size of the median filter that gets applied to the measurements on the coarse grid.</span>
+<span class="sd">        This median filter helps for example to avoid &quot;bumps&quot; from large diffuse objects. </span>
 
+<span class="sd">    For more details, see https://photutils.readthedocs.io/en/stable/user_guide/background.html</span>
+<span class="sd">    </span>
 <span class="sd">    Returns:</span>
 <span class="sd">    background, background_rms: two numpy arrays</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">bkg</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">background</span><span class="o">.</span><span class="n">Background2D</span><span class="p">(</span>
         <span class="n">image</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-        <span class="n">box_size</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
-        <span class="n">filter_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-        <span class="n">bkg_estimator</span><span class="o">=</span><span class="n">photutils</span><span class="o">.</span><span class="n">background</span><span class="o">.</span><span class="n">MedianBackground</span><span class="p">())</span>
+        <span class="n">box_size</span><span class="o">=</span><span class="p">(</span><span class="n">box_size</span><span class="p">,</span> <span class="n">box_size</span><span class="p">),</span>
+        <span class="n">filter_size</span><span class="o">=</span><span class="p">(</span><span class="n">filter_size</span><span class="p">,</span> <span class="n">filter_size</span><span class="p">),</span>
+        <span class="n">bkg_estimator</span><span class="o">=</span><span class="n">photutils</span><span class="o">.</span><span class="n">background</span><span class="o">.</span><span class="n">MedianBackground</span><span class="p">()</span>
+        <span class="p">)</span>
     
     <span class="k">return</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="n">bkg</span><span class="o">.</span><span class="n">background_rms</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Let’s apply this to the reference image, to experiment with the parameters.</p>
+<p>If the background you want to subtract has relatively fine structures, try reducing box_size and simultaneouly increasing filter_size in the call below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We run this on the reference image</span>
-<span class="n">background</span><span class="p">,</span> <span class="n">background_rms</span> <span class="o">=</span> <span class="n">estimate_background</span><span class="p">(</span><span class="n">ref_image</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize the background image</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+<span class="n">background_box_size</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">background_filter_size</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">background</span><span class="p">,</span> <span class="n">background_rms</span> <span class="o">=</span> <span class="n">estimate_background</span><span class="p">(</span><span class="n">ref_image</span><span class="p">,</span> <span class="n">box_size</span><span class="o">=</span><span class="n">background_box_size</span><span class="p">,</span> <span class="n">filter_size</span><span class="o">=</span><span class="n">background_filter_size</span><span class="p">)</span>
+
+<span class="c1"># Visualize the background image</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Background model&quot;</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cbar</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Pixel value [ADU]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x [pixel]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y [pixel]&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -551,9 +567,25 @@ Of course, depending on the data to be processed, you might want to adjust (hard
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We subtract the background from the reference image</span>
 <span class="n">ref_image_noback</span> <span class="o">=</span> <span class="n">ref_image</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;adu&quot;</span><span class="p">))</span>
 
-<span class="c1"># And we define a &quot;threshold&quot; image for this reference frame,</span>
-<span class="c1"># whose values are multiples of the estimated RMS of the background in each pixel.</span>
-<span class="c1"># (RMS is an estimate of the standard deviation, so 3*RMS is &quot;3 sigma&quot; above the background)</span>
+<span class="c1"># And visualize how &quot;flat&quot; the background-subtracted reference image is.</span>
+<span class="c1"># We smooth this slightly, to reduce noise and better see the structure.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Background-subtracted image, smoothed&quot;</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="n">ref_image_noback</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">20</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cbar</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Pixel value [ADU]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x [pixel]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y [pixel]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The above two visualizations will probably never look perfect, as background subtraction is difficult (way more sophisticated approaches exist). Explore if you can improve it by adjusting the background estimation parameters, otherwise keep the default values.</p>
+<p>In preparation for the source detection, we also have to define a “threshold” image for this reference frame, whose values are multiples of the estimated RMS of the background in each pixel.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># (RMS is an estimate of the standard deviation, so 3*RMS is &quot;3 sigma&quot; above the background)</span>
 <span class="n">threshold</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">background_rms</span> <span class="c1"># this is an array</span>
 </pre></div>
 </div>
@@ -636,25 +668,22 @@ Of course, depending on the data to be processed, you might want to adjust (hard
 </div>
 </div>
 <p>Zoom in and check if all relevant sources are detected. If there are issues, one might have to adjust the sensitivity of the detection.</p>
+<p>Depending on your science objective, you can save CPU-time by setting a flux threshold to keep only those stars you actually care about, and not every tiny detection.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make this catalog smaller, for testing:</span>
-<span class="n">ref_catalog</span> <span class="o">=</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;kron_flux&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">]</span> <span class="c1"># pick the brightest sources</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply some flux cut, to remove fainter sources if those are not needed:</span>
+<span class="n">ref_catalog</span> <span class="o">=</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;kron_flux&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">]</span>
 <span class="nb">len</span><span class="p">(</span><span class="n">ref_catalog</span><span class="p">)</span>
 
-<span class="c1"># Rerun the vizualisation above to see the effect...</span>
+<span class="c1"># Now rerun the vizualisation above to see the effect, and adapt the threshold if needed!</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>A large reference catalog will slow down the photometry. It’s helpful to adapt the flux threshold above to keep mainly those stars you actually care about, and not every tiny detection.</p>
-</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For reference, we write the reference catalog in this directory.</span>
-<span class="c1"># It contains the aperture positions.</span>
+<span class="c1"># Note that this catalog also contains the aperture positions in sky coordinates.</span>
 <span class="n">ref_catalog</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">photometry_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;ref_catalog_</span><span class="si">{</span><span class="n">object_to_process</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -669,7 +698,7 @@ This means that we use the sky coordinates of the sources detected in the refere
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We group all steps of the photometric measurement into one function:</span>
 
-<span class="k">def</span> <span class="nf">measure_photometry</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">sky_positions</span><span class="p">,</span> <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">measure_photometry</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">sky_positions</span><span class="p">,</span> <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">background_box_size</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">background_filter_size</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Function for forced aperture photometry given the provided sky_positions.</span>
 <span class="sd">    This function first estimates and subtracts the background from the image,</span>
 <span class="sd">    and performs aperture photometry both on the background-subtracted image and on the background alone.</span>
@@ -685,7 +714,7 @@ This means that we use the sky coordinates of the sources detected in the refere
 
     <span class="c1"># Estimating and subtracting the background:</span>
     <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>    
-    <span class="n">background</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">estimate_background</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">background</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">estimate_background</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">box_size</span><span class="o">=</span><span class="n">background_box_size</span><span class="p">,</span> <span class="n">filter_size</span><span class="o">=</span><span class="n">background_filter_size</span><span class="p">)</span>
     <span class="n">image_noback</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;adu&quot;</span><span class="p">))</span>
     <span class="n">tend</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Background subtraction took </span><span class="si">{</span><span class="n">tend</span><span class="o">-</span><span class="n">tstart</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> sec&quot;</span><span class="p">)</span>
@@ -705,7 +734,7 @@ This means that we use the sky coordinates of the sources detected in the refere
         <span class="c1"># Same photometry on the background image:</span>
         <span class="n">background_aperture_measurements</span> <span class="o">=</span> <span class="n">photutils</span><span class="o">.</span><span class="n">aperture</span><span class="o">.</span><span class="n">ApertureStats</span><span class="p">(</span><span class="n">background</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">aperture</span><span class="o">=</span><span class="n">apertures</span><span class="p">,</span> <span class="n">wcs</span><span class="o">=</span><span class="n">image_noback</span><span class="o">.</span><span class="n">wcs</span><span class="p">)</span>
         
-        <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">])</span>
+        <span class="n">aperture_catalog</span> <span class="o">=</span> <span class="n">aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">])</span>
         <span class="n">background_aperture_catalog</span> <span class="o">=</span> <span class="n">background_aperture_measurements</span><span class="o">.</span><span class="n">to_table</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">])</span>
 
         <span class="c1"># Note: ApertureStats also provides &quot;fwhm&quot; and &quot;elongation&quot;, among other stats.</span>
@@ -758,12 +787,23 @@ This means that we use the sky coordinates of the sources detected in the refere
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># As a test, we run this on the ref_image.</span>
 <span class="c1"># For this we read the ref image again, as the one in memory already has the background subtracted.</span>
 <span class="n">ref_image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ref_image_filepath</span><span class="p">)</span>
-<span class="n">ref_photo_cat</span> <span class="o">=</span> <span class="n">measure_photometry</span><span class="p">(</span><span class="n">ref_image</span><span class="p">,</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">],</span> <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ref_photo_cat</span> <span class="o">=</span> <span class="n">measure_photometry</span><span class="p">(</span><span class="n">ref_image</span><span class="p">,</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">],</span>
+                                   <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">background_box_size</span> <span class="o">=</span> <span class="n">background_box_size</span><span class="p">,</span>
+                                   <span class="n">background_filter_size</span> <span class="o">=</span> <span class="n">background_filter_size</span>
+                                   <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ref_photo_cat</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>To summarize, the columns are the following.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sum_x</span></code> is the background-subtracted flux within the aperture of radius <code class="docutils literal notranslate"><span class="pre">x</span></code> arcsec. This is what we’ll use to compute magnitudes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_x</span></code> is the maximum pixel value within the corresponding aperture. This informs us if some pixels are at or close to saturation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">back_sum_x</span></code> is the flux of the background within the corresponding aperture. This could be used later to estimate the noise of the photometry.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fwhm_fit</span></code>, <code class="docutils literal notranslate"><span class="pre">flux_fit</span></code>, <code class="docutils literal notranslate"><span class="pre">q_fit</span></code> are measurements from the optional 2D Gaussian fit.</p></li>
+</ul>
 <section id="chimney-plot">
 <h3>Chimney Plot<a class="headerlink" href="#chimney-plot" title="Permalink to this heading">#</a></h3>
 <p>As an illustration of how this photometric catalog can be used, we create a basic and very common scatter plot: the so-called “chimney plot”, named after its shape. The plot shows instrumental magnitude against FWHM (or some other size measurement) of all detected sources.</p>
@@ -829,7 +869,11 @@ This means that we use the sky coordinates of the sources detected in the refere
         <span class="p">]}</span>
     
     <span class="c1"># Now run the measurements:</span>
-    <span class="n">catalog</span> <span class="o">=</span> <span class="n">measure_photometry</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">],</span> <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">measure_photometry</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">],</span>
+                                 <span class="n">run_simple_fit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">background_box_size</span> <span class="o">=</span> <span class="n">background_box_size</span><span class="p">,</span>
+                                 <span class="n">background_filter_size</span> <span class="o">=</span> <span class="n">background_filter_size</span>
+                                 <span class="p">)</span>
 
     <span class="c1"># Add the information from the FITS header</span>
     <span class="n">catalog</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">meta_from_image</span><span class="p">)</span>
