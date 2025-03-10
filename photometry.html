@@ -854,10 +854,16 @@ This means that we use the sky coordinates of the sources detected in the refere
 <span class="c1"># And now we loop over all selected exposures:</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">science_file</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">science_files</span><span class="o">.</span><span class="n">files</span><span class="p">):</span>
 
-    <span class="c1">#if i &lt; 104: # could use something like that to relaunch on selected files</span>
+    <span class="n">image_filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">science_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+    <span class="n">output_filepath</span> <span class="o">=</span> <span class="n">photometry_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">image_filename</span><span class="si">}</span><span class="s2">.fits&quot;</span>
+
+    <span class="c1"># Could use something like that to relaunch on new or selected files:</span>
+    <span class="c1">#if output_filepath.exists():</span>
+    <span class="c1">#    continue</span>
+    <span class="c1"># Or, alternatively:</span>
+    <span class="c1">#if i &lt; 104:</span>
     <span class="c1">#    continue</span>
     
-    <span class="n">image_filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">science_file</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== Processing image </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_files</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">image_filename</span><span class="si">}</span><span class="s2"> ===&quot;</span><span class="p">)</span>
 
     <span class="n">image</span> <span class="o">=</span> <span class="n">ccdproc</span><span class="o">.</span><span class="n">CCDData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">science_file</span><span class="p">)</span>
@@ -884,7 +890,7 @@ This means that we use the sky coordinates of the sources detected in the refere
     <span class="c1">#catalog[&quot;sky_centroid_win&quot;] = ref_catalog[&quot;sky_centroid_win&quot;]</span>
 
     <span class="c1"># And write all this as a FITS table</span>
-    <span class="n">catalog</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">photometry_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">image_filename</span><span class="si">}</span><span class="s2">.fits&quot;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">catalog</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     
 </pre></div>
 </div>
