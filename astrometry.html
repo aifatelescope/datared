@@ -404,7 +404,7 @@ document.write(`
 While this might not seem to be very elegant (in particular given a potentially low number of stars per image), this approach remains very flexible, and works even when the camera got rotated (for example) or when flexion in the telescope affects the distortion.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In case you’re using this tutorial with images from a <strong>different telescope setup</strong>, simply either adapt (or remove!) the hard-coded pixel scale parameters <code class="docutils literal notranslate"><span class="pre">--scale-low</span></code> and <code class="docutils literal notranslate"><span class="pre">--scale-high</span></code> as well as <code class="docutils literal notranslate"><span class="pre">--downsample</span></code> from the call to <code class="docutils literal notranslate"><span class="pre">solve-field</span></code> below. These parameters are optional, they are provided here only to speed up the process. Note that if your telescope has a field of view much narrower or wider than about 0.5 deg, you might need different index files (see links on <a class="reference internal" href="installation.html"><span class="std std-doc">Requirements and installation</span></a>).</p>
+<p>In case you’re using this tutorial with <strong>your own telescope setup</strong> (i.e., not the AIfA telescope), simply either adapt (or remove!) the hard-coded pixel scale parameters <code class="docutils literal notranslate"><span class="pre">--scale-low</span></code> and <code class="docutils literal notranslate"><span class="pre">--scale-high</span></code> as well as <code class="docutils literal notranslate"><span class="pre">--downsample</span></code> from the call to <code class="docutils literal notranslate"><span class="pre">solve-field</span></code> below. These parameters are optional, they are provided here only to speed up the process. Note that if your telescope has a field of view much narrower or wider than about 0.5 deg, you might need different index files (see links on <a class="reference internal" href="installation.html"><span class="std std-doc">Requirements and installation</span></a>).</p>
 </div>
 <p>As before, you could copy or write the code shown below in a script, or alternatively directly download this page as a <a class="reference download internal" download="" href="_downloads/b0a3b9fdbc44c20450042e257e32afda/astrometry.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code></a> file.</p>
 <p>To run the code, you’ll need the module <code class="docutils literal notranslate"><span class="pre">dataredconfig.py</span></code>, as explained <a class="reference internal" href="data.html"><span class="std std-doc">here</span></a>.</p>
@@ -639,6 +639,10 @@ As you will see once it has run, the generated plot is relatively self-explanato
 </pre></div>
 </div>
 </div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This last step might take a while, typically 10 s per image. But no need to wait! You can leave it running and start working through the next notebook. Simply re-run the latter once the astrometry is done.</p>
 </div>
 </section>
 
