@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Colour-magnitude diagram &#8212; AIfA telescope data reduction tutorial</title>
   
@@ -15,49 +14,49 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js"></script>
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'CMD';</script>
@@ -74,28 +73,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -117,12 +111,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -138,6 +140,8 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
+  
+    
   
 
 <a class="navbar-brand logo" href="intro.html">
@@ -160,7 +164,7 @@
 
  <script>
  document.write(`
-   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
     <span class="search-button__default-text">Search</span>
     <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -215,7 +219,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -224,14 +228,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -356,10 +360,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -367,14 +371,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -420,10 +424,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="colour-magnitude-diagram">
-<h1>Colour-magnitude diagram<a class="headerlink" href="#colour-magnitude-diagram" title="Permalink to this heading">#</a></h1>
+<h1>Colour-magnitude diagram<a class="headerlink" href="#colour-magnitude-diagram" title="Link to this heading">#</a></h1>
 <p>In this notebook, we will:</p>
 <ul class="simple">
 <li><p>read the photometric catalogs of the science frames and group them in a convenient structure,</p></li>
@@ -439,32 +443,32 @@ All that we’ll need from here on is the content of the <code class="docutils l
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dataredconfig</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">dataredconfig</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">astropy</span>
-<span class="kn">import</span> <span class="nn">astropy.table</span>
-<span class="kn">import</span> <span class="nn">astropy.visualization</span>
-<span class="kn">import</span> <span class="nn">astropy.coordinates</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.table</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.visualization</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astropy.coordinates</span>
 
-<span class="kn">import</span> <span class="nn">astroquery.vizier</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">astroquery.vizier</span>
 
-<span class="kn">import</span> <span class="nn">urllib.request</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 
-<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">astropy</span><span class="w"> </span><span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
 
 <span class="o">%</span><span class="k">matplotlib</span> widget
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.widgets</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.widgets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 </pre></div>
 </div>
 </div>
 </div>
 <section id="gathering-and-structuring-the-data">
-<h2>Gathering and structuring the data<a class="headerlink" href="#gathering-and-structuring-the-data" title="Permalink to this heading">#</a></h2>
+<h2>Gathering and structuring the data<a class="headerlink" href="#gathering-and-structuring-the-data" title="Link to this heading">#</a></h2>
 <p>We start by reading the relevant catalogs as a list of tables.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -540,7 +544,7 @@ These columns have two dimension: the first index identifies the source (i.e., s
 </div>
 </div>
 <section id="a-quick-cmd-in-instrumental-magnitudes">
-<h3>A quick CMD in instrumental magnitudes<a class="headerlink" href="#a-quick-cmd-in-instrumental-magnitudes" title="Permalink to this heading">#</a></h3>
+<h3>A quick CMD in instrumental magnitudes<a class="headerlink" href="#a-quick-cmd-in-instrumental-magnitudes" title="Link to this heading">#</a></h3>
 <p>As an example about how the catalog can now be used, we compute a median instrumental magnitude in each filter (where the median is taken over the different exposures) and plot a simple uncalibrated CMD.
 This quick magnitude computation is clearly not optimal, in particular if the atmospheric conditions changed during the observation! But it should be sufficient to get a first idea of the CMD. We’ll come back to magnitude calibration later.</p>
 <div class="cell docutils container">
@@ -578,7 +582,7 @@ This quick magnitude computation is clearly not optimal, in particular if the at
 </section>
 </section>
 <section id="magnitude-calibration">
-<h2>Magnitude calibration<a class="headerlink" href="#magnitude-calibration" title="Permalink to this heading">#</a></h2>
+<h2>Magnitude calibration<a class="headerlink" href="#magnitude-calibration" title="Link to this heading">#</a></h2>
 <p>To compare our data with stellar models, we need to:</p>
 <ul class="simple">
 <li><p>convert our instrumental magnitudes into apparent magnitudes (that is, “standardise” our observations)</p></li>
@@ -600,7 +604,7 @@ This quick magnitude computation is clearly not optimal, in particular if the at
 </div>
 </div>
 <section id="matching-to-a-reference-catalogue">
-<h3>Matching to a reference catalogue<a class="headerlink" href="#matching-to-a-reference-catalogue" title="Permalink to this heading">#</a></h3>
+<h3>Matching to a reference catalogue<a class="headerlink" href="#matching-to-a-reference-catalogue" title="Link to this heading">#</a></h3>
 <p>We will make use the catalogue ATLAS-REFCAT2. This is an all-sky reference catalog compiling together several large surveys. In particular, among many other data, it contains <em>real</em> photometry in the SDSS filters g, r, and i for stars brighter than the 14th magnitude. Details about the catalogue can be found at <a class="reference external" href="https://archive.stsci.edu/hlsp/atlas-refcat2">https://archive.stsci.edu/hlsp/atlas-refcat2</a> .</p>
 <p>We access this catalogue via a service called VizieR, a library of published astronomical catalogues.</p>
 <div class="cell docutils container">
@@ -676,7 +680,7 @@ This quick magnitude computation is clearly not optimal, in particular if the at
 </div>
 </section>
 <section id="computing-the-magnitude-zero-points">
-<h3>Computing the magnitude zero points<a class="headerlink" href="#computing-the-magnitude-zero-points" title="Permalink to this heading">#</a></h3>
+<h3>Computing the magnitude zero points<a class="headerlink" href="#computing-the-magnitude-zero-points" title="Link to this heading">#</a></h3>
 <p>Using the matched catalogue, we can visualize the difference between our own instrumental magnitudes and the apparent magnitudes from the reference catalogue.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -750,13 +754,13 @@ The zero points are computed using the matched catalogue, but then we apply them
 </section>
 </section>
 <section id="isochrones">
-<h2>Isochrones<a class="headerlink" href="#isochrones" title="Permalink to this heading">#</a></h2>
+<h2>Isochrones<a class="headerlink" href="#isochrones" title="Link to this heading">#</a></h2>
 <p>We will use isochrones (i.e. “synthetic” cluster CMDs) based on the stellar evolution code MESA, as provided by the <a class="reference external" href="https://waps.cfa.harvard.edu/MIST/">MIST</a> project (<a class="reference external" href="http://adsabs.harvard.edu/abs/2016ApJS..222....8D">Dotter 2016</a> and <a class="reference external" href="http://adsabs.harvard.edu/abs/2016ApJ...823..102C">Choi et al. 2016</a>). These isochrones have been generated with synthetic photometry computed in the same Sloan/SDSS photometric system that we use for our observations.
 To make the use of these isochrones as easy as possible, we have repackaged them into a custom single file, that we will download and use below.</p>
 <p>In case you want to know more about the origin of these isochrones, see the website of MIST (<a class="reference external" href="https://waps.cfa.harvard.edu/MIST/">https://waps.cfa.harvard.edu/MIST/</a>), the website of MESA (<a class="reference external" href="https://mesastar.org">https://mesastar.org</a>),  and the related publications.</p>
 <p>The details about our repackaging into a single file are given <a class="reference internal" href="MIST_isochrone_repackaging.html"><span class="std std-doc">in this notebook</span></a>.</p>
 <section id="loading-the-isochrones">
-<h3>Loading the isochrones<a class="headerlink" href="#loading-the-isochrones" title="Permalink to this heading">#</a></h3>
+<h3>Loading the isochrones<a class="headerlink" href="#loading-the-isochrones" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download the file containing all the isochrones (about 48 MB):</span>
@@ -823,13 +827,13 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 </div>
 </section>
 <section id="extinction-and-distance">
-<h3>Extinction and distance<a class="headerlink" href="#extinction-and-distance" title="Permalink to this heading">#</a></h3>
+<h3>Extinction and distance<a class="headerlink" href="#extinction-and-distance" title="Link to this heading">#</a></h3>
 <p>To compare these isochrones to our calibrated data, we need two more ingredients: extinction, and distance.</p>
 <p>Extinction is the radiation loss due to scattering and absorption by the interstellar medium (gas and dust). For a given line of sight, the amount of extinction depends on wavelength: blue light is scattered and absorbed more than red light, causing <em>reddening</em> of the light of stars. This dependency on wavelength is called a <em>reddening law</em>. Its shape depends on the properties of the interstellar medium, and is <em>not</em> the same for every cluster or part of the sky. The relation that we’ll use below is an empirical “average” solution, certainly only approximate, but it illustrates the idea.</p>
 <p>Note that extinction is multiplicative in flux, and in practice it can therefore be expressed as a magnitude offset <span class="math notranslate nohighlight">\(A\)</span> for each band (assuming some spectrum for the starlight). These magnitude offsets in the different bands are proportional to each other. For a given reddening law, they can be expressed as multiples of the extinction in some reference band. In the example below, this reference is the visible band V, and the reference extinction is denoted <span class="math notranslate nohighlight">\(A_{\mathrm{V}}\)</span>. We will use it as a free parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extinction_law</span><span class="p">(</span><span class="n">A_V</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">extinction_law</span><span class="p">(</span><span class="n">A_V</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns extinction values for the different SDSS/Sloan filters, based on some reference total extinction A_V</span>
 
@@ -841,7 +845,7 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 
 
 
-<span class="k">def</span> <span class="nf">mag_absolute_to_apparent</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">extinction</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mag_absolute_to_apparent</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">extinction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function that corrects absolute magnitudes by distance modulus and extinction, to get apparent magnitudes</span>
 <span class="sd">    </span>
@@ -856,11 +860,11 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 </div>
 </section>
 <section id="comparing-the-observed-cmd-with-isochrones">
-<h3>Comparing the observed CMD with isochrones<a class="headerlink" href="#comparing-the-observed-cmd-with-isochrones" title="Permalink to this heading">#</a></h3>
+<h3>Comparing the observed CMD with isochrones<a class="headerlink" href="#comparing-the-observed-cmd-with-isochrones" title="Link to this heading">#</a></h3>
 <p>With all this in hand, we will now build an interactive matplotlib plot, displaying the observed CMD, and overplotting isochrones of selected age and metallicity. For this we define one more helper function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_apparent_isochrone</span><span class="p">(</span><span class="n">vrot_index</span><span class="p">,</span> <span class="n">metallicity_index</span><span class="p">,</span> <span class="n">age_index</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">A_V</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_apparent_isochrone</span><span class="p">(</span><span class="n">vrot_index</span><span class="p">,</span> <span class="n">metallicity_index</span><span class="p">,</span> <span class="n">age_index</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">A_V</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function to get a specific isochrone at a specific distance and total extinction</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -885,7 +889,11 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 </div>
 </div>
 </div>
-<p>And now the interactive plot, using matplotlib sliders:</p>
+<p>And now the interactive plot, using matplotlib sliders.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this interactive plot, make sure to zoom to the relevant region, to properly see your data! You can do this either interactively, or by adapting the code for example via <code class="docutils literal notranslate"><span class="pre">ax.set_xlim([xmin,</span> <span class="pre">xmax])</span></code> and <code class="docutils literal notranslate"><span class="pre">ax.set_ylim([ymin,</span> <span class="pre">ymax])</span></code>.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initial position of sliders:</span>
@@ -912,7 +920,7 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 <span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">label_string</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
 
 <span class="c1"># The function to be called anytime a slider or botton is changed</span>
-<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
     <span class="n">vrot_index</span> <span class="o">=</span> <span class="n">vrot_button</span><span class="o">.</span><span class="n">index_selected</span>
     <span class="n">metallicity_index</span> <span class="o">=</span> <span class="n">metallicity_slider</span><span class="o">.</span><span class="n">val</span>
     <span class="n">age_index</span> <span class="o">=</span> <span class="n">age_slider</span><span class="o">.</span><span class="n">val</span>
@@ -999,7 +1007,7 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 </section>
 </section>
 <section id="discussion-of-the-cmd">
-<h2>Discussion of the CMD<a class="headerlink" href="#discussion-of-the-cmd" title="Permalink to this heading">#</a></h2>
+<h2>Discussion of the CMD<a class="headerlink" href="#discussion-of-the-cmd" title="Link to this heading">#</a></h2>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
 <p>What photometric aperture radius gives the most accurate CMD? Apart from judging the appearance of the CMD itself, feel invited to make and discuss dedicated plots (e.g., similar to the one done just before the zero point computations above). Especially if the observing conditions were variable, it might be interesting to analyse if and how individual exposures differ, instead of just considering their median.</p>
@@ -1059,7 +1067,7 @@ If you would have to quantify uncertainties, how could you approach this?</p>
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -1088,6 +1096,7 @@ If you would have to quantify uncertainties, how could you approach this?</p>
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -1159,8 +1168,8 @@ All contents released under <a href="https://creativecommons.org/licenses/by-sa/
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
