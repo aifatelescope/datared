@@ -3,15 +3,21 @@
 ## Foreword
 
 
-The aim of this tutorial is to show you a way to "reduce" and analyse imaging data acquired with the 35-cm optical AIfA telescope, that is to turn the raw data into a scientific result. We'll do so using professional Python packages that are easy to install. Note that while the present tutorial is fine-tuned for the AIfA telescope, it should be well possible to follow it when dealing with data from other instruments, with only minor adaptations.
+The aim of this tutorial is to show you a way to "reduce" and analyse imaging data acquired with the 35-cm AIfA telescope in the scope of a lab course. We'll go from the raw data towards a scientific result, using professional and easy-to-install Python packages. The tutorial focuses on aperture photometry and its calibration, but also touches on reprojection and stacking. No prerequisite knowledge of these topics is needed, as we'll start with a general introduction to optical observations.
 
 
-```{image} ./figures/results_teaser.png
-:alt: Example results obtained with the reduction described in this tutorial
-:width: 100%
-:align: center
+```{figure} ./figures/results_teaser.png
+---
+width: 100%
+name: results_teaser
+---
+Illustrative products of the tutorial
 ```
 
+Note that while the tutorial is fine-tuned for the AIfA telescope, it is perfectly possible to use the provided code when dealing with data from other instruments, contingent on minor adaptations that are either obvious or described in the text. 
+
+
+## What's this "reduction"?
 
 Image reduction can often be broadly split into two separate parts, which *may* comprise some of these steps: 
 
