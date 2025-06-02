@@ -2,16 +2,16 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="278.5105mm"
-   height="136.10242mm"
-   viewBox="0 0 278.5105 136.10242"
+   width="264.64825mm"
+   height="199.50769mm"
+   viewBox="0 0 264.64826 199.5077"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (c3084ef, 2021-09-22)"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
    sodipodi:docname="results_teaser.svg"
-   inkscape:export-filename="/Users/mtewes/Documents/AIfA 2024/AIfA Teleskop/git_datared/figure_sources/results_teaser/results_teaser.png"
-   inkscape:export-xdpi="109.36176"
-   inkscape:export-ydpi="109.36176"
+   inkscape:export-filename="results_teaser.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -27,15 +27,17 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.64304622"
-     inkscape:cx="330.45836"
-     inkscape:cy="663.24937"
-     inkscape:window-width="1312"
-     inkscape:window-height="969"
+     inkscape:zoom="0.90940469"
+     inkscape:cx="468.98813"
+     inkscape:cy="399.16223"
+     inkscape:window-width="1680"
+     inkscape:window-height="983"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#d1d1d1" />
   <defs
      id="defs2">
     <linearGradient
@@ -51,52 +53,53 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(49.592278,-48.079624)">
+     transform="translate(46.973804,-6.7568436)">
     <rect
        style="fill:none;stroke:#333333;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3165"
        width="124.21465"
        height="82.861664"
-       x="-49.342278"
-       y="71.775269" />
+       x="-46.723804"
+       y="83.703857" />
     <image
        width="124.21465"
        height="82.861664"
        preserveAspectRatio="none"
        xlink:href="M37_full.jpg"
        id="image900"
-       x="-49.342278"
-       y="71.775269"
+       x="-46.723804"
+       y="83.703857"
        style="stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        style="fill:none;stroke:#333333;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3167"
        width="108.74918"
-       height="81.56189"
-       x="45.767281"
-       y="48.329624" />
+       height="108.74918"
+       x="32.552856"
+       y="7.0068436"
+       ry="0" />
     <image
        width="108.74918"
-       height="81.56189"
+       height="108.74918"
        preserveAspectRatio="none"
-       xlink:href="WASP-104b.png"
+       xlink:href="HAT-P-23b.png"
        id="image928"
-       x="45.767281"
-       y="48.329624" />
+       x="32.552856"
+       y="7.0068436" />
     <rect
        style="fill:none;stroke:#333333;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect3169"
-       width="97.737808"
-       height="73.303345"
-       x="130.93042"
-       y="101.67089" />
+       width="151.74481"
+       height="95.800133"
+       x="65.679626"
+       y="110.21439" />
     <image
-       width="97.737808"
-       height="73.303345"
+       width="151.74481"
+       height="95.80014"
        preserveAspectRatio="none"
-       xlink:href="CMD_M37.png"
+       xlink:href="CMD_M3.png"
        id="image3725"
-       x="130.93042"
-       y="101.67089" />
+       x="65.679626"
+       y="110.21439" />
   </g>
 </svg>
