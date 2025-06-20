@@ -316,31 +316,42 @@ In practice, photometry will deliver instrumental fluxes, measured in units of A
 For the sake of simplicity, we ignore here the effect that astrometric distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).
 ```
 
-## Apparent magnitudes
-
-The apparent brightness of a source in optical astronomy, as seen in some defined passband, is denoted by an **apparent magnitude** in that passband. Magnitudes are a logarithmic scale of the flux that we observe from a source.
-
-For an instrumental flux $F$ (e.g., in ADU) obtained via photometry, one can compute an "instrumental magnitude" often defined as
-
-$$
-m_{\mathrm{instr}} = -2.5 \log_{10}(F[ADU]).
-$$
-
-Clearly, this $m_{\mathrm{instr}}$ is dependent on the instrument (and the telescope), but also on the exposure time, the aperture size, the atmospheric transparency, etc. In other words, the instrumental magnitude is a completely *uncalibrated* apparent magnitude, which nevertheless can be used to compare for example fluxes measured with the same observational setup.
 
 
-More generally, for a source of flux $F$ (in any appropriate unit), the magnitude is given by
+
+
+## Magnitudes, distance, and extinction
+
+The term magnitude denotes a logarithmic scale of the flux that we observe from a source, *in some specified passband*. Depending on how this flux is calibrated, one distinguishes between different kinds of magnitudes. We briefly discuss the most basic concepts in the following.
+
+
+### Instrumental magnitude
+
+For an instrumental flux $f$ (e.g., in ADU) obtained via photometry, one can compute an "instrumental magnitude" often defined as
 
 $$
-m = -2.5 \log_{10}(F) + C,
+m_{\mathrm{instr}} = -2.5 \log_{10}(f[ADU]).
 $$
 
-where $C$ is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration can vary, and connecting your observations to a referential zero point can be a challenging task. In practice, this relies on the observation of standard sources whose magnitudes are known from a reference catalogue. Note that for many applications (such as the analysis of exoplanet transit light curves), an accurate magnitude calibration is not required, as we care only about *relative* photometry (i.e., differences in magnitudes).
+Clearly, this $m_{\mathrm{instr}}$ is dependent on the instrument (and the telescope), but also on the exposure time, the aperture size, the atmospheric transparency, etc. In other words, the instrumental magnitude is a completely *uncalibrated* magnitude, which nevertheless can be used to compare for example fluxes measured with the same observational setup.
 
-Indeed, $C$ cancels out when forming a difference in magnitudes between two sources:
+### Apparent magnitude
+
+The apparent brightness of a source, in some defined passband, is denoted by an **apparent magnitude** in that passband. Usually "magnitude" refers to this apparent magnitude, unless stated otherwise.
+The apparent magnitude is a statement about the flux that we observers (typically on Earth) recieve from a particular source. Obviously we don't want this apparent magnitude to depend on the telescope or the weather. We therefore need to introduce some kind of reference to calibrate the scale, defining what flux should correspond to a magnitude of exactly 0. For the interested reader: this choice of reference is called a magnitude system, and the most commonly used nowadays is the [AB magnitude system](https://en.wikipedia.org/wiki/AB_magnitude).
+
+In all generality, for a source of flux $f$ (in any appropriate unit), the (apparent) magnitude is given by
 
 $$
-m_1 - m_2 = -2.5 \log_{10}\left(\frac{F_1}{F_2}\right).
+m = -2.5 \log_{10}(f) + c,
+$$
+
+where $c$ is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration can vary, and connecting your observations to a referential zero point can be a challenging task. In practice, this relies on the observation of standard sources whose apparent magnitudes are known from a reference catalogue. Note that for many applications (such as the analysis of exoplanet transit light curves), an accurate magnitude calibration is not even required, as we care only about *relative* photometry (i.e., differences in magnitudes).
+
+Indeed, $c$ cancels out when forming a difference in magnitudes between two sources:
+
+$$
+m_1 - m_2 = -2.5 \log_{10}\left(\frac{f_1}{f_2}\right).
 $$
 
 A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values do not have a unit, but often the word *magnitude* or *mag* is used as if it were a unit.
@@ -356,10 +367,43 @@ If the sources in a field would all have the same intrinsic spectrum, then any c
 
 ```
 
-
 ````{admonition} Questions
 * What flux ratio corresponds to a difference of one magnitude?
 * What magnitude difference corresponds to a change in flux of $1\%$?
 * And what about a change in flux of $0.1\%$ (i.e., one part per thousand, or one "ppt")?
 ````
+
+### Absolute magnitude and distance modulus
+
+The **absolute magnitude** (often denoted with an uppercase $M$) is a measure of the intrinsic brightness of an object, again in a specified passband.
+It is defined as being equal to the apparent magnitude that this object would have if it was located at a distance of 10 pc.
+
+With this definition, the absolute magnitude is related to the apparent magnitude and the distance of an object in a straightforward way. Indeed, the observed flux $f$ of an object decreases with its distance $d$ following $f \propto d^{-2}$. Therefore, "moving" an object from some distance $d$ to a distance $D$ would change its flux from $f$ to $F$ following
+
+$$
+\frac{f}{F} = \left( \frac{D}{d}\right)^2.
+$$
+
+Let's assume $F$ is the flux corresponding to a distance $D$ of 10 pc.
+The difference between the apparent and absolute magnitudes of an object is then given by
+
+$$
+m-M = -2.5 \log_{10}\left(\frac{f}{F}\right) = 5\log_{10}\left(\frac{d}{D}\right) = 5\log_{10}(d / \textrm{pc}) - 5.
+$$
+
+This quantity $m-M$ is called the **distance modulus** of the specific object. Hence, by knowing $m$ and $d$ we can compute the absolute magnitude $M$. On the other hand, if we know $m$ and $M$ we can infer the distance $d$.
+
+
+### Extinction
+
+Tightly connected to the notion of distance modulus is the effect of interstellar extinction.
+The absorption and scattering of photons in the interstellar medium can cause stars to appear dimmer than they actually are. This effect is multiplicative in flux, and hence additive in magnitude.
+
+If we have $A$ magnitudes of extinction (this always has to be specified for a given passband) then the above equation has to be rewritten as
+
+$$
+m-M =  5\log_{10}(d / \textrm{pc}) - 5 + A.
+$$
+
+Unlike the effect of distance, extinction is fortunately strongly wavelength dependent. Extinction is therefore not completely degenerate with distance, and can be constrained by analysing photometric measurements in multiple filters. 
 
