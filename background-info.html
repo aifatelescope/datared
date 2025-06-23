@@ -434,7 +434,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinates-wcs">Coordinates, WCS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coaddition">Coaddition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#photometry">Photometry</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitudes-distance-and-extinction">Magnitudes, distance, and extinction</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitudes-colors-and-extinction">Magnitudes, colors, and extinction</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrumental-magnitude">Instrumental magnitude</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apparent-magnitude">Apparent magnitude</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#colors">Colors</a></li>
@@ -700,8 +700,8 @@ The most common WCS for identifying and cataloguing sources is the equatorial sy
 <p>For the sake of simplicity, we ignore here the effect that astrometric distortions have on photometry. For the curious: flatfielding links the pixel scale inhomogeneity of the detector to a systematic photometric bias, that in principle needs to be accounted for (either a posteriori or by reprojecting the images on a distortion-free pixel grid).</p>
 </div>
 </section>
-<section id="magnitudes-distance-and-extinction">
-<h2>Magnitudes, distance, and extinction<a class="headerlink" href="#magnitudes-distance-and-extinction" title="Link to this heading">#</a></h2>
+<section id="magnitudes-colors-and-extinction">
+<h2>Magnitudes, colors, and extinction<a class="headerlink" href="#magnitudes-colors-and-extinction" title="Link to this heading">#</a></h2>
 <p>The term magnitude denotes a logarithmic scale of the flux that we observe from a source, <em>in some specified passband</em>. Depending on how this flux is calibrated, one distinguishes between different kinds of magnitudes. We briefly discuss the most basic concepts in the following.</p>
 <section id="instrumental-magnitude">
 <h3>Instrumental magnitude<a class="headerlink" href="#instrumental-magnitude" title="Link to this heading">#</a></h3>
@@ -739,7 +739,7 @@ m_1 - m_2 = -2.5 \log_{10}\left(\frac{f_1}{f_2}\right).
 <p>A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values do not have a unit, but often the word <em>magnitude</em> or <em>mag</em> is used as if it were a unit.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Instead of the symbol <span class="math notranslate nohighlight">\(m\)</span>, one often uses a symbol corresponding to a filter to designate magnitudes (e.g., some galaxy is at <span class="math notranslate nohighlight">\(r=15.6\)</span> mag)</p>
+<p>Instead of the symbol <span class="math notranslate nohighlight">\(m\)</span>, one often uses a symbol corresponding to a filter to designate magnitudes (e.g., one could say that some galaxy is at <span class="math notranslate nohighlight">\(r=15.6\)</span> mag)</p>
 </div>
 <div class="admonition-questions admonition">
 <p class="admonition-title">Questions</p>
@@ -884,7 +884,7 @@ m-M =  5\log_{10}(d / \textrm{pc}) - 5 + A.
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinates-wcs">Coordinates, WCS</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coaddition">Coaddition</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#photometry">Photometry</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitudes-distance-and-extinction">Magnitudes, distance, and extinction</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitudes-colors-and-extinction">Magnitudes, colors, and extinction</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrumental-magnitude">Instrumental magnitude</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apparent-magnitude">Apparent magnitude</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#colors">Colors</a></li>

@@ -320,7 +320,7 @@ For the sake of simplicity, we ignore here the effect that astrometric distortio
 
 
 
-## Magnitudes, distance, and extinction
+## Magnitudes, colors, and extinction
 
 The term magnitude denotes a logarithmic scale of the flux that we observe from a source, *in some specified passband*. Depending on how this flux is calibrated, one distinguishes between different kinds of magnitudes. We briefly discuss the most basic concepts in the following.
 
@@ -367,7 +367,7 @@ $$
 A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values do not have a unit, but often the word *magnitude* or *mag* is used as if it were a unit.
 
 ```{note}
-Instead of the symbol $m$, one often uses a symbol corresponding to a filter to designate magnitudes (e.g., some galaxy is at $r=15.6$ mag)
+Instead of the symbol $m$, one often uses a symbol corresponding to a filter to designate magnitudes (e.g., one could say that some galaxy is at $r=15.6$ mag)
 ```
 
 ````{admonition} Questions
