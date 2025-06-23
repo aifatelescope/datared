@@ -320,7 +320,7 @@ For the sake of simplicity, we ignore here the effect that astrometric distortio
 
 
 
-## Magnitudes, distance, and extinction
+## Magnitudes, colors, and extinction
 
 The term magnitude denotes a logarithmic scale of the flux that we observe from a source, *in some specified passband*. Depending on how this flux is calibrated, one distinguishes between different kinds of magnitudes. We briefly discuss the most basic concepts in the following.
 
@@ -335,10 +335,20 @@ $$
 
 Clearly, this $m_{\mathrm{instr}}$ is dependent on the instrument (and the telescope), but also on the exposure time, the aperture size, the atmospheric transparency, etc. In other words, the instrumental magnitude is a completely *uncalibrated* magnitude, which nevertheless can be used to compare for example fluxes measured with the same observational setup.
 
+```{note}
+Fainter sources have higher magnitudes!
+```
+
+```{note}
+The magnitude scale is logarithmic. Any multiplicative effect on flux (such as extinction by interstellar dust, absorption by clouds, dirt on the telescope mirror, shading of parts of the telescope mirror by a misaligned dome, etc) therefore corresponds to an **additive shift** in instrumental magnitude, independent on the brightness of the source.
+
+And if the objects in a field would all have the same intrinsic spectrum, then any change to the *passband* of the instrument (i.e., using a narrower or broader filter, or a filter of a different color) would correspond to a common shift in the instrumental magnitudes of all these objects. In practice however, objects have different spectra, so that a change in passband results in different shifts for all objects!
+```
+
 ### Apparent magnitude
 
 The apparent brightness of a source, in some defined passband, is denoted by an **apparent magnitude** in that passband. Usually "magnitude" refers to this apparent magnitude, unless stated otherwise.
-The apparent magnitude is a statement about the flux that we observers (typically on Earth) recieve from a particular source. Obviously we don't want this apparent magnitude to depend on the telescope or the weather. We therefore need to introduce some kind of reference to calibrate the scale, defining what flux should correspond to a magnitude of exactly 0. For the interested reader: this choice of reference is called a magnitude system, and the most commonly used nowadays is the [AB magnitude system](https://en.wikipedia.org/wiki/AB_magnitude).
+The apparent magnitude is a statement about the flux that we observers (typically on Earth) recieve from a particular source. Obviously we don't want this apparent magnitude to depend on the telescope or the weather. We therefore need to introduce some kind of reference to calibrate the scale, defining for example what flux should correspond to a magnitude of exactly zero. This choice of reference is called a magnitude system. A common and modern one is the [AB magnitude system](https://en.wikipedia.org/wiki/AB_magnitude) which is based on an absolute flux scale, but many others exist, often tied to particular observatories. A historically important one is the Johnson system, which uses the star Vega as reference, so that Vega has a magnitue of zero in all bands. Magnitude systems are designed to yield comparable values (e.g., Vega has a magnitude close to zero in all systems, in visible bands), but for some purposes it is very important to be aware of which system one uses.
 
 In all generality, for a source of flux $f$ (in any appropriate unit), the (apparent) magnitude is given by
 
@@ -346,7 +356,7 @@ $$
 m = -2.5 \log_{10}(f) + c,
 $$
 
-where $c$ is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration can vary, and connecting your observations to a referential zero point can be a challenging task. In practice, this relies on the observation of standard sources whose apparent magnitudes are known from a reference catalogue. Note that for many applications (such as the analysis of exoplanet transit light curves), an accurate magnitude calibration is not even required, as we care only about *relative* photometry (i.e., differences in magnitudes).
+where $c$ is a constant that calibrates the magnitude scale, often called zero point. The definition of this calibration varies with conventions and magnitude systems, and connecting your observations to a referential zero point can be a challenging task. In practice, the zero point determination often relies on the observation of standard sources whose apparent magnitudes are known from a reference catalogue. Note that for many applications (such as the analysis of exoplanet transit light curves), an accurate magnitude calibration is not even required, as we care only about *relative* photometry (i.e., differences in magnitudes).
 
 Indeed, $c$ cancels out when forming a difference in magnitudes between two sources:
 
@@ -357,14 +367,7 @@ $$
 A difference of 5 magnitudes corresponds to factor 100 in flux. Magnitude values do not have a unit, but often the word *magnitude* or *mag* is used as if it were a unit.
 
 ```{note}
-Fainter sources have higher magnitudes!
-```
-
-```{note}
-The magnitude scale is logarithmic. Any multiplicative effect on flux (such as extinction by interstellar dust, absorption by clouds, dirt on the telescope mirror, shading of parts of the telescope mirror by a misaligned dome, etc) therefore corresponds to an **additive shift** in magnitude, independent on the brightness of a source.
-
-If the sources in a field would all have the same intrinsic spectrum, then any change to the passband of the instrument (i.e., using a narrower or broader filter, or a filter of a different color) would correspond to a common shift in the recorded magnitudes of all these sources.
-
+Instead of the symbol $m$, one often uses a symbol corresponding to a filter to designate magnitudes (e.g., one could say that some galaxy is at $r=15.6$ mag)
 ```
 
 ````{admonition} Questions
@@ -372,6 +375,12 @@ If the sources in a field would all have the same intrinsic spectrum, then any c
 * What magnitude difference corresponds to a change in flux of $1\%$?
 * And what about a change in flux of $0.1\%$ (i.e., one part per thousand, or one "ppt")?
 ````
+
+### Colors
+
+For observational astronomers a **color** is a difference in magnitude between two filters, where one always subtracts the "redder" magnitude from the "bluer" one (e.g., $g-r$ or $r-i$). In this way, a higher color values correspond to a redder source.
+
+
 
 ### Absolute magnitude and distance modulus
 
