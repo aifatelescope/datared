@@ -378,7 +378,7 @@ Instead of the symbol $m$, one often uses a symbol corresponding to a filter to 
 
 ### Colors
 
-For observational astronomers a **color** (or [color index](https://en.wikipedia.org/wiki/Color_index)) is a difference in magnitude between two filters, where one always subtracts the "redder" magnitude from the "bluer" one (e.g., $g-r$ or $r-i$). In this way, a higher color value corresponds to a redder source.
+For observational astronomers a **color** (or [color index](https://en.wikipedia.org/wiki/Color_index)) is a difference in between magnitudes in two separate filters, where one always subtracts the "redder" magnitude from the "bluer" one (e.g., $g-r$ or $r-i$). In this way, a higher color value corresponds to a redder source.
 
 
 
