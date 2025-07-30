@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -508,7 +508,7 @@ But we start by picking one reference image, used to detect sources. It should b
 </div>
 <section id="estimating-and-subtracting-the-background">
 <h2>Estimating and subtracting the background<a class="headerlink" href="#estimating-and-subtracting-the-background" title="Link to this heading">#</a></h2>
-<p>The background estimation is run individually on every image (as the background might well change, e.g., due to clouds, light pollution, or stray light. We therefore start by defining a function for background estimation.
+<p>The background estimation is run individually on every image (as the background might well change, e.g., due to clouds, light pollution, or stray light). We therefore start by defining a function for background estimation.
 Depending on the data to be processed, you might have to adjust the parameters of this function, to tune the “flexibility” of the background model to your science objective. The given default values are often ok, but certaintly not optimal for every situation.</p>
 <p>The typical compromise in background estimation is driven by the following. If the background model is too flexible, the background subtraction will take away some light from larger objects (such as galaxies, but also the central regions of star clusters). And if it is to rigid, the model won’t be able to properly fit the structure that the background might have.</p>
 <div class="cell docutils container">
