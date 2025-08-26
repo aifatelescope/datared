@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -641,7 +641,7 @@ The following code is there as an example on how to use and manipulate the <code
 <span class="c1"># Another interesting quantity might be the angular separation (in degrees) between each star and your target:</span>
 <span class="n">target_index</span> <span class="o">=</span> <span class="mi">34</span> <span class="c1"># Adapt this!</span>
 <span class="n">target_center_pos</span> <span class="o">=</span> <span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">][</span><span class="n">target_index</span><span class="p">]</span>
-<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">SkyCoord</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">],</span> <span class="n">target_center_pos</span><span class="p">)</span>
+<span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;separation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_center_pos</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="s2">&quot;sky_centroid_win&quot;</span><span class="p">])</span>
 <span class="c1"># Depending on your data, it could be important to avoid stars with large angular separation to calibrate your target.</span>
 
 <span class="c1"># When making a plot (and also to select reference stars), you could hand-pick indices, or build such a list algorithmically:</span>
