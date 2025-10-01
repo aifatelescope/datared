@@ -45,7 +45,7 @@ For ground-based astronomical observations, Earth’s atmosphere has to be consi
 The size of such a stellar image, as given by the **full width at half maximum (FWHM)** of the PSF profile, is called the **seeing** of the image and measures the actual resolution in a particular observation. The less turbulent the atmosphere, the higher the resolution and thus the data quality that can be achieved. For Bonn, a seeing of 2 arcsec is a very rare and good value, while in excellent locations like Hawaii or the Atacama desert 0.5 arcsec are common.
 
 
-```{hint}
+```{note}
 Both the diffraction-limited resolution of a telescope and the seeing are wavelength-dependent!
 The diffraction-limited image is sharpest for shorter wavelength. But as just discussed, atmospheric seeing is a consequence of *refraction*. Refraction of visible light in the atmosphere (that is a medium with so-called "normal dispersion") is *stronger* for short wavelengths than it is for long wavelengths. For any typical ground-based telescope with an aperture larger than a few centimeter, the seeing will limit the resolution of the image. Therefore, a ground-based image taken in red (or infrared) light will be sharper than an image in the blue part of the spectrum (assuming otherwise similar observing conditions)!
 ```
