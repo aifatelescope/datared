@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -400,7 +400,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-and-subtracting-the-background">Estimating and subtracting the background</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-detection-and-measurement">Source detection and measurement</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forced-aperture-photometry">Forced aperture photometry</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chimney-plot">Chimney Plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#size-magnitude-diagram">Size-Magnitude Diagram</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performing-the-measurements-on-all-images">Performing the measurements on all images</a></li>
 </ul>
 </li>
@@ -815,13 +815,14 @@ This means that we use the sky coordinates of the sources detected in the refere
 <li><p><code class="docutils literal notranslate"><span class="pre">back_sum_x</span></code> is the flux of the background within the corresponding aperture. This could be used later to estimate the noise of the photometry.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fwhm_fit</span></code>, <code class="docutils literal notranslate"><span class="pre">flux_fit</span></code>, <code class="docutils literal notranslate"><span class="pre">q_fit</span></code> are measurements from the optional 2D Gaussian fit.</p></li>
 </ul>
-<section id="chimney-plot">
-<h3>Chimney Plot<a class="headerlink" href="#chimney-plot" title="Link to this heading">#</a></h3>
-<p>As an illustration of how this photometric catalog can be used, we create a basic and very common scatter plot: the so-called “chimney plot”, named after its shape. The plot shows instrumental magnitude against FWHM (or some other size measurement) of all detected sources.</p>
+<section id="size-magnitude-diagram">
+<h3>Size-Magnitude Diagram<a class="headerlink" href="#size-magnitude-diagram" title="Link to this heading">#</a></h3>
+<p>As an illustration of how this photometric catalog can be used, we create a basic and very common scatter plot of the measured FWHM against instrumental (i.e., uncalibrated) magnitude of all detected sources. This diagram is sometimes called “chimney plot”, after its shape.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Potentially, your image contains both unresolved sources (stars) and resolved sources (e.g., galaxies). This plot should show you a clear “stellar locus” (i.e., where the stars are), and directly tell you the seeing of this particular image. Can you measure it? A potential fine “smoke plume” coming from your chimney is related to the saturation of the brightest stars.</p>
+<p>Potentially, your image contains both unresolved sources (stars) and resolved sources (e.g., galaxies). If your image is relatively well focused and has enough sources, this plot should show you a clear “stellar locus” (this is the “chimney”, where the stars are), which directly shows you the seeing of this particular image. Can you measure it? A potential fine “smoke plume” rising from your chimney is related to saturation of the brightest stars, which increases their FHWM.</p>
 </div>
+<p>Recall that the measured seeing depends on the filter, the focus, and the atmospheric conditions (among other potential issues). It can be interesting to visualize it as function of time.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Just as an example, let&#39;s use the flux within the apertures of 6 arcseconds: </span>
@@ -853,7 +854,7 @@ This means that we use the sky coordinates of the sources detected in the refere
 <section id="performing-the-measurements-on-all-images">
 <h3>Performing the measurements on all images<a class="headerlink" href="#performing-the-measurements-on-all-images" title="Link to this heading">#</a></h3>
 <p>Finally, we apply this measurement function to all images of the object.</p>
-<p>If you don’t need the Gaussian fitting, you can run this faster by setting <code class="docutils literal notranslate"><span class="pre">run_simple_fit=False</span></code> below, in the call of <code class="docutils literal notranslate"><span class="pre">measure_photometry()</span></code>.</p>
+<p>If you <em>don’t</em> need the Gaussian fitting (which provides <code class="docutils literal notranslate"><span class="pre">fwhm_fit</span></code>), you can run this faster by leaving <code class="docutils literal notranslate"><span class="pre">run_simple_fit=False</span></code> below, in the call of <code class="docutils literal notranslate"><span class="pre">measure_photometry()</span></code>. Otherwise just set it to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We read again the ref catalog from file:</span>
@@ -981,7 +982,7 @@ This means that we use the sky coordinates of the sources detected in the refere
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-and-subtracting-the-background">Estimating and subtracting the background</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-detection-and-measurement">Source detection and measurement</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forced-aperture-photometry">Forced aperture photometry</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#chimney-plot">Chimney Plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#size-magnitude-diagram">Size-Magnitude Diagram</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performing-the-measurements-on-all-images">Performing the measurements on all images</a></li>
 </ul>
 </li>
