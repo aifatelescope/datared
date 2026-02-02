@@ -39,9 +39,6 @@ Image reduction can often be broadly split into two separate parts, which *may* 
 
 The present tutorial goes even a bit further than the reduction itself, as it also covers the analysis of the data (e.g., the comparison between an observed color-magnitude diagram and isochrones).
 
-```{note}
-The name "reduction" is somewhat misleading. It won't give you back disk space, on the contrary!
-```
 
 Many approaches and software solutions for data reduction exist. The focus of this particular tutorial is on:
 * keeping it short and simple, suited for a lab course,
