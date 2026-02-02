@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -861,7 +861,13 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 </section>
 <section id="comparing-the-observed-cmd-with-isochrones">
 <h3>Comparing the observed CMD with isochrones<a class="headerlink" href="#comparing-the-observed-cmd-with-isochrones" title="Link to this heading">#</a></h3>
-<p>With all this in hand, we will now build an interactive matplotlib plot, displaying the observed CMD, and overplotting isochrones of selected age and metallicity. For this we define one more helper function:</p>
+<p>With all this in hand, we will now build an interactive matplotlib plot, displaying the observed CMD, and overplotting isochrones of selected age and metallicity.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>PLEASE NOTE THE FOLLOWING: the purpose of this interactive plot is to give insights about how the observed data compares to the models. In the context of the lab, this plot can perfectly be used to obtain reasonable estimates of the age and distance of the cluster (including uncertainties). Remember to adjust the axes limits to zoom on the relevant parts of the CMD.</p>
+<p>Please do not rush to implement a statistical fitting, no matter how “sophisticated”. You may of course try something, but we do not ask for it! Instead, make sure to think about <strong>and discuss</strong> the limitations of the data and the model. Keep in mind that the most advanced fitting technique will give misleading results if the model is inadequate or incomplete. In particular in the present case, adjusting the model by eye with good judgement will likely result in more accurate estimates, unless one uses a very comprehensive model of the data.</p>
+</div>
+<p>We start by defining one more helper function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_apparent_isochrone</span><span class="p">(</span><span class="n">vrot_index</span><span class="p">,</span> <span class="n">metallicity_index</span><span class="p">,</span> <span class="n">age_index</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">A_V</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -1027,7 +1033,7 @@ To make the use of these isochrones as easy as possible, we have repackaged them
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
 <p>Discuss the difficulty to get estimates (and uncertainty estimates) for these parameters. You could create CMDs with several isochrones to illustrate your points.
-If you would have to quantify uncertainties, how could you approach this?</p>
+Recall that we do not ask you to implement a statistical method to quantify uncertainties. But if you would have to do so, how could you approach this, and where would be the main issues?</p>
 </div>
 <div class="admonition-question admonition">
 <p class="admonition-title">Question</p>
