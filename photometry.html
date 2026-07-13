@@ -673,14 +673,14 @@ Depending on the data to be processed, you might have to adjust the parameters o
 </div>
 </div>
 <p>Zoom in and check if all relevant sources are detected. If there are issues, one might have to adjust the sensitivity of the detection.</p>
-<p>Depending on your science objective, you can save CPU-time by setting a flux threshold to keep only those stars you actually care about, and not every tiny detection.</p>
+<p>Depending on your science objective, you can save CPU-time by setting a flux threshold to keep only those stars you actually care about, and not every tiny detection. You can either adapt the <code class="docutils literal notranslate"><span class="pre">threshold</span></code> level (see a few cells above, try e.g. a threshold of 10 sigma instead of 3 sigma), or you can apply some flux cut as done below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply some flux cut, to remove fainter sources if those are not needed:</span>
 <span class="n">ref_catalog</span> <span class="o">=</span> <span class="n">ref_catalog</span><span class="p">[</span><span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;kron_flux&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">]</span>
 <span class="nb">len</span><span class="p">(</span><span class="n">ref_catalog</span><span class="p">)</span>
 
-<span class="c1"># Now rerun the vizualisation above to see the effect, and adapt the threshold if needed!</span>
+<span class="c1"># Now rerun the vizualisation above to see the effect, and adapt the cut if needed!</span>
 </pre></div>
 </div>
 </div>
@@ -830,10 +830,10 @@ This means that we use the sky coordinates of the sources detected in the refere
 
 <span class="c1"># We create a scatter plot of FWHM versus mag</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;fwhm_fit&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> 
     <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;mag_6&quot;</span><span class="p">],</span>
-    <span class="n">s</span><span class="o">=</span><span class="mi">10</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span>
 <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span> <span class="c1"># Bright is at the top!</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;FWHM [pix]&quot;</span><span class="p">)</span>
@@ -845,7 +845,7 @@ This means that we use the sky coordinates of the sources detected in the refere
 </div>
 </div>
 </div>
-<p>It can be interesting to check the FWHM accross the field. Simple example:</p>
+<p>It can be interesting to check the FWHM accross the field. Try the following example (adapt vmin and vmax to highlight what happens with isolated stars accross the field):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
@@ -853,8 +853,8 @@ This means that we use the sky coordinates of the sources detected in the refere
     <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;xcentroid_win&quot;</span><span class="p">],</span> 
     <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;ycentroid_win&quot;</span><span class="p">],</span> 
     <span class="n">c</span><span class="o">=</span><span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;fwhm_fit&quot;</span><span class="p">],</span>
-    <span class="n">vmin</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span>
     <span class="n">s</span><span class="o">=</span><span class="mi">10</span>
 <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;FWHM from fit [pix]&quot;</span><span class="p">)</span>
