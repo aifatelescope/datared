@@ -11,6 +11,8 @@ https://jupyterbook.org/en/stable/intro.html
 
 ## Installation
 
+Note that we are currently usding the "old" V1 version of Jupyter Book, you'll have to adapt the following to get this v1 instead of the current v2.
+
 Software to build the book:
 
 Get anaconda or miniconda, and set up an environnment with:
@@ -42,6 +44,15 @@ ghp-import -n -p -f book/_build/html
 ```
 
 This pushes the book to the branch `gh-pages`. From there it is automatically served online (maybe with a few minutes delay).
+
+
+Build LaTeX version (https://jupyterbook.org/v1/advanced/pdf.html) : 
+
+```
+jb build book/ --builder latex
+```
+
+And then build with XeLaTeX
 
 
 
