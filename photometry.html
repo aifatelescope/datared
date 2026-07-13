@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -420,7 +420,7 @@ document.write(`
 <p>On this page we’ll detect sources and perform simple aperture photometry (along other measurements) for each pre-reduced image.
 The same procedure could of course also be applied to coadded images.</p>
 <p>As before, you could copy or write the code shown below in a script, or alternatively directly download this page as a <a class="reference download internal" download="" href="_downloads/b3818530518c2677d23c7773e04ac78d/photometry.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code></a> file.</p>
-<p>To run the code, you’ll need the module <code class="docutils literal notranslate"><span class="pre">dataredconfig.py</span></code>, as explained <a class="reference internal" href="data.html"><span class="std std-doc">here</span></a>.</p>
+<p>To run the code, you’ll need the module <code class="docutils literal notranslate"><span class="pre">dataredconfig.py</span></code>, as explained <a class="reference internal" href="data.html"><span class="std std-doc">here</span></a>. And don’t forget to use the <code class="docutils literal notranslate"><span class="pre">datared</span></code> environment!</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The photometry presented here is sufficient for our purposes, but remains extremely simple. Notably, it ignores the effect of variable seeing (in time and/or accross filters). The next steps to improve upon the minimal approach shown here would be to perform a PSF homogeneization or to use PSF-fitting.</p>
@@ -813,7 +813,7 @@ This means that we use the sky coordinates of the sources detected in the refere
 <li><p><code class="docutils literal notranslate"><span class="pre">sum_x</span></code> is the background-subtracted flux within the aperture of radius <code class="docutils literal notranslate"><span class="pre">x</span></code> arcsec. This is what we’ll use to compute magnitudes.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">max_x</span></code> is the maximum pixel value within the corresponding aperture. This informs us if some pixels are at or close to saturation.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">back_sum_x</span></code> is the flux of the background within the corresponding aperture. This could be used later to estimate the noise of the photometry.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fwhm_fit</span></code>, <code class="docutils literal notranslate"><span class="pre">flux_fit</span></code>, <code class="docutils literal notranslate"><span class="pre">q_fit</span></code> are measurements from the optional 2D Gaussian fit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fwhm_fit</span></code>, <code class="docutils literal notranslate"><span class="pre">flux_fit</span></code>, <code class="docutils literal notranslate"><span class="pre">q_fit</span></code> are measurements from the optional 2D Gaussian fit (<code class="docutils literal notranslate"><span class="pre">q_fit</span></code> is a fit quality metric: sum(abs(fit residuals)) / (fitted flux)).</p></li>
 </ul>
 <section id="size-magnitude-diagram">
 <h3>Size-magnitude diagram<a class="headerlink" href="#size-magnitude-diagram" title="Link to this heading">#</a></h3>
@@ -828,22 +828,38 @@ This means that we use the sky coordinates of the sources detected in the refere
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Just as an example, let&#39;s use the flux within the apertures of 6 arcseconds: </span>
 <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;mag_6&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;sum_6&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
-<span class="c1"># We create a scatter plot of FWHM versus mag, and color the datapoints according to the q_fit parameter (see legend).</span>
-<span class="c1"># High values of q_fit indicate that the source was not well fitted by the simple 2D-Gaussian.</span>
+<span class="c1"># We create a scatter plot of FWHM versus mag</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
     <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;fwhm_fit&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> 
-    <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;mag_6&quot;</span><span class="p">],</span> 
-    <span class="n">c</span><span class="o">=</span><span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;q_fit&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+    <span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;mag_6&quot;</span><span class="p">],</span>
     <span class="n">s</span><span class="o">=</span><span class="mi">10</span>
 <span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span> <span class="c1"># Bright is at the top!</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fit quality metric: sum(abs(fit residuals)) / (fitted flux)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;FWHM [pix]&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Instrumental magnitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>It can be interesting to check the FWHM accross the field. Simple example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;xcentroid_win&quot;</span><span class="p">],</span> 
+    <span class="n">ref_catalog</span><span class="p">[</span><span class="s2">&quot;ycentroid_win&quot;</span><span class="p">],</span> 
+    <span class="n">c</span><span class="o">=</span><span class="n">ref_photo_cat</span><span class="p">[</span><span class="s2">&quot;fwhm_fit&quot;</span><span class="p">],</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;FWHM from fit [pix]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x [pix]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y [pix]&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
